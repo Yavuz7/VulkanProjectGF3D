@@ -112,6 +112,7 @@
     <ClInclude Include="..\include\gf3d_validation.h" />
     <ClInclude Include="..\include\gf3d_vgraphics.h" />
     <ClInclude Include="..\include\gf3d_vqueues.h" />
+    <ClInclude Include="entity.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\gfc\simple_json\src\simple_json.c" />

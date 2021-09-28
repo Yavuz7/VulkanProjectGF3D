@@ -99,6 +99,9 @@
     <ClInclude Include="..\gfc\simple_json\include\simple_json_value.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="entity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\gfc\simple_json\src\simple_json.c">
