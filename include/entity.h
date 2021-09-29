@@ -8,17 +8,18 @@ typedef struct Entity_S{
 	Uint8 _inuse;/*Keeps track of memory Usage*/
 	Model *model;/*pointer to entity to draw*/
 	void(*think)();/*pointer to think function*/
+	Matrix4 modelMat; //animation matrixfor model
 	//etc
 }Entity;
 
-Matrix4 modelmat; //animation matrixfor model
+
 
 /*
 *@Brief Intializes Entity
 *@Param MaxEntities
 */
 
-void entity_system_init(Uint8 maxEntities); //Initializes entity
+void entity_system_init(Uint32 maxEntities); //Initializes entity
 
 /*Pointer to new entity*/
 

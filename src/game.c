@@ -10,6 +10,7 @@
 #include "gf3d_model.h"
 #include "gf3d_camera.h"
 #include "gf3d_texture.h"
+#include "entity.h"
 
 int main(int argc,char *argv[])
 {
@@ -45,6 +46,7 @@ int main(int argc,char *argv[])
 	slog_sync();
 
     // main game loop
+	
     slog("gf3d main loop begin");
 	slog_sync();
 	model = gf3d_model_load("dino");
