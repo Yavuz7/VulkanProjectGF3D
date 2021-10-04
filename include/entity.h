@@ -9,6 +9,7 @@ typedef struct Entity_S{
 	Model *model;/*pointer to entity to draw*/
 	void(*think)();/*pointer to think function*/
 	Matrix4 modelMat; //animation matrixfor model
+	Uint8 tileType; // Tile types for map
 	//etc
 }Entity;
 
@@ -59,5 +60,8 @@ void entity_draw_all();
 */
 
 void entity_think_all();
+
+void map_populate();
+
 
 #endif

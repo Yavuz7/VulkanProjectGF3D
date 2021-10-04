@@ -80,3 +80,16 @@ void entity_draw_all(Uint32 bufferFrame, VkCommandBuffer commandBuffer)
 
 void entity_think_all();
 
+void map_populate(){
+	int x;
+	int y;
+	int mapData[7][7];
+	for (x = 1; x <= 7; x++){
+		for (y = 1; y <= 7; y++){
+			mapData[x][y] = 0;
+			slog("Set Map Tile (%d,%d) to %d", x, y, mapData[x][y]);
+			slog_sync();
+		}
+	}
+}
+
