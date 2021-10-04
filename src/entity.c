@@ -42,6 +42,7 @@ for (i = 0; i < entity_manager.entity_count; i++)
 		gfc_matrix_identity(entity_manager.entity_list[i].modelMat);
 		return &entity_manager.entity_list[i];
 	}
+
 	slog("No free space in entity list");
 	return NULL;
 }
@@ -83,11 +84,14 @@ void entity_think_all();
 void map_populate(){
 	int x;
 	int y;
-	int mapData[7][7];
+	//int mapData[7][7];
+	Entity *mapData[7][7];
 	for (x = 1; x <= 7; x++){
 		for (y = 1; y <= 7; y++){
-			mapData[x][y] = 0;
-			slog("Set Map Tile (%d,%d) to %d", x, y, mapData[x][y]);
+			//mapData[x][y]->tileType = 1;
+			mapData[x][y] = entity_new();		
+			slog("Set Map Tile (%d,%d) to %d", x, y, mapData[x][y]);			
+			
 			slog_sync();
 		}
 	}
