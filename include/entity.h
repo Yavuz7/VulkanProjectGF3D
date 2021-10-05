@@ -4,16 +4,22 @@
 #include "gfc_types.h"
 #include "gf3d_model.h"
 
+
 typedef struct Entity_S{
 	Uint8 _inuse;/*Keeps track of memory Usage*/
 	Model *model;/*pointer to entity to draw*/
 	void(*think)();/*pointer to think function*/
 	Matrix4 modelMat; //animation matrixfor model
 	int tileType; // Tile types for map
-	
+	Uint64 cardNumber; //ID number for card
 }Entity;
 
+typedef struct{
+	Uint64 cardNumber; // ID number for card
+	char cardName[]; //String character thingy for Card Name
+	//Card data should go here after being read from file 
 
+}Card;
 
 /*
 *@Brief Intializes Entity
@@ -67,6 +73,12 @@ void entity_think_all();
 *@Todo Read tile numbers from file, create entities for each tile
 */
 void map_populate();
+
+/*
+*@Brief Creates card entities from file data to form a deck
+*@Param File that has card ids, forms a deck
+*/
+void deck_populate(FILE *cardData);
 
 
 #endif

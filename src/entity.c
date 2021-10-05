@@ -1,13 +1,20 @@
 #include "entity.h"
 #include "simple_logger.h"
 #include "gf3d_model.h"
+#include <stdio.h>
 typedef struct
 {
 	Entity *entity_list; //List of entities
 	Uint32 entity_count; //Number of entities
 }EntityManager;
+typedef struct
+{
+	Card *card_list; //List of cards in deck?
+	Uint32 card_count; //Number of cards?
+}DeckManager;
 
 static EntityManager entity_manager = { 0 };
+static DeckManager deck_manager = { 0 };
 
 void entity_system_close(){
 	int i;
@@ -90,7 +97,7 @@ void map_populate(){
 		for (y = 1; y <= 7; y++){
 			//mapData[x][y]->tileType = 1;
 			mapData[x][y] = entity_new();		
-			slog("Set Map Tile (%d,%d) to %d", x, y, mapData[x][y]);			
+			//slog("Set Map Tile (%d,%d) to %d", x, y, mapData[x][y]);			
 			
 			slog_sync();
 		}
