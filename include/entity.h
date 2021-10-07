@@ -1,25 +1,21 @@
-#ifndef ENTITY_H_
-#define ENTITY_H_
+#ifndef __ENTITY_H__
+#define __ENTITY_H__
 
 #include "gfc_types.h"
 #include "gf3d_model.h"
+#include <stdio.h>
 
-
-typedef struct Entity_S{
+typedef struct Entity_S
+{
 	Uint8 _inuse;/*Keeps track of memory Usage*/
 	Model *model;/*pointer to entity to draw*/
 	void(*think)();/*pointer to think function*/
 	Matrix4 modelMat; //animation matrixfor model
-	int tileType; // Tile types for map
-	Uint64 cardNumber; //ID number for card
+
+	void *dataAccess //Is used by entity to access data from other structs
+	
 }Entity;
 
-typedef struct{
-	Uint64 cardNumber; // ID number for card
-	char cardName[]; //String character thingy for Card Name
-	//Card data should go here after being read from file 
-
-}Card;
 
 /*
 *@Brief Intializes Entity

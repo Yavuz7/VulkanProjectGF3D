@@ -1,22 +1,20 @@
 #include "entity.h"
 #include "simple_logger.h"
 #include "gf3d_model.h"
-#include <stdio.h>
+
 typedef struct
 {
 	Entity *entity_list; //List of entities
 	Uint32 entity_count; //Number of entities
+
 }EntityManager;
-typedef struct
-{
-	Card *card_list; //List of cards in deck?
-	Uint32 card_count; //Number of cards?
-}DeckManager;
+
 
 static EntityManager entity_manager = { 0 };
-static DeckManager deck_manager = { 0 };
 
-void entity_system_close(){
+
+void entity_system_close()
+{
 	int i;
 	for (i = 0; i < entity_manager.entity_count; i++){
 		entity_free(&entity_manager.entity_list[i]);
@@ -26,7 +24,8 @@ void entity_system_close(){
 	slog("entity_system closed");
 }
 
-void entity_system_init(Uint32 maxEntities){
+void entity_system_init(Uint32 maxEntities)
+{
 	entity_manager.entity_list = gfc_allocate_array(sizeof(Entity), maxEntities);
 	if (entity_manager.entity_list == NULL)
 	{
@@ -55,7 +54,8 @@ for (i = 0; i < entity_manager.entity_count; i++)
 }
 return NULL;
 }
-void entity_free(Entity *self){
+void entity_free(Entity *self)
+{
 	if (!self) return;
 	gf3d_model_free(self->model);
 	memset(self, 0, sizeof(Entity));
@@ -87,7 +87,7 @@ void entity_draw_all(Uint32 bufferFrame, VkCommandBuffer commandBuffer)
 
 
 void entity_think_all();
-
+/*
 void map_populate(){
 	int x;
 	int y;
@@ -103,4 +103,4 @@ void map_populate(){
 		}
 	}
 }
-
+*/
