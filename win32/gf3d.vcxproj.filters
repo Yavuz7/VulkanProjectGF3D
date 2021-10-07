@@ -105,7 +105,7 @@
     <ClInclude Include="..\include\card.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\tiles.h">
+    <ClInclude Include="..\include\tile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -206,7 +206,7 @@
     <ClCompile Include="..\src\card.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\tiles.c">
+    <ClCompile Include="..\src\tile.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

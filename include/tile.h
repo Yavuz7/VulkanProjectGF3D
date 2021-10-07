@@ -6,7 +6,7 @@
 
 typedef struct
 {
-	Uint16 _tileType; // Keeps track of Tile type
+	Uint16 _tileType; /* Keeps track of Tile type*/
 }Tile;
 
 /*

@@ -10,9 +10,9 @@ typedef struct Entity_S
 	Uint8 _inuse;/*Keeps track of memory Usage*/
 	Model *model;/*pointer to entity to draw*/
 	void(*think)();/*pointer to think function*/
-	Matrix4 modelMat; //animation matrixfor model
+	Matrix4 modelMat; /*animation matrixfor model*/
 
-	void *dataAccess //Is used by entity to access data from other structs
+	void *dataAccess /*Is used by entity to access data from other structs*/
 	
 }Entity;
 
@@ -68,7 +68,7 @@ void entity_think_all();
 *@Param
 *@Todo Read tile numbers from file, create entities for each tile
 */
-void map_populate();
+//void map_populate();
 
 /*
 *@Brief Creates card entities from file data to form a deck
