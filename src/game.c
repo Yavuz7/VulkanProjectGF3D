@@ -11,6 +11,7 @@
 #include "gf3d_camera.h"
 #include "gf3d_texture.h"
 #include "entity.h"
+#include "tile.h"
 
 
 int main(int argc,char *argv[])
@@ -51,8 +52,9 @@ int main(int argc,char *argv[])
     slog("gf3d main loop begin");
 	slog_sync();
 	
-	map_populate();
-
+	//map_populate();
+	
+	loadMap("map1.txt");
 
 	model = gf3d_model_load("dino");
 	gfc_matrix_identity(modelMat);

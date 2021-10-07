@@ -12,7 +12,7 @@ typedef struct Entity_S
 	void(*think)();/*pointer to think function*/
 	Matrix4 modelMat; /*animation matrixfor model*/
 
-	void *dataAccess /*Is used by entity to access data from other structs*/
+	void *dataAccess; /*Is used by entity to access data from other structs*/
 	
 }Entity;
 

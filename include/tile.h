@@ -7,6 +7,7 @@
 typedef struct
 {
 	Uint16 _tileType; /* Keeps track of Tile type*/
+	Uint8 _tileOccupied; /*Keeps of whether or not there is a monster on top of tile*/
 }Tile;
 
 /*
