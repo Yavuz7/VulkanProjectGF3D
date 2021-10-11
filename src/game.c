@@ -54,7 +54,7 @@ int main(int argc,char *argv[])
 	
 	//map_populate();
 	
-	loadMap("map1.txt");
+	loadMap("mapDat/map1.txt");
 
 	model = gf3d_model_load("dino");
 	gfc_matrix_identity(modelMat);

@@ -3,11 +3,15 @@
 
 #include "gfc_types.h"
 #include <stdio.h>
+#include "entity.h"
+#include "gf3d_model.h"
 
 typedef struct
 {
 	Uint16 _tileType; /* Keeps track of Tile type*/
 	Uint8 _tileOccupied; /*Keeps of whether or not there is a monster on top of tile*/
+	Entity visualTile; /*Entity that loads the model of the tile*/
+
 }Tile;
 
 /*
@@ -20,7 +24,14 @@ void loadMap(FILE *mapData);
 *@Brief Unload Tiles whatever that means
 */
 
+
+
 void clearTiles();
+
+/*
+*@Brief load tile models on a grid
+*/
+void drawTiles();
 
 
 #endif
