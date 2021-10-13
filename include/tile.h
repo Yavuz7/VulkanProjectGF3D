@@ -6,8 +6,7 @@
 #include "entity.h"
 #include "gf3d_model.h"
 
-typedef struct
-{
+typedef struct{
 	Uint16 _tileType; /* Keeps track of Tile type*/
 	Uint8 _tileOccupied; /*Keeps of whether or not there is a monster on top of tile*/
 	Model tileModel; /*The model of the tile*/
@@ -19,7 +18,7 @@ typedef struct
 *@Brief Loads tileType from file into map array
 *@Param Map data file that the data will be loaded from
 */
-void loadMap(FILE *mapData); 
+void loadMap(char *mapData); 
 
 /*
 *@Brief Unload Tiles whatever that means
@@ -31,8 +30,20 @@ void clearTiles();
 
 /*
 *@Brief load tile models on a grid
+*@Param x value of grid tile
+*@Param y value of grid tile
+*@Todo Tile should draw the models
 */
-void drawTiles();
+void drawTiles(int x, int y);
+
+/*
+*@Brief Grab tile data from json and set into tiles
+*@Param x value of grid tile
+*@Param y value of grid tile
+*@Todo Json (Tiles need model name corresponding to tile id number)
+*/
+
+void setTileData(int x, int y);
 
 
 #endif

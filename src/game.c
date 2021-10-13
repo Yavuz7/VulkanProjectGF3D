@@ -16,6 +16,7 @@
 Entity *agumon[8];
 int main(int argc,char *argv[])
 {
+
     int done = 0;
     int a;
     Uint8 validate = 0;
@@ -56,14 +57,11 @@ int main(int argc,char *argv[])
 	
 	//loadMap("mapDat/map1.txt");
 	entity_system_init(100);
+
 	int q;
 	for (q = 0; q < 7; q++){
 		agumon[q] = entity_new();
 		agumon[q]->model = gf3d_model_load("dino");
-		gfc_matrix_make_translation(
-			agumon[q]->modelMat,
-			vector3d(q, 0, 0)
-			);
 		slog("Agumon model set for entity %i",q);
 	}
 	//agumon[0] = entity_new();

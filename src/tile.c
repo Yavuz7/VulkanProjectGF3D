@@ -22,6 +22,7 @@ void loadMap(char *mapData)
 	if (!map)
 	{
 		slog("Didn't load the mapData %s using fopen, ,w,", mapData);
+		fclose(map);
 		slog_sync();
 		return;
 	}
@@ -34,20 +35,17 @@ void loadMap(char *mapData)
 		{
 			fscanf(map,"%i", buff);
 			tileMap[x][y]._tileType = buff[0];
-			
+			//drawTiles(x,y);
 			slog("Tile %d , %d set to Type %i", x, y, tileMap[x][y]._tileType);
 			slog_sync();
 		}
 		
 	}
+	fclose(map);
 }
-void drawTiles(){
-	int x, y;
-	for (x = 0; x <= 6; x++)
-	{
-		for (y = 0; y <= 6; y++)
-		{
-			tileMap[x][y];
-		}
-	}
+void clearTiles(){
+	
+}
+void drawTiles(int x, int y){
+
 }

@@ -6,7 +6,7 @@
 
 typedef struct
 {
-	Uint8 _cardState; /*Keeps track of state of card, in hand or in play*/
+	//Uint8 _cardState; /*Keeps track of state of card, in hand or in play*/
 	SJString cardName; /* Card Name*/
 	SJString cardText; /* Text of a card*/
 	Uint32 cardId; /* Id to identify card*/
@@ -19,6 +19,19 @@ typedef struct
 	
 
 }Card;
+
+/*
+*@Brief Loads character data of card from card ID
+*@Param ID number of card
+*/
+void setCardData(char *id, Card *deck);
+
+/*
+*@Brief Loads card ids from txt file and puts it into a array of cards using setCardData
+*@Return Array of cards
+*/
+
+Card *getDeck();
 
 
 #endif
