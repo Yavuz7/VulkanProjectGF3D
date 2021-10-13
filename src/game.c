@@ -13,7 +13,7 @@
 #include "entity.h"
 #include "tile.h"
 
-
+Entity *agumon[8];
 int main(int argc,char *argv[])
 {
     int done = 0;
@@ -54,8 +54,26 @@ int main(int argc,char *argv[])
 	
 	//map_populate();
 	
-	loadMap("mapDat/map2.txt");
-
+	//loadMap("mapDat/map1.txt");
+	entity_system_init(100);
+	int q;
+	for (q = 0; q < 7; q++){
+		agumon[q] = entity_new();
+		agumon[q]->model = gf3d_model_load("dino");
+		gfc_matrix_make_translation(
+			agumon[q]->modelMat,
+			vector3d(q, 0, 0)
+			);
+		slog("Agumon model set for entity %i",q);
+	}
+	//agumon[0] = entity_new();
+	/*if (agumon[0])
+	{
+		agumon[0]->model = gf3d_model_load("dino");
+		slog("Agumon model set for entity");
+		slog_sync();
+	}
+	*/
 	model = gf3d_model_load("dino");
 	gfc_matrix_identity(modelMat);
 	model2 = gf3d_model_load("dino");
@@ -90,7 +108,7 @@ int main(int argc,char *argv[])
 
                 gf3d_model_draw(model,bufferFrame,commandBuffer,modelMat);
                 gf3d_model_draw(model2,bufferFrame,commandBuffer,modelMat2);
-                
+				entity_draw_all(bufferFrame, commandBuffer);
             gf3d_command_rendering_end(commandBuffer);
             
         gf3d_vgraphics_render_end(bufferFrame);

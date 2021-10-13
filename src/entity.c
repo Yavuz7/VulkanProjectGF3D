@@ -13,6 +13,7 @@ typedef struct
 static EntityManager entity_manager = { 0 };
 
 
+
 void entity_system_close()
 {
 	int i;
@@ -35,6 +36,7 @@ void entity_system_init(Uint32 maxEntities)
 	entity_manager.entity_count = maxEntities;
 	atexit(entity_system_close);
 	slog("entity_system intialized");
+	return;
 }
 
 Entity *entity_new()
@@ -48,12 +50,12 @@ for (i = 0; i < entity_manager.entity_count; i++)
 		gfc_matrix_identity(entity_manager.entity_list[i].modelMat);
 		return &entity_manager.entity_list[i];
 	}
-
-	slog("No free space in entity list");
-	return NULL;
+	
 }
+slog("No free space in entity list");
 return NULL;
 }
+
 void entity_free(Entity *self)
 {
 	if (!self) return;

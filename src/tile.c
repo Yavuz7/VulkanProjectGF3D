@@ -47,7 +47,7 @@ void drawTiles(){
 	{
 		for (y = 0; y <= 6; y++)
 		{
-
+			tileMap[x][y];
 		}
 	}
 }

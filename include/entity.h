@@ -10,7 +10,7 @@ typedef struct Entity_S
 	Uint8 _inuse;/*Keeps track of memory Usage*/
 	Model *model;/*pointer to entity to draw*/
 	void(*think)();/*pointer to think function*/
-	Matrix4 modelMat; /*animation matrixfor model*/
+	Matrix4 modelMat; /*animation matrix for model*/
 
 	void *dataAccess; /*Is used by entity to access data from other structs*/
 	
@@ -24,7 +24,9 @@ typedef struct Entity_S
 
 void entity_system_init(Uint32 maxEntities); //Initializes entity
 
-/*Pointer to new entity*/
+/*
+*@Brief Sets a pointer to a entity
+*/
 
 Entity *entity_new();
 
@@ -40,7 +42,7 @@ void entity_free(Entity *self);
 *@Param Entity being drawn
 */
 
-void entity_draw(Entity *self);
+void entity_draw(Entity *self, Uint32 bufferFrame, VkCommandBuffer commandBuffer);
 
 /*
 *@Brief Entity Logic
@@ -54,7 +56,7 @@ void entity_think(Entity *self);
 *@Param 
 */
 
-void entity_draw_all();
+void entity_draw_all(Uint32 bufferFrame, VkCommandBuffer commandBuffer);
 
 /*
 *@Brief Entities Act
