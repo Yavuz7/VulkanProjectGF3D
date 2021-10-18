@@ -639,6 +639,11 @@ int gf3d_vgraphics_create_buffer(VkDeviceSize size, VkBufferUsageFlags usage, Vk
     return 1;
 }
 
+Matrix4 *gf3d_vgraphics_get_view()
+{
+	return gf3d_vgraphics.ubo.view;
+}
+
 uint32_t gf3d_vgraphics_find_memory_type(uint32_t typeFilter, VkMemoryPropertyFlags properties)
 {
     VkPhysicalDeviceMemoryProperties memProperties;

@@ -4,7 +4,7 @@
 
 void setCardData(char *id,Card *deck)
 {
-	SJson *cardData;
+	SJson *cardData,*dataBuffer;
 	
 	cardData = sj_load("cards/cardData.json");
 	if (!cardData)
@@ -12,6 +12,8 @@ void setCardData(char *id,Card *deck)
 		slog("Card Data not loaded from cards/cardData.json");
 		return;
 	}	
+	dataBuffer = sj_object_get_value(cardData, id);
+
 
 
 }

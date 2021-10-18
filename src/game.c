@@ -103,8 +103,14 @@ int main(int argc,char *argv[])
         bufferFrame = gf3d_vgraphics_render_begin();
         gf3d_pipeline_reset_frame(gf3d_vgraphics_get_graphics_pipeline(),bufferFrame);
             commandBuffer = gf3d_command_rendering_begin(bufferFrame);
+			//entity think all
+			//entity update all think then update
 
-                gf3d_model_draw(model,bufferFrame,commandBuffer,modelMat);
+			gf3d_camera_update_view();
+			gf3d_camera_get_view(gf3d_vgraphics_get_view());
+
+
+                gf3d_model_draw(model, bufferFrame, commandBuffer, modelMat);
                 gf3d_model_draw(model2,bufferFrame,commandBuffer,modelMat2);
 				entity_draw_all(bufferFrame, commandBuffer);
             gf3d_command_rendering_end(commandBuffer);
