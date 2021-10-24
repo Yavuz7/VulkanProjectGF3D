@@ -15,6 +15,8 @@
 #include "agumon.h"
 #include "player.h"
 #include "world.h"
+#include "card.h"
+#include "tile.h"
 
 int main(int argc,char *argv[])
 {
@@ -22,8 +24,6 @@ int main(int argc,char *argv[])
     int a;
     Uint8 validate = 0;
     const Uint8 * keys;
-    Uint32 bufferFrame = 0;
-    VkCommandBuffer commandBuffer;
     
     World *w;
     
@@ -48,9 +48,12 @@ int main(int argc,char *argv[])
 	slog_sync();
     
     entity_system_init(1024);
-    
-    w = world_load("config/testworld.json");
-
+	Card *c;
+	//setCardData("00001", c );
+	//setCardData("00002", c);
+  //  w = world_load("config/testworld.json");
+	loadMap("mapDat/map1.txt");
+	//w = world_load("models/cube.json");
     for (a = 0; a < 10;a++)
     {
         agumon_new(vector3d(a * 10 -50,0,0));
@@ -58,7 +61,7 @@ int main(int argc,char *argv[])
     // main game loop
 	slog_sync();
     gf3d_camera_set_scale(vector3d(1,1,1));
-    
+
     slog("gf3d main loop begin");
     player_new(vector3d(0,0,20));
     while(!done)
@@ -72,16 +75,12 @@ int main(int argc,char *argv[])
 
         // configure render command for graphics command pool
         // for each mesh, get a command and configure it from the pool
-        bufferFrame = gf3d_vgraphics_render_begin();
-        gf3d_pipeline_reset_frame(gf3d_vgraphics_get_graphics_pipeline(),bufferFrame);
-            commandBuffer = gf3d_command_rendering_begin(bufferFrame);
+        gf3d_vgraphics_render_start();
 
-                world_draw(w,bufferFrame,commandBuffer);
-                entity_draw_all(bufferFrame,commandBuffer);
-
-            gf3d_command_rendering_end(commandBuffer);
-            
-        gf3d_vgraphics_render_end(bufferFrame);
+              //  world_draw(w);
+                entity_draw_all();
+				drawTiles();
+        gf3d_vgraphics_render_end();
 
         if (keys[SDL_SCANCODE_ESCAPE])done = 1; // exit condition
     }    

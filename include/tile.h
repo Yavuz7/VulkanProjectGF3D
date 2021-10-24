@@ -9,7 +9,7 @@
 typedef struct{
 	Uint16 _tileType; /* Keeps track of Tile type*/
 	Uint8 _tileOccupied; /*Keeps of whether or not there is a monster on top of tile*/
-	Model tileModel; /*The model of the tile*/
+	Model *tileModel; /*The model of the tile*/
 	Matrix4 tileModelMatrix;/*Model Matrix of tile*/
 
 }Tile;
@@ -30,20 +30,12 @@ void clearTiles();
 
 /*
 *@Brief load tile models on a grid
+*@Param Tile to set data to
 *@Param x value of grid tile
 *@Param y value of grid tile
 *@Todo Tile should draw the models
 */
-void drawTiles(int x, int y);
+void setTile(Tile *t,int x, int y);
 
-/*
-*@Brief Grab tile data from json and set into tiles
-*@Param x value of grid tile
-*@Param y value of grid tile
-*@Todo Json (Tiles need model name corresponding to tile id number)
-*/
-
-void setTileData(int x, int y);
-
-
+void drawTiles();
 #endif
