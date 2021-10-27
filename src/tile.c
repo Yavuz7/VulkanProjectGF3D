@@ -54,7 +54,7 @@ void setTile(Tile *t, int x, int y)
 	t->tileModel = gf3d_model_load("tile1");
 
 	gfc_matrix_scale(t->tileModelMatrix, vector3d(2, 2, 2));
-	gfc_matrix_translate(t->tileModelMatrix, vector3d(1+x * 20, 1+y * 20, -10));
+	gfc_matrix_translate(t->tileModelMatrix, vector3d(1 + x * 23, 1 + y * 23, -10));
 	//gf3d_model_draw(t->tileModel, t->tileModelMatrix);
 	return;
 }

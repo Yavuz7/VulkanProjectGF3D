@@ -7,6 +7,8 @@
 
 void player_think(Entity *self);
 void player_update(Entity *self);
+int px;
+int py;
 
 Entity *player_new(Vector3D position)
 {
@@ -18,11 +20,14 @@ Entity *player_new(Vector3D position)
         slog("UGH OHHHH, no player for you!");
         return NULL;
     }
-    
+	px = 3;
+	py = 0;
 //    ent->model = gf3d_model_load("dino");
     ent->think = player_think;
     ent->update = player_update;
     vector3d_copy(ent->position,position);
+	ent->position.y = -46;
+	ent->position.x = 69;
     ent->rotation.x = -M_PI;
     return ent;
 }
@@ -36,34 +41,78 @@ void player_think(Entity *self)
     const Uint8 * keys;
     keys = SDL_GetKeyboardState(NULL); // get the keyboard state for this frame
 
+
     vector3d_angle_vectors(self->rotation, &forward, &right, &up);
-    vector3d_set_magnitude(&forward,0.1);
-    vector3d_set_magnitude(&right,0.1);
+    vector3d_set_magnitude(&forward,1.0);
+    vector3d_set_magnitude(&right,1.0);
     vector3d_set_magnitude(&up,0.1);
+
+	self->rotation.x = 10.08;
+	//self->rotation.y = -20;
+	self->rotation.z = -0.001;
+	self->position.z = 34;
+
 
     if (keys[SDL_SCANCODE_W])
     {   
-        vector3d_add(self->position,self->position,forward);
+		if (py >= 6)
+		{
+			return;
+		}
+		py += 1;
+		
+		self->position.y += 23;
+		_sleep(90);
+		slog("position of py %i", py);
+		//vector3d_add(self->position, self->position, -right);
+        
     }
     if (keys[SDL_SCANCODE_S])
     {
-        vector3d_add(self->position,self->position,-forward);        
+		if (py <= 0)
+		{
+			return;
+		}
+		py -= 1;
+
+		self->position.y -= 23;
+		_sleep(90);
+		slog("position of py %i", py);
+		//vector3d_add(self->position, self->position, right);
     }
     if (keys[SDL_SCANCODE_D])
     {
-        vector3d_add(self->position,self->position,right);
+		if (px >= 6)
+		{
+			return;
+		}
+		px += 1;
+
+		self->position.x += 23;
+		_sleep(90);
+		slog("position of px %i", px);
+		//vector3d_add(self->position, self->position, forward);
     }
     if (keys[SDL_SCANCODE_A])    
     {
-        vector3d_add(self->position,self->position,-right);
+		if (px <= 0)
+		{
+			return;
+		}
+		px -= 1;
+
+		self->position.x -= 23;
+		_sleep(90);
+		slog("position of px %i", px);
+		//vector3d_add(self->position, self->position, -forward);
     }
     if (keys[SDL_SCANCODE_SPACE])self->position.z += 0.40;
     if (keys[SDL_SCANCODE_Z])self->position.z -= 0.40;
     
-    if (keys[SDL_SCANCODE_UP])self->rotation.x -= 0.0040;
-    if (keys[SDL_SCANCODE_DOWN])self->rotation.x += 0.0040;
-    if (keys[SDL_SCANCODE_LEFT])self->rotation.z -= 0.0040;
-    if (keys[SDL_SCANCODE_RIGHT])self->rotation.z += 0.0040;
+   // if (keys[SDL_SCANCODE_UP])self->rotation.x -= 0.0040;
+   // if (keys[SDL_SCANCODE_DOWN])self->rotation.x += 0.0040;
+ //   if (keys[SDL_SCANCODE_LEFT])self->rotation.z -= 0.0040;
+   // if (keys[SDL_SCANCODE_RIGHT])self->rotation.z += 0.0040;
 
 }
 
