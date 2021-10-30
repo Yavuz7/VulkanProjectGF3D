@@ -6,7 +6,7 @@
 #include "card.h"
 
 
-Card *Hand[5];
+Card *Hand;
 Uint16 cardsInDeck = 50;
 Card *playerDeck;
 
@@ -23,7 +23,7 @@ void *setCardData(Card *card)
 	dataBuffer = sj_object_get_value(cardData, card->cardId);
 	if (!dataBuffer)
 	{
-		slog("Card Data for iD: [ %s ] not found", card->cardId);
+		slog("Card Data for iD: [ %i ] not found", card->cardId);
 		sj_free(cardData);
 		return;
 	}
@@ -39,23 +39,52 @@ void *setCardData(Card *card)
 
 void drawCard(Card *deck)
 {
-	float random;
-	Card *cardBuff;
-	int rando;
+	Card cardBuff;
+	int rando,i;
+	
+	if (!deck)
+	{
+		slog("Nu deck found through drawCard()");
+		return;
+	}
+
 	do
 	{
-		random = gfc_crandom() * 50;
-		if (random < 0)
+		rando = (int)(gfc_crandom() * 50.0);
+
+		if (rando < 0)
 		{
-			random *= -1;
+			rando *= -1;
 		}
-		rando = (float)random;
-		cardBuff = &deck[rando];
-	} while (cardBuff->_cardState != 0);
-	cardBuff->_cardState = 1;
-	setCardData(cardBuff);
+		slog("Random number %i", rando);
+		cardBuff._cardState = deck[rando]._cardState;
+		slog("cardstate %i", cardBuff._cardState);
+	} while (cardBuff._cardState != 0);
+
+	cardBuff.cardId = &playerDeck[rando].cardId;
+
+	cardBuff._cardState = 1;
+	deck[rando]._cardState = 1;
+
+	setCardData(&cardBuff);
+	slog("Drew card %i from deck", rando);
+	for (i = 0; i < 5; i++)
+	{
+		if (Hand[i]._cardState == 1)
+		{
+			slog("Hand slot %i full moving to next position in hand", i);
+			continue;
+		}
+		else
+		{
+			slog("Card placed in hand slot %i", i);
+			Hand[i] = cardBuff;
+			break;
+		}
+	}
+
 	cardsInDeck -= 1;
-	slog("Random number %i", rando);
+
 	return;
 }
 
@@ -66,6 +95,7 @@ void setDeck(char *deckName)
 	int x;
 	Card *cardBuff;
 	playerDeck = gfc_allocate_array(sizeof(Card), 50);
+	Hand = gfc_allocate_array(sizeof(Card), 5);
 	if (!deckName)
 	{
 		slog("Didn't get Deck file parameter ,w,");
@@ -87,8 +117,10 @@ void setDeck(char *deckName)
 	{
 			fscanf(deck, "%i", buff);
 			playerDeck[x].cardId = buff[0];
+			playerDeck[x]._cardState = 0;
 			slog("Deck index %i set to ID %i", x, playerDeck[x].cardId);
 	}
+	drawCard(&playerDeck);
 	fclose(deck);
 	return;
 }
