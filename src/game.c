@@ -51,8 +51,14 @@ int main(int argc,char *argv[])
 	Card *c;
 	//setCardData("00001", c );
 	//setCardData("00002", c);
+/*	for (int i = 0; i < 50; i++)
+	{
+		//drawCard();
+	}
+	*/
+
   //  w = world_load("config/testworld.json");
-	loadMap("mapDat/map1.txt");
+	//loadMap("mapDat/map1.txt");
 	//w = world_load("models/cube.json");
     for (a = 0; a < 10;a++)
     {

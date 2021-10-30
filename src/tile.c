@@ -61,6 +61,7 @@ void setTile(Tile *t, int x, int y)
 
 void drawTiles()
 {
+
 	int x, y;
 	for (x = 0; x < 7; x++)
 	{
@@ -69,7 +70,7 @@ void drawTiles()
 			Tile *temp = &tileMap[x][y];
 			if (!temp->tileModel)
 			{
-				slog("nu tilemodel");
+				//slog("nu tilemodel");
 				return;
 			}
 			gf3d_model_draw(temp->tileModel, temp->tileModelMatrix);
