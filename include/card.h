@@ -14,7 +14,7 @@ typedef struct
 	char  *cardName; /* Card Name*/
 	char *cardText; /* Text of a card*/
 	Model *cardModel; /*Model of card(taken from file)*/
-	Uint32 cardId; /* Id to identify card*/
+	char  *cardId; /* Id to identify card*/
 	Uint8 cardType; /* Card Type , Monster or Magic*/
 	Uint16 cardAttribute; /*Attribute of card*/
 	Uint16 cardAP; /*Attack value of a card*/

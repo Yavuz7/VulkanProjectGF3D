@@ -8,7 +8,7 @@
 
 Card *Hand[5];
 Uint16 cardsInDeck = 50;
-Card *playerDeck[50];
+Card *playerDeck;
 
 void *setCardData(Card *card)
 {
@@ -65,10 +65,11 @@ void setDeck(char *deckName)
 	char buff[256];
 	int x;
 	Card *cardBuff;
+	playerDeck = gfc_allocate_array(sizeof(Card), 50);
 	if (!deckName)
 	{
 		slog("Didn't get Deck file parameter ,w,");
-		slog_sync();
+		free(playerDeck);
 		return;
 	}
 	deck = fopen(deckName, "r");
@@ -76,7 +77,7 @@ void setDeck(char *deckName)
 	{
 		slog("Didn't load the deck %s using fopen, ,w,", deck);
 		fclose(deck);
-		slog_sync();
+		free(playerDeck);
 		return;
 	}
 	slog("Deck Opened ^w^");
@@ -85,10 +86,9 @@ void setDeck(char *deckName)
 	for (x = 0; x < 50; x++)
 	{
 			fscanf(deck, "%i", buff);
-			playerDeck[x]->cardId = buff[0];
-			slog("Deck index %i set to ID %i", x, playerDeck[x]->cardId);
-			slog_sync();
-
+			playerDeck[x].cardId = buff[0];
+			slog("Deck index %i set to ID %i", x, playerDeck[x].cardId);
 	}
 	fclose(deck);
+	return;
 }
