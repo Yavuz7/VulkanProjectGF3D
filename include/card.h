@@ -29,7 +29,7 @@ typedef struct
 *@Brief Loads character data of card from card ID, called when card is drawn
 *@Param ID number of card
 */
-void *setCardData(Card *card);
+void setCardData(Card *card);
 
 /*
 *@Brief Loads card ids from txt file and puts it into a array of cards using setCardData
@@ -41,6 +41,6 @@ void setDeck(char *deckName);
 *@Brief Adds card to hand array
 *@Param card is drawn from deck
 */
-void drawCard(Card *deck);
+void drawCard();
 
 #endif

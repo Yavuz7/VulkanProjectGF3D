@@ -1,16 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
-
 #include "simple_json.h"
 #include "simple_logger.h"
 #include "card.h"
 
 
-Card *Hand;
+Card *Hand = { 0 };
 Uint16 cardsInDeck = 50;
-Card *playerDeck;
+Card *playerDeck = { 0 };
 
-void *setCardData(Card *card)
+void setCardData(Card *card)
 {
 	SJson *cardData,*dataBuffer;
 	
@@ -33,38 +32,34 @@ void *setCardData(Card *card)
 	slog("Card Name : %s", card->cardName);
 	slog("Card Text : %s", card->cardText);
 	sj_free(cardData);
-	return card;
+	return;
 
 }
 
-void drawCard(Card *deck)
+void drawCard()
 {
 	Card cardBuff;
 	int rando,i;
 	
-	if (!deck)
-	{
-		slog("Nu deck found through drawCard()");
-		return;
-	}
-
+	// Srand gotten from : https://stackoverflow.com/a/9459063	
+	srand((unsigned int)SDL_GetTicks());
 	do
-	{
-		rando = (int)(gfc_crandom() * 50.0);
-
+	{	
+		rando = rand() % 50;
 		if (rando < 0)
 		{
 			rando *= -1;
 		}
 		slog("Random number %i", rando);
-		cardBuff._cardState = deck[rando]._cardState;
+		cardBuff._cardState = playerDeck[rando]._cardState;
 		slog("cardstate %i", cardBuff._cardState);
+
 	} while (cardBuff._cardState != 0);
 
-	cardBuff.cardId = &playerDeck[rando].cardId;
+	cardBuff.cardId = playerDeck[rando].cardId;
 
 	cardBuff._cardState = 1;
-	deck[rando]._cardState = 1;
+	playerDeck[rando]._cardState = 1;
 
 	setCardData(&cardBuff);
 	slog("Drew card %i from deck", rando);
@@ -84,6 +79,11 @@ void drawCard(Card *deck)
 	}
 
 	cardsInDeck -= 1;
+	if (Hand[4]._cardState != 1)
+	{
+		drawCard();
+	}
+
 
 	return;
 }
@@ -93,7 +93,7 @@ void setDeck(char *deckName)
 	FILE *deck;
 	char buff[256];
 	int x;
-	Card *cardBuff;
+
 	playerDeck = gfc_allocate_array(sizeof(Card), 50);
 	Hand = gfc_allocate_array(sizeof(Card), 5);
 	if (!deckName)
@@ -115,12 +115,12 @@ void setDeck(char *deckName)
 
 	for (x = 0; x < 50; x++)
 	{
-			fscanf(deck, "%i", buff);
-			playerDeck[x].cardId = buff[0];
+			fscanf(deck, "%s", buff);
+			playerDeck[x].cardId = buff;
 			playerDeck[x]._cardState = 0;
-			slog("Deck index %i set to ID %i", x, playerDeck[x].cardId);
+			slog("Deck index %i set to ID %s", x, playerDeck[x].cardId);
 	}
-	drawCard(&playerDeck);
+	drawCard();
 	fclose(deck);
 	return;
 }

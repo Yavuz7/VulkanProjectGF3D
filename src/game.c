@@ -92,6 +92,7 @@ int main(int argc,char *argv[])
     }    
     
     world_delete(w);
+	clearTiles();
     
     vkDeviceWaitIdle(gf3d_vgraphics_get_default_logical_device());    
     //cleanup

@@ -45,7 +45,16 @@ void loadMap(char *mapData)
 	fclose(map);
 }
 void clearTiles(){
-	
+	int x, y;
+	for (x = 0; x < 7; x++)
+	{
+		for (y = 0; y < 7; y++)
+		{
+			gf3d_model_free(tileMap[x][y].tileModel);
+			free(tileMap);
+		}
+
+	}
 }
 void setTile(Tile *t, int x, int y)
 {
