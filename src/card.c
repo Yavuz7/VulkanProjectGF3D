@@ -5,36 +5,59 @@
 #include "card.h"
 
 
+
+typedef struct{
+	char  *cardId; /* Id to identify card*/
+	Uint8 _cardState;
+}deckData;
+
 Card *Hand = { 0 };
 Uint16 cardsInDeck = 50;
-Card *playerDeck = { 0 };
+deckData *playerDeck = { 0 };
 
-void setCardData(Card *card)
+
+void setDeck(char *deckName)
 {
-	SJson *cardData,*dataBuffer;
-	
-	cardData = sj_load("cards/cardData.json");
-	if (!cardData)
+	FILE *deck;
+	char *buff = { 0 };
+	int x;
+
+	playerDeck = gfc_allocate_array(sizeof(deckData), 50);
+	Hand = gfc_allocate_array(sizeof(Card), 5);
+	if (!deckName)
 	{
-		slog("Card Data not loaded from cards/cardData.json");
-		return;
-	}	
-	dataBuffer = sj_object_get_value(cardData, card->cardId);
-	if (!dataBuffer)
-	{
-		slog("Card Data for iD: [ %i ] not found", card->cardId);
-		sj_free(cardData);
+		slog("Didn't get Deck file parameter ,w,");
+		free(playerDeck);
+		free(Hand);
 		return;
 	}
+	deck = fopen(deckName, "r");
+	if (!deck)
+	{
+		slog("Didn't load the deck %s using fopen, ,w,", deck);
+		fclose(deck);
+		free(playerDeck);
+		free(Hand);
+		return;
+	}
+	slog("Deck Opened ^w^");
+	slog_sync();
 
-	card->cardName = sj_get_string_value(sj_object_get_value(dataBuffer, "Name"));
-	card->cardText = sj_get_string_value(sj_object_get_value(dataBuffer, "Text"));
-	slog("Card Name : %s", card->cardName);
-	slog("Card Text : %s", card->cardText);
-	sj_free(cardData);
+	for (x = 0; x < 50; x++)
+	{
+		buff = gfc_allocate_array(sizeof(char), 30);
+		fscanf(deck, "%s", buff);
+		playerDeck[x].cardId = buff;
+		playerDeck[x]._cardState = 0;
+		slog("Deck index %i set to ID %s", x, playerDeck[x].cardId);
+		slog("Deck index 2 set to ID %s", playerDeck[2].cardId);
+		slog("Deck index 3 set to ID %s", playerDeck[3].cardId);
+	}
+	drawCard();
+	fclose(deck);
 	return;
-
 }
+
 
 void drawCard()
 {
@@ -88,39 +111,31 @@ void drawCard()
 	return;
 }
 
-void setDeck(char *deckName)
+void setCardData(Card *card)
 {
-	FILE *deck;
-	char buff[256];
-	int x;
+	SJson *cardData, *dataBuffer;
 
-	playerDeck = gfc_allocate_array(sizeof(Card), 50);
-	Hand = gfc_allocate_array(sizeof(Card), 5);
-	if (!deckName)
+	cardData = sj_load("cards/cardData.json");
+	if (!cardData)
 	{
-		slog("Didn't get Deck file parameter ,w,");
-		free(playerDeck);
+		slog("Card Data not loaded from cards/cardData.json");
 		return;
 	}
-	deck = fopen(deckName, "r");
-	if (!deck)
+	dataBuffer = sj_object_get_value(cardData, card->cardId);
+	if (!dataBuffer)
 	{
-		slog("Didn't load the deck %s using fopen, ,w,", deck);
-		fclose(deck);
-		free(playerDeck);
+		slog("Card Data for iD: [ %i ] not found", card->cardId);
+		sj_free(cardData);
+		//sj_free(dataBuffer);
 		return;
 	}
-	slog("Deck Opened ^w^");
-	slog_sync();
 
-	for (x = 0; x < 50; x++)
-	{
-			fscanf(deck, "%s", buff);
-			playerDeck[x].cardId = buff;
-			playerDeck[x]._cardState = 0;
-			slog("Deck index %i set to ID %s", x, playerDeck[x].cardId);
-	}
-	drawCard();
-	fclose(deck);
+	card->cardName = sj_get_string_value(sj_object_get_value(dataBuffer, "Name"));
+	card->cardText = sj_get_string_value(sj_object_get_value(dataBuffer, "Text"));
+	slog("Card Name : %s", card->cardName);
+	slog("Card Text : %s", card->cardText);
+	//sj_free(dataBuffer);
+	sj_free(cardData);
 	return;
+
 }
