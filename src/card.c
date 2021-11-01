@@ -45,7 +45,7 @@ void setDeck(char *deckName)
 
 	for (x = 0; x < 50; x++)
 	{
-		buff = gfc_allocate_array(sizeof(char), 30);
+		buff = gfc_allocate_array(sizeof(char), 15);
 		fscanf(deck, "%s", buff);
 		playerDeck[x].cardId = buff;
 		playerDeck[x]._cardState = 0;

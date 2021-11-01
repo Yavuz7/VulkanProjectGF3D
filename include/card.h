@@ -2,6 +2,7 @@
 #define CARD_H_
 
 #include "gfc_types.h"
+#include "gfc_text.h"
 #include "gf3d_model.h"
 #include "simple_json.h"
 
@@ -11,10 +12,10 @@ typedef struct
 	/*Keeps track of state of card, in hand or in play*/
 	Uint8 _cardState; 
 
-	char  *cardName; /* Card Name*/
-	char *cardText; /* Text of a card*/
+	TextLine *cardName; /* Card Name*/
+	TextBlock *cardText; /* Text of a card*/
 	Model *cardModel; /*Model of card(taken from file)*/
-	char  *cardId; /* Id to identify card*/
+	TextWord *cardId; /* Id to identify card*/
 	Uint8 cardType; /* Card Type , Monster or Magic*/
 	Uint16 cardAttribute; /*Attribute of card*/
 	Uint16 cardAP; /*Attack value of a card*/
