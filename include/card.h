@@ -8,14 +8,17 @@
 
 typedef struct
 {
-	/*Card States: 0 = In deck, 1 = In hand*/
+	
 	/*Keeps track of state of card, in hand or in play*/
-	Uint8 _cardState; 
+	enum states _cardState; 
 
+	Model *cardModel; /*Model of card(taken from file)*/
+	Matrix4 cardMatrix;/*Matrix for cards*/
+
+	TextWord *cardId; /* Id to identify card*/
 	TextLine *cardName; /* Card Name*/
 	TextBlock *cardText; /* Text of a card*/
-	Model *cardModel; /*Model of card(taken from file)*/
-	TextWord *cardId; /* Id to identify card*/
+
 	Uint8 cardType; /* Card Type , Monster or Magic*/
 	Uint16 cardAttribute; /*Attribute of card*/
 	Uint16 cardAP; /*Attack value of a card*/
@@ -26,6 +29,8 @@ typedef struct
 
 }Card;
 
+/*States for _cardState*/
+enum states{ inDeck, inHand };
 /*
 *@Brief Loads character data of card from card ID, called when card is drawn
 *@Param ID number of card
@@ -40,8 +45,12 @@ void setDeck(char *deckName);
 
 /*
 *@Brief Adds card to hand array
-*@Param card is drawn from deck
 */
 void drawCard();
 
+/*
+*@Brief Cleans up everything
+*/
+
+void endDuel();
 #endif
