@@ -141,13 +141,16 @@ void setCardData(Card *card)
 		sj_free(dataBuffer);
 		return;
 	}
-	//card->cardName = gfc_allocate_array(sizeof(TextLine), 1);
-	//card->cardText = gfc_allocate_array(sizeof(TextBlock), 1);
+	card->cardName = gfc_allocate_array(sizeof(TextLine), 1);
+	card->cardText = gfc_allocate_array(sizeof(TextBlock), 1);
 
-	card->cardName = sj_get_string_value(sj_object_get_value(dataBuffer, "Name"));	
-	card->cardText = sj_get_string_value(sj_object_get_value(dataBuffer, "Text"));
+	//card->cardName = sj_get_string_value(sj_object_get_value(dataBuffer, "Name"));	
+	memcpy(card->cardName, sj_get_string_value(sj_object_get_value(dataBuffer, "Name")), sizeof(TextLine));
+	//card->cardText = sj_get_string_value(sj_object_get_value(dataBuffer, "Text"));
+	memcpy(card->cardText, sj_get_string_value(sj_object_get_value(dataBuffer, "Text")), sizeof(TextBlock));
 	slog("Card Name : %s", card->cardName);
 	slog("Card Text : %s", card->cardText);
+	sj_free(cardData);
 	return;
 
 }
