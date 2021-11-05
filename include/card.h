@@ -16,6 +16,7 @@ typedef struct
 	TextBlock *cardText; /* Text of a card*/
 	TextLine *cardName; /* Card Name*/
 	TextWord *cardId; /* Id to identify card*/
+	Entity *eP; /*Pointer to associated entity*/
 
 	Uint16 cardAttribute; /*Attribute of card*/
 	Uint16 cardAP; /*Attack value of a card*/
@@ -73,5 +74,12 @@ void playCard(int x, int y, int handIndex);
 *@Param Card to be destroyed
 */
 void destroyCard(Entity *eCard);
+/*
+*@Brief setCard model location stuff
+*@Param X coordinate the model is moving to
+*@Param Y coordinate the model is moving to
+*@Param Entity that is moving
+*/
+void setCardModelLocation(int x, int y, Entity *eCard);
 
 #endif

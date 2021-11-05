@@ -179,7 +179,7 @@ void endDuel()
 
 void playCard(int x, int y, int handIndex)
 {
-	Entity *eCard = entity_new();
+	//Entity *eCard = entity_new();
 	int fieldIndex; //Keeps track of positions of cards
 	for (fieldIndex = 0; fieldIndex < 50; fieldIndex++)
 	{
@@ -193,24 +193,37 @@ void playCard(int x, int y, int handIndex)
 			break;
 		}
 	}
-	eCard->model = gf3d_model_load("cardBasic");
-	eCard->cfieldIndex = fieldIndex;
+	
 	memcpy(&Field[fieldIndex], &Hand[handIndex], sizeof(Card));
-	Field[fieldIndex]._cardState = inField;
 	slog("Hand test: %s", Field[fieldIndex].cardName);
 	memset(&Hand[handIndex], 0, sizeof(Card));
 	slog("Hand test: %s", Hand[handIndex].cardName);
+	//Set data of card on field
+	Field[fieldIndex]._cardState = inField;
+	Field[fieldIndex].eP = entity_new();
+	Field[fieldIndex].eP->model = gf3d_model_load("cardBasic");
+	Field[fieldIndex].eP->cfieldIndex = fieldIndex;
+	Field[fieldIndex].cardXpos = x;
+	Field[fieldIndex].cardYpos = y;
+	setCardModelLocation(x, y, Field[fieldIndex].eP);
+	
 	cardsInHand -= 1;
 	cardsInField += 1;
+	
+	return;
+}
+
+void setCardModelLocation(int x, int y, Entity *eCard)
+{
+	if (!eCard) return;
 	eCard->scale.x = 2;
 	eCard->scale.y = 2;
 	eCard->scale.z = 2;
 	eCard->position.z = -5.0f;
-	eCard->position.x = 1+x*23.0f;
-	eCard->position.y = 1+y*23.0f;
+	eCard->position.x = 1 + x*23.0f;
+	eCard->position.y = 1 + y*23.0f;
 	return;
 }
-
 void destroyCard(Entity *eCard)
 {
 	if (eCard)

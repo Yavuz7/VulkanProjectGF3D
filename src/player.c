@@ -11,7 +11,7 @@ void player_think(Entity *self);
 void player_update(Entity *self);
 int px,py;
 Uint32 timeStart, timeEnd;
-
+const int cameraDelay = 240;
 
 
 Entity *player_new(Vector3D position)
@@ -63,7 +63,7 @@ void player_think(Entity *self)
 		self->rotation.z = -0.001f;
 		self->position.z = 37.0f;
 	}
-	if (timeEnd + 300 > SDL_GetTicks())
+	if (timeEnd + cameraDelay > SDL_GetTicks())
 	{
 		return;
 	}
