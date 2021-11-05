@@ -56,6 +56,11 @@ void drawCard();
 
 void endDuel();
 
+/*
+*@Brief Plays a card at index x y 
+*@Param X position on grid
+*@Param Y position on grid
+*/
 void playCard(int x, int y);
 
 #endif
