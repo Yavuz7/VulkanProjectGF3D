@@ -8,6 +8,7 @@
 
 typedef struct{
 	Uint16 _tileType; /* Keeps track of Tile type*/
+	Uint8 _tileOccupied; /*Keeps track of whether or not the tile occupied*/
 	Model *tileModel; /*The model of the tile*/
 	Matrix4 tileModelMatrix;/*Model Matrix of tile*/
 
@@ -22,9 +23,6 @@ void loadMap(char *mapData);
 /*
 *@Brief Unload Tiles whatever that means
 */
-
-
-
 void clearTiles();
 
 /*

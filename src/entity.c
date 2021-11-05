@@ -111,8 +111,8 @@ void entity_update(Entity *self)
     if (!self)return;
     // HANDLE ALL COMMON UPDATE STUFF
     
-    vector3d_add(self->position,self->position,self->velocity);
-    vector3d_add(self->velocity,self->acceleration,self->velocity);
+    //vector3d_add(self->position,self->position,self->velocity);
+    //vector3d_add(self->velocity,self->acceleration,self->velocity);
     
     gfc_matrix_identity(self->modelMat);
     gfc_matrix_scale(self->modelMat,self->scale);

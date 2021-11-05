@@ -4,6 +4,7 @@
 #include "gfc_types.h"
 
 #include "gf3d_model.h"
+#include "card.h"
 
 
 typedef struct Entity_S
@@ -14,21 +15,20 @@ typedef struct Entity_S
     void       (*think)(struct Entity_S *self); /**<pointer to the think function*/
     void       (*update)(struct Entity_S *self); /**<pointer to the update function*/
     void       (*draw)(struct Entity_S *self); /**<pointer to an optional extra draw funciton*/
-    void       (*damage)(struct Entity_S *self, float damage, struct Entity_S *inflictor); /**<pointer to the think function*/
     void       (*onDeath)(struct Entity_S *self); /**<pointer to an funciton to call when the entity dies*/
     
     Vector3D    position;  
-    Vector3D    velocity;
-    Vector3D    acceleration;
-    
-    
+   // Vector3D    velocity;
+    //Vector3D    acceleration;
+     
     Vector3D    scale;
     Vector3D    rotation;
     
-    Uint32      health;     /**<entity dies when it reaches zero*/
+   // Uint32      health;     /**<entity dies when it reaches zero*/
     // WHATEVER ELSE WE MIGHT NEED FOR ENTITIES
-    struct Entity_S *target;    /**<entity to target for weapons / ai*/
+   // struct Entity_S *target;    /**<entity to target for weapons / ai*/
     
+	Card *cardPointer; /*Pointer to card, Needs to be freed seperate*/
     void *customData;   /**<IF an entity needs to keep track of extra data, we can do it here*/
 }Entity;
 

@@ -3,7 +3,6 @@
 #include "simple_json.h"
 #include "simple_logger.h"
 #include "card.h"
-#include "entity.h"
 #include "tile.h"
 
 
@@ -162,11 +161,15 @@ void endDuel()
 	return;
 }
 
-void playCard(int x, int y)
+void playCard(int x, int y, int handIndex)
 {
 	Entity *eCard = entity_new();
-	Matrix4 matrixBuff;
 	eCard->model = gf3d_model_load("cardBasic");
+	eCard->cardPointer = gfc_allocate_array(sizeof(Card), 1);
+	memcpy(eCard->cardPointer, &Hand[handIndex], sizeof(Card));
+	slog("Hand test: %s", eCard->cardPointer->cardName);
+	memset(&Hand[handIndex], 0, sizeof(Card));
+	slog("Hand test: %s", Hand[handIndex].cardName);
 	
 	eCard->scale.x = 2;
 	eCard->scale.y = 2;
@@ -174,6 +177,16 @@ void playCard(int x, int y)
 	eCard->position.z = -5;
 	eCard->position.x = 1+x*23;
 	eCard->position.y = 1+y*23;
+}
+
+void destroyCard(Entity *eCard)
+{
+	if (eCard)
+	{
+		free(eCard->cardPointer);
+		entity_free(eCard);
+	}
+	return;
 }
 
 

@@ -5,15 +5,13 @@
 #include "gfc_text.h"
 #include "gf3d_model.h"
 #include "simple_json.h"
+#include "entity.h"
 
 typedef struct
 {
 	
 	/*Keeps track of state of card, in hand or in play*/
 	enum states _cardState; 
-
-	Model *cardModel; /*Model of card(taken from file)*/
-	Matrix4 cardMatrix;/*Matrix for cards*/
 
 	TextWord *cardId; /* Id to identify card*/
 	TextLine *cardName; /* Card Name*/
@@ -32,7 +30,7 @@ typedef struct
 }Card;
 
 /*States for _cardState*/
-enum states{ inDeck, inHand };
+enum states{ inDeck, inHand, inField,inGrave };
 /*
 *@Brief Loads character data of card from card ID, called when card is drawn
 *@Param ID number of card
@@ -61,6 +59,12 @@ void endDuel();
 *@Param X position on grid
 *@Param Y position on grid
 */
-void playCard(int x, int y);
+void playCard(int x, int y, int handIndex);
+
+/*
+*@Brief Destroys card and entity
+*@Param Card to be destroyed
+*/
+void destroyCard(Entity *eCard);
 
 #endif

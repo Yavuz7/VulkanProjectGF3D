@@ -60,7 +60,7 @@ int main(int argc,char *argv[])
 	loadMap("mapDat/map1.txt");
 	//w = world_load("models/cube.json");
 	setDeck("cards/deck1.txt");
-	playCard(4,4);
+	playCard(4,4,2);
 	
     for (a = 0; a < 10;a++)
     {
