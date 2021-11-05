@@ -3,6 +3,8 @@
 #include "simple_json.h"
 #include "simple_logger.h"
 #include "card.h"
+#include "entity.h"
+#include "tile.h"
 
 
 
@@ -131,26 +133,47 @@ void setCardData(Card *card)
 	if (!cardData)
 	{
 		slog("Card Data not loaded from cards/cardData.json");
+		sj_free(cardData);
 		return;
 	}
 	dataBuffer = sj_object_get_value(cardData, card->cardId);
 	if (!dataBuffer)
 	{
 		slog("Card Data for iD: [ %i ] not found", card->cardId);
-		//sj_free(cardData);
-		sj_free(dataBuffer);
+		sj_free(cardData);
 		return;
 	}
 	card->cardName = gfc_allocate_array(sizeof(TextLine), 1);
 	card->cardText = gfc_allocate_array(sizeof(TextBlock), 1);
-
-	//card->cardName = sj_get_string_value(sj_object_get_value(dataBuffer, "Name"));	
 	memcpy(card->cardName, sj_get_string_value(sj_object_get_value(dataBuffer, "Name")), sizeof(TextLine));
-	//card->cardText = sj_get_string_value(sj_object_get_value(dataBuffer, "Text"));
 	memcpy(card->cardText, sj_get_string_value(sj_object_get_value(dataBuffer, "Text")), sizeof(TextBlock));
+
+
 	slog("Card Name : %s", card->cardName);
 	slog("Card Text : %s", card->cardText);
 	sj_free(cardData);
 	return;
 
 }
+void endDuel()
+{
+	free(Hand);
+	free(playerDeck);
+	return;
+}
+
+void playCard(int x, int y)
+{
+	Entity *eCard = entity_new();
+	Matrix4 matrixBuff;
+	eCard->model = gf3d_model_load("cardBasic");
+	
+	eCard->scale.x = 2;
+	eCard->scale.y = 2;
+	eCard->scale.z = 2;
+	eCard->position.z = -5;
+	eCard->position.x = 1+x*23;
+	eCard->position.y = 1+y*23;
+}
+
+

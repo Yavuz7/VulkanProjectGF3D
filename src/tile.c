@@ -5,6 +5,7 @@
 #include "gfc_matrix.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "gfc_vector.h"
 
 Tile tileMap[7][7]; /*Array to store tile map in*/
 
@@ -37,8 +38,7 @@ void loadMap(char *mapData)
 			fscanf(map,"%i", buff);
 			tileMap[x][y]._tileType = buff[0];
 			setTile(&tileMap[x][y],x,y);
-			slog("Tile %d , %d set to Type %i", x, y, tileMap[x][y]._tileType);
-			slog_sync();
+			//slog("Tile %d , %d set to Type %i", x, y, tileMap[x][y]._tileType);
 		}
 		
 	}
@@ -51,10 +51,11 @@ void clearTiles(){
 		for (y = 0; y < 7; y++)
 		{
 			gf3d_model_free(tileMap[x][y].tileModel);
-			free(tileMap);
+			
 		}
 
 	}
+	free(tileMap);
 }
 void setTile(Tile *t, int x, int y)
 {
@@ -87,3 +88,5 @@ void drawTiles()
 
 	}
 }
+
+

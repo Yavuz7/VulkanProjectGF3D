@@ -5,11 +5,14 @@
 #include "player.h"
 #include "SDL.h"
 #include "gfc_types.h"
+#include "card.h"
 
 void player_think(Entity *self);
 void player_update(Entity *self);
 int px,py;
 Uint32 timeStart, timeEnd;
+
+
 
 Entity *player_new(Vector3D position)
 {

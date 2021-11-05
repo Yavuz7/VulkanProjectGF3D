@@ -10,6 +10,14 @@
  */
 Entity *player_new(Vector3D position);
 
+/*
+*@Brief Summon player idols or summoning catalyst or whatever
+*/
+void startGame();
 
+/*
+*@Brief Summon card in valid area
+*/
+void playCard();
 
 #endif

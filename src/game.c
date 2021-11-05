@@ -60,6 +60,8 @@ int main(int argc,char *argv[])
 	loadMap("mapDat/map1.txt");
 	//w = world_load("models/cube.json");
 	setDeck("cards/deck1.txt");
+	playCard(4,4);
+	
     for (a = 0; a < 10;a++)
     {
         agumon_new(vector3d(a * 10 -50,0,0));
@@ -90,7 +92,7 @@ int main(int argc,char *argv[])
 
         if (keys[SDL_SCANCODE_ESCAPE])done = 1; // exit condition
     }    
-    
+	endDuel();
     world_delete(w);
 	clearTiles();
     

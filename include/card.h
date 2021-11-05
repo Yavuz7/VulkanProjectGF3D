@@ -26,6 +26,8 @@ typedef struct
 	Uint16 cardHP; /*Health value of a card*/
 	Uint16 cardCost; /*Summoning cost of a card*/
 	
+	Uint8 cardXpos;/*x position of card*/
+	Uint8 cardYpos;/*y position of card*/
 
 }Card;
 
@@ -53,4 +55,7 @@ void drawCard();
 */
 
 void endDuel();
+
+void playCard(int x, int y);
+
 #endif

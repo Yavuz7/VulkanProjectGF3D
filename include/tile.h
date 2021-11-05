@@ -8,7 +8,6 @@
 
 typedef struct{
 	Uint16 _tileType; /* Keeps track of Tile type*/
-	Uint8 _tileOccupied; /*Keeps of whether or not there is a monster on top of tile*/
 	Model *tileModel; /*The model of the tile*/
 	Matrix4 tileModelMatrix;/*Model Matrix of tile*/
 
@@ -37,5 +36,10 @@ void clearTiles();
 */
 void setTile(Tile *t,int x, int y);
 
+/*
+*@Brief Draws tiles in main game loop
+*/
 void drawTiles();
+
+
 #endif
