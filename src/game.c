@@ -59,6 +59,7 @@ int main(int argc,char *argv[])
   //  w = world_load("config/testworld.json");
 	loadMap("mapDat/map1.txt");
 	//w = world_load("models/cube.json");
+	setCardFileData();
 	setDeck("cards/deck1.txt");
 	playCard(4,4,2);
 	

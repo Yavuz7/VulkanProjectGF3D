@@ -12,21 +12,33 @@ typedef struct{
 	enum states _cardState; /*Identifies card position, for this struct it only keeps track of in deck or in hand*/
 }deckData;
 
- Card *Hand = { 0 };
- Uint16 cardsInDeck = 50;
- deckData *playerDeck = { 0 };
- Uint8 cardsInHand = 0;
+Card *Hand = { 0 }; /*Player Hand*/
+Card *Field = { 0 };/* Cards on the field*/
+deckData *playerDeck = { 0 }; /*Deck of ids to pull from*/
+deckData *graveyard = { 0 }; /*Graveyard of ids to pull from*/
+Uint8 cardsInDeck;
+ Uint8 cardsInHand;
+ Uint8 cardsInField;
+ Uint8 cardsInGrave;
 
-
+ void setCardFileData()
+ {
+	 cardsInDeck = 50;
+	 cardsInHand = 0;
+	 cardsInField = 0;
+	 cardsInGrave = 0;
+	 playerDeck = gfc_allocate_array(sizeof(deckData), 50);
+	 graveyard = gfc_allocate_array(sizeof(deckData), 50);
+	 Hand = gfc_allocate_array(sizeof(Card), 5);
+	 Field = gfc_allocate_array(sizeof(Card), 50);
+ }
 
 void setDeck(char *deckName)
 {
 	FILE *deck;
 	char *buff = { 0 };
 	int x;
-
-	playerDeck = gfc_allocate_array(sizeof(deckData), 50);
-	Hand = gfc_allocate_array(sizeof(Card), 5);
+	
 	if (!deckName)
 	{
 		slog("Didn't get Deck file parameter ,w,");
@@ -77,7 +89,7 @@ void drawCard()
 	}
 	
 	int rando,i;
-
+	
 	for (i = 0; i < 5; i++)
 	{
 		if (Hand[i]._cardState == inHand)
@@ -88,11 +100,15 @@ void drawCard()
 		else
 		{
 			slog("Card placed in hand slot %i", i);
-			cardsInHand += 1;
 			break;
 		}
 	}
-
+	if (cardsInHand > 4)
+	{
+		slog("Hand is full");
+		return;
+	}
+	cardsInHand += 1;
 	// Srand gotten from : https://stackoverflow.com/a/9459063	
 	srand((unsigned int)SDL_GetTicks());
 	
@@ -164,26 +180,42 @@ void endDuel()
 void playCard(int x, int y, int handIndex)
 {
 	Entity *eCard = entity_new();
+	int fieldIndex; //Keeps track of positions of cards
+	for (fieldIndex = 0; fieldIndex < 50; fieldIndex++)
+	{
+		if (Field[fieldIndex]._cardState == inField)
+		{
+			continue;
+		}
+		else
+		{
+			slog("Card summoned into field index %i", fieldIndex);
+			break;
+		}
+	}
 	eCard->model = gf3d_model_load("cardBasic");
-	eCard->cardPointer = gfc_allocate_array(sizeof(Card), 1);
-	memcpy(eCard->cardPointer, &Hand[handIndex], sizeof(Card));
-	slog("Hand test: %s", eCard->cardPointer->cardName);
+	eCard->cfieldIndex = fieldIndex;
+	memcpy(&Field[fieldIndex], &Hand[handIndex], sizeof(Card));
+	Field[fieldIndex]._cardState = inField;
+	slog("Hand test: %s", Field[fieldIndex].cardName);
 	memset(&Hand[handIndex], 0, sizeof(Card));
 	slog("Hand test: %s", Hand[handIndex].cardName);
-	
+	cardsInHand -= 1;
+	cardsInField += 1;
 	eCard->scale.x = 2;
 	eCard->scale.y = 2;
 	eCard->scale.z = 2;
-	eCard->position.z = -5;
-	eCard->position.x = 1+x*23;
-	eCard->position.y = 1+y*23;
+	eCard->position.z = -5.0f;
+	eCard->position.x = 1+x*23.0f;
+	eCard->position.y = 1+y*23.0f;
+	return;
 }
 
 void destroyCard(Entity *eCard)
 {
 	if (eCard)
 	{
-		free(eCard->cardPointer);
+		memset(&Field[eCard->cfieldIndex],0,sizeof(Card));
 		entity_free(eCard);
 	}
 	return;

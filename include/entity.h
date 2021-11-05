@@ -4,7 +4,7 @@
 #include "gfc_types.h"
 
 #include "gf3d_model.h"
-#include "card.h"
+
 
 
 typedef struct Entity_S
@@ -28,7 +28,7 @@ typedef struct Entity_S
     // WHATEVER ELSE WE MIGHT NEED FOR ENTITIES
    // struct Entity_S *target;    /**<entity to target for weapons / ai*/
     
-	Card *cardPointer; /*Pointer to card, Needs to be freed seperate*/
+	Uint8 cfieldIndex; /*fieldIndex of card*/
     void *customData;   /**<IF an entity needs to keep track of extra data, we can do it here*/
 }Entity;
 

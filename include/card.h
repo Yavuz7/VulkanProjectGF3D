@@ -13,30 +13,37 @@ typedef struct
 	/*Keeps track of state of card, in hand or in play*/
 	enum states _cardState; 
 
-	TextWord *cardId; /* Id to identify card*/
-	TextLine *cardName; /* Card Name*/
 	TextBlock *cardText; /* Text of a card*/
+	TextLine *cardName; /* Card Name*/
+	TextWord *cardId; /* Id to identify card*/
 
-	Uint8 cardType; /* Card Type , Monster or Magic*/
 	Uint16 cardAttribute; /*Attribute of card*/
 	Uint16 cardAP; /*Attack value of a card*/
 	Uint16 cardDP; /*Defense value of a card*/
 	Uint16 cardHP; /*Health value of a card*/
 	Uint16 cardCost; /*Summoning cost of a card*/
-	
+	Uint8 cardType; /* Card Type , Monster or Magic*/
+
 	Uint8 cardXpos;/*x position of card*/
 	Uint8 cardYpos;/*y position of card*/
+	enum cardPosition _cardPosition;
 
 }Card;
 
 /*States for _cardState*/
 enum states{ inDeck, inHand, inField,inGrave };
+/*BattlePositions for Cards*/
+enum cardPosition{fightPosition,blockPosition};
 /*
 *@Brief Loads character data of card from card ID, called when card is drawn
 *@Param ID number of card
 */
 void setCardData(Card *card);
 
+/*
+*@Brief Allocates memory for global variables in 
+*/
+void setCardFileData();
 /*
 *@Brief Loads card ids from txt file and puts it into a array of cards using setCardData
 *@Return Array of cards

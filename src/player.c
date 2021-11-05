@@ -34,9 +34,9 @@ Entity *player_new(Vector3D position)
 	ent->position.y = -46;
 	ent->position.x = 69;
    // ent->rotation.x = -M_PI;
-	ent->rotation.x = 10.12;
-	ent->rotation.z = -0.001;
-	ent->position.z = 37;
+	ent->rotation.x = 10.12f;
+	ent->rotation.z = -0.001f;
+	ent->position.z = 37.0f;
     return ent;
 }
 
@@ -53,15 +53,15 @@ void player_think(Entity *self)
 	
 
     vector3d_angle_vectors(self->rotation, &forward, &right, &up);
-    vector3d_set_magnitude(&forward,1.0);
-    vector3d_set_magnitude(&right,1.0);
-    vector3d_set_magnitude(&up,0.1);
+    vector3d_set_magnitude(&forward,1.0f);
+    vector3d_set_magnitude(&right,1.0f);
+    vector3d_set_magnitude(&up,0.1f);
 
 	if (keys[SDL_SCANCODE_P])
 	{
-		self->rotation.x = 10.12;
-		self->rotation.z = -0.001;
-		self->position.z = 37;
+		self->rotation.x = 10.12f;
+		self->rotation.z = -0.001f;
+		self->position.z = 37.0f;
 	}
 	if (timeEnd + 300 > SDL_GetTicks())
 	{
@@ -119,13 +119,13 @@ void player_think(Entity *self)
 		slog("position of px %i", px);
 		//vector3d_add(self->position, self->position, -forward);
     }
-    if (keys[SDL_SCANCODE_SPACE])self->position.z += 0.40;
-    if (keys[SDL_SCANCODE_Z])self->position.z -= 0.40;
+    if (keys[SDL_SCANCODE_SPACE])self->position.z += 0.40f;
+    if (keys[SDL_SCANCODE_Z])self->position.z -= 0.40f;
 
-    if (keys[SDL_SCANCODE_UP])self->rotation.x -= 0.0080;
-    if (keys[SDL_SCANCODE_DOWN])self->rotation.x += 0.0080;
-    if (keys[SDL_SCANCODE_LEFT])self->rotation.z += 0.0080;
-    if (keys[SDL_SCANCODE_RIGHT])self->rotation.z -= 0.0080;
+    if (keys[SDL_SCANCODE_UP])self->rotation.x -= 0.0080f;
+    if (keys[SDL_SCANCODE_DOWN])self->rotation.x += 0.0080f;
+    if (keys[SDL_SCANCODE_LEFT])self->rotation.z += 0.0080f;
+    if (keys[SDL_SCANCODE_RIGHT])self->rotation.z -= 0.0080f;
 
 }
 
