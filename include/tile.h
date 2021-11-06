@@ -5,12 +5,12 @@
 #include <stdio.h>
 #include "entity.h"
 #include "gf3d_model.h"
-#include "card.h"
+
 
 typedef struct{
 	Uint16 _tileType; /* Keeps track of Tile type*/
 	Uint8 _tileOccupied; /*Keeps track of whether or not the tile occupied*/
-	Card *occupation; /*card pointer to card it is occupied by*/
+	void *occupation; /*card pointer to card it is occupied by*/
 	Model *tileModel; /*The model of the tile*/
 	Matrix4 tileModelMatrix;/*Model Matrix of tile*/
 
@@ -35,6 +35,20 @@ void clearTiles();
 *@Todo Tile should draw the models
 */
 void setTile(Tile *t,int x, int y);
+
+/*
+*@Brief Sets tile to occupied and sets pointer to card occupying
+*@Param x coordinate from where card was summoned
+*@Param y coordinate from where card was summoned
+*/
+void setTileOccupation(Uint8 x, Uint8 y, void * Card);
+
+/*
+*@Brief Getter for void pointer of tile
+*@Param x coordinate of tile 
+*@Param y coordinate of tile
+*/
+void *getTileOccupation(int x, int y);
 
 /*
 *@Brief Draws tiles in main game loop

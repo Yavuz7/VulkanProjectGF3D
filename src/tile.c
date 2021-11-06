@@ -11,8 +11,10 @@ Tile tileMap[7][7]; /*Array to store tile map in*/
 
 void loadMap(char *mapData)
 {
+	
 	FILE *map;
-	char buff[256];
+	char * buff;
+
 	int x, y;
 	if (!mapData)
 	{
@@ -35,12 +37,13 @@ void loadMap(char *mapData)
 	{
 		for (y = 0; y < 7; y++)
 		{
+			buff = gfc_allocate_array(sizeof(char), 5);
 			fscanf(map,"%i", buff);
 			tileMap[x][y]._tileType = buff[0];
+			tileMap[x][y]._tileOccupied = 0;
 			setTile(&tileMap[x][y],x,y);
-			//slog("Tile %d , %d set to Type %i", x, y, tileMap[x][y]._tileType);
+			slog("Tile %d , %d set to Type %i", x, y, tileMap[x][y]._tileType);
 		}
-		
 	}
 	fclose(map);
 }
@@ -90,3 +93,18 @@ void drawTiles()
 }
 
 
+void setTileOccupation(Uint8 x, Uint8 y, void* Card)
+{
+	if (!Card) return;
+	tileMap[x][y]._tileOccupied = 1;
+	tileMap[x][y].occupation = Card;
+	slog("Tile occupied %i %i", x, y);
+}
+
+void *getTileOccupation(int x, int y)
+{
+	if (tileMap[x][y]._tileOccupied == 1)
+	{
+		return tileMap[x][y].occupation;
+	}
+}

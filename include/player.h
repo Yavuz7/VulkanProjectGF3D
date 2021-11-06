@@ -9,11 +9,19 @@
  * @return NULL on error, or an player entity pointer on success
  */
 Entity *player_new(Vector3D position);
-
+/*Enumeration for card Movement system*/
 enum movement{north,south,west,east,none};
+/*
+*@Brief Moves selected card up to 2 spaces
+*@Param Entity of player for camera movement
+*/
+void cardMovement(Entity *self, int x, int y);
 
-void cardMovement(Entity *self);
-
+/*
+*@Brief Helper function of cardMovement, keeps track of places cards moved 
+*@Param Enum direction card is moving too
+*@Param Enum direction opposite of card moving, to check if card is moving somewhere it was
+*/
 int movementHelper(enum movement direction, enum movement opposite);
 /*
 *@Brief Summon player idols or summoning catalyst or whatever

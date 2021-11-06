@@ -3,7 +3,7 @@
 #include "simple_json.h"
 #include "simple_logger.h"
 #include "card.h"
-
+#include "tile.h"
 
 
 
@@ -206,6 +206,7 @@ void playCard(int x, int y, int handIndex)
 	Field[fieldIndex].cardXpos = x;
 	Field[fieldIndex].cardYpos = y;
 	setCardModelLocation(x, y, Field[fieldIndex].eP);
+	setTileOccupation(x, y, &Field[fieldIndex]);
 	
 	cardsInHand -= 1;
 	cardsInField += 1;

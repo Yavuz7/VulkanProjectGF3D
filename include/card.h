@@ -9,10 +9,6 @@
 
 typedef struct
 {
-	
-	/*Keeps track of state of card, in hand or in play*/
-	enum states _cardState; 
-
 	TextBlock *cardText; /* Text of a card*/
 	TextLine *cardName; /* Card Name*/
 	TextWord *cardId; /* Id to identify card*/
@@ -28,7 +24,9 @@ typedef struct
 
 	Uint8 cardXpos;/*x position of card*/
 	Uint8 cardYpos;/*y position of card*/
-	enum cardPosition _cardPosition;
+	Uint8 cardMoved;/*Checks if card moved*/
+	enum states _cardState;/*Keeps track of state of card*/
+	enum cardPosition _cardPosition;/*Keeps track of card position,*/
 
 }Card;
 

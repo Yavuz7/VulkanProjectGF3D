@@ -11,7 +11,7 @@
 void player_think(Entity *self);
 void player_update(Entity *self);
 int px,py;
-int stopper;
+int stopper,movementStopper;
 
 Uint32 timeStart, timeEnd;
 const int cameraDelay = 240;
@@ -44,6 +44,7 @@ Entity *player_new(Vector3D position)
 	ent->position.z = 37.0f;
 	moveCount = 0;
 	stopper = 0;
+	movementStopper = 0;
 	
     return ent;
 }
@@ -51,8 +52,12 @@ Entity *player_new(Vector3D position)
 
 void player_think(Entity *self)
 {
-	cardMovement(self);
-	return;
+	if (movementStopper == 1)
+	{
+		return;
+	}
+	//cardMovement(self,py,px);
+	//return;
     Vector3D forward;
     Vector3D right;
     Vector3D up;
@@ -67,6 +72,10 @@ void player_think(Entity *self)
     vector3d_set_magnitude(&right,1.0f);
     vector3d_set_magnitude(&up,0.1f);
 
+	if (keys[SDL_SCANCODE_SPACE])
+	{
+		movementStopper = 1;
+	}
 	if (keys[SDL_SCANCODE_P])
 	{
 		self->rotation.x = 10.12f;
@@ -129,7 +138,7 @@ void player_think(Entity *self)
 		slog("position of px %i", px);
 		//vector3d_add(self->position, self->position, -forward);
     }
-    if (keys[SDL_SCANCODE_SPACE])self->position.z += 0.40f;
+    if (keys[SDL_SCANCODE_X])self->position.z += 0.40f;
     if (keys[SDL_SCANCODE_Z])self->position.z -= 0.40f;
 
     if (keys[SDL_SCANCODE_UP])self->rotation.x -= 0.0080f;
@@ -146,7 +155,7 @@ void player_update(Entity *self)
     gf3d_camera_set_rotation(self->rotation);
 }
 
-void cardMovement(Entity *self)
+void cardMovement(Entity *self,int x, int y)
 {
 	Vector3D forward;
 	Vector3D right;
