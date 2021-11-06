@@ -107,4 +107,14 @@ void *getTileOccupation(int x, int y)
 	{
 		return tileMap[x][y].occupation;
 	}
+	return NULL;
+}
+
+void removeTileOccupation(int x, int y, void*Card)
+{
+	if (!Card)return;
+	tileMap[x][y]._tileOccupied = 1;
+	tileMap[x][y].occupation = NULL;
+	return;
+
 }

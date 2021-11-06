@@ -214,9 +214,18 @@ void playCard(int x, int y, int handIndex)
 	return;
 }
 
+void cardMove(int x, int y, Card *cardPointer)
+{
+	if (!cardPointer)return;
+	setCardModelLocation(x, y, cardPointer->eP);
+	removeTileOccupation(cardPointer->cardXpos, cardPointer->cardYpos,cardPointer);
+	cardPointer->cardXpos = x;
+	cardPointer->cardYpos = y;
+	cardPointer->_cardMoved = 1;
+}
 void setCardModelLocation(int x, int y, Entity *eCard)
 {
-	if (!eCard) return;
+	if (!eCard)return;
 	eCard->scale.x = 2;
 	eCard->scale.y = 2;
 	eCard->scale.z = 2;

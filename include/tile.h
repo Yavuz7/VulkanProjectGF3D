@@ -55,5 +55,5 @@ void *getTileOccupation(int x, int y);
 */
 void drawTiles();
 
-
+void removeTileOccupation(int x, int y, void * Card);
 #endif

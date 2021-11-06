@@ -5,19 +5,20 @@
 #include "player.h"
 #include "SDL.h"
 #include "gfc_types.h"
-#include "card.h"
+
 #include "tile.h"
 
 void player_think(Entity *self);
 void player_update(Entity *self);
 int px,py;
-int stopper,movementStopper;
+int stopper,startCardMovement;
+Card *cardPointer;
 
 Uint32 timeStart, timeEnd;
 const int cameraDelay = 240;
 
-	int moveCount;
-	enum movement moveHistory[2];
+int moveCount;
+enum movement moveHistory[2];
 
 Entity *player_new(Vector3D position)
 {
@@ -44,7 +45,7 @@ Entity *player_new(Vector3D position)
 	ent->position.z = 37.0f;
 	moveCount = 0;
 	stopper = 0;
-	movementStopper = 0;
+	startCardMovement = 0;
 	
     return ent;
 }
@@ -52,10 +53,7 @@ Entity *player_new(Vector3D position)
 
 void player_think(Entity *self)
 {
-	if (movementStopper == 1)
-	{
-		return;
-	}
+
 	//cardMovement(self,py,px);
 	//return;
     Vector3D forward;
@@ -74,7 +72,23 @@ void player_think(Entity *self)
 
 	if (keys[SDL_SCANCODE_SPACE])
 	{
-		movementStopper = 1;
+		if (startCardMovement == 1)
+		{
+			startCardMovement = 0;
+		}
+		else
+		{			
+			cardPointer = getTileOccupation(px, py);
+			if (cardPointer && cardPointer->_cardMoved == 0)
+			{
+				startCardMovement = 1;
+			}
+		}		
+	}
+	if (startCardMovement == 1)
+	{
+		cardMovement(self, px, py,cardPointer);
+		return;
 	}
 	if (keys[SDL_SCANCODE_P])
 	{
@@ -155,7 +169,7 @@ void player_update(Entity *self)
     gf3d_camera_set_rotation(self->rotation);
 }
 
-void cardMovement(Entity *self,int x, int y)
+void cardMovement(Entity *self,int x, int y,Card *cardPointer)
 {
 	Vector3D forward;
 	Vector3D right;
@@ -164,7 +178,18 @@ void cardMovement(Entity *self,int x, int y)
 
 
 	keys = SDL_GetKeyboardState(NULL);
-
+	if (keys[SDL_SCANCODE_R])
+	{
+		cardMove(px, py, cardPointer);
+		cardPointer = NULL;
+		moveCount = 0;
+		moveHistory[0] = none;
+		moveHistory[1] = none;
+		startCardMovement = 0;
+		stopper = 0;
+		
+		return;
+	}
 	if (keys[SDL_SCANCODE_P])
 	{
 		self->rotation.x = 10.12f;

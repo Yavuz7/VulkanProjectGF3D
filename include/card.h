@@ -24,7 +24,7 @@ typedef struct
 
 	Uint8 cardXpos;/*x position of card*/
 	Uint8 cardYpos;/*y position of card*/
-	Uint8 cardMoved;/*Checks if card moved*/
+	Uint8 _cardMoved;/*Checks if card moved*/
 	enum states _cardState;/*Keeps track of state of card*/
 	enum cardPosition _cardPosition;/*Keeps track of card position,*/
 
@@ -80,5 +80,12 @@ void destroyCard(Entity *eCard);
 *@Param Entity that is moving
 */
 void setCardModelLocation(int x, int y, Entity *eCard);
+/*
+*@Brief Move cards position and entity and sets new coordinates
+*@Param X coordinate of new position
+*@Param Y coordinate of new position
+*@Param Pointer to card being moved
+*/
+void cardMove(int x, int y, Card *cardPointer);
 
 #endif

@@ -2,6 +2,7 @@
 #define __PLAYER_H__
 
 #include "entity.h"
+#include "card.h"
 
 /**
  * @brief Create a new player entity
@@ -15,7 +16,7 @@ enum movement{north,south,west,east,none};
 *@Brief Moves selected card up to 2 spaces
 *@Param Entity of player for camera movement
 */
-void cardMovement(Entity *self, int x, int y);
+void cardMovement(Entity *self, int x, int y, Card *cardPointer);
 
 /*
 *@Brief Helper function of cardMovement, keeps track of places cards moved 
