@@ -201,7 +201,7 @@ void playCard(int x, int y, int handIndex)
 	//Set data of card on field
 	Field[fieldIndex]._cardState = inField;
 	Field[fieldIndex].eP = entity_new();
-	Field[fieldIndex].eP->model = gf3d_model_load("cardBasic");
+	Field[fieldIndex].eP->model = gf3d_model_load_plus("cardDefault","cardDefault");
 	Field[fieldIndex].eP->cfieldIndex = fieldIndex;
 	Field[fieldIndex].cardXpos = x;
 	Field[fieldIndex].cardYpos = y;

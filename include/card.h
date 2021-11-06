@@ -17,6 +17,7 @@ typedef struct
 	TextLine *cardName; /* Card Name*/
 	TextWord *cardId; /* Id to identify card*/
 	Entity *eP; /*Pointer to associated entity*/
+	Entity *eMP;/*Pointer to monster entity*/
 
 	Uint16 cardAttribute; /*Attribute of card*/
 	Uint16 cardAP; /*Attack value of a card*/

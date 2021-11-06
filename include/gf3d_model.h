@@ -50,6 +50,7 @@ typedef struct
 void gf3d_model_manager_init(Uint32 max_models,Uint32 chain_length,VkDevice device);
 
 Model * gf3d_model_load(char * filename);
+Model * gf3d_model_load_plus(char * filename,char * imagename); // loads model and image seperate( model then image file names)
 Model * gf3d_model_new();
 /**
  * @brief queue up a model for rendering
