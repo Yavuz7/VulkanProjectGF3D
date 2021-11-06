@@ -5,10 +5,12 @@
 #include <stdio.h>
 #include "entity.h"
 #include "gf3d_model.h"
+#include "card.h"
 
 typedef struct{
 	Uint16 _tileType; /* Keeps track of Tile type*/
 	Uint8 _tileOccupied; /*Keeps track of whether or not the tile occupied*/
+	Card *occupation; /*card pointer to card it is occupied by*/
 	Model *tileModel; /*The model of the tile*/
 	Matrix4 tileModelMatrix;/*Model Matrix of tile*/
 

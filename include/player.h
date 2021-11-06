@@ -10,14 +10,16 @@
  */
 Entity *player_new(Vector3D position);
 
+enum movement{north,south,west,east,none};
+
+void cardMovement(Entity *self);
+
+int movementHelper(enum movement direction, enum movement opposite);
 /*
 *@Brief Summon player idols or summoning catalyst or whatever
 */
 void startGame();
 
-/*
-*@Brief Summon card in valid area
-*/
-void playCard();
+
 
 #endif
