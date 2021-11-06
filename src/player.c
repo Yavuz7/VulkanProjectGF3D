@@ -72,11 +72,7 @@ void player_think(Entity *self)
 
 	if (keys[SDL_SCANCODE_SPACE])
 	{
-		if (startCardMovement == 1)
-		{
-			startCardMovement = 0;
-		}
-		else
+		if (startCardMovement == 0)
 		{			
 			cardPointer = getTileOccupation(px, py);
 			if (cardPointer && cardPointer->_cardMoved == 0)
