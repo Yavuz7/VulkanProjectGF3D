@@ -49,7 +49,12 @@ void setTileOccupation(Uint8 x, Uint8 y, void * Card);
 *@Param y coordinate of tile
 */
 void *getTileOccupation(int x, int y);
-
+/*
+*@Brief Checks if tile is occupied
+*@Param x coordinate of tile
+*@Param y coordinate of tile
+*/
+int checkTileOccupation(int x, int y);
 /*
 *@Brief Draws tiles in main game loop
 */

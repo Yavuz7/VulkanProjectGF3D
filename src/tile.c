@@ -109,6 +109,14 @@ void *getTileOccupation(int x, int y)
 	}
 	return NULL;
 }
+int checkTileOccupation(int x, int y)
+{
+	if (tileMap[x][y]._tileOccupied == 1)
+	{
+		return 1;
+	}
+	return 0;
+}
 
 void removeTileOccupation(int x, int y, void*Card)
 {

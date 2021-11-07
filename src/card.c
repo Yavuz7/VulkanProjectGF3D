@@ -244,4 +244,26 @@ void destroyCard(Entity *eCard)
 	return;
 }
 
-
+void startDuel()
+{
+	int x, y;
+	for (int i = 0; i < 2; i++)
+	{
+		Field[i]._cardState = inField;
+		Field[i].eP = entity_new();
+		Field[i].eP->model = gf3d_model_load_plus("cardDefault", "cardFace");
+		Field[i].eP->cfieldIndex = i;
+		Field[i]._cardType = leader;
+		x = 3;
+		y = 0;
+		if (checkTileOccupation(x, y) == 1)
+		{
+			x = 3;
+			y = 6;
+		}
+		Field[i].cardXpos = x;
+		Field[i].cardYpos = y;
+		setCardModelLocation(x, y, Field[i].eP);
+		setTileOccupation(x, y, &Field[i]);
+	}
+}

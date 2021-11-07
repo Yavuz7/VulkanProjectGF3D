@@ -61,6 +61,7 @@ int main(int argc,char *argv[])
 	//w = world_load("models/cube.json");
 	setCardFileData();
 	setDeck("cards/deck1.txt");
+	startDuel();
 	playCard(1, 1, 3);
 	playCard(4,4,2);
 	playCard(3, 3, 1);

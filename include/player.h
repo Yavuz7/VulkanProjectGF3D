@@ -23,7 +23,7 @@ void cardMovement(Entity *self, int x, int y, Card *cardPointer);
 *@Param Enum direction card is moving too
 *@Param Enum direction opposite of card moving, to check if card is moving somewhere it was
 */
-int movementHelper(enum movement direction, enum movement opposite);
+int movementHelperDouble(enum movement direction, enum movement opposite);
 /*
 *@Brief Summon player idols or summoning catalyst or whatever
 */

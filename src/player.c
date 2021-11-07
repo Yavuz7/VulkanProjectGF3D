@@ -75,6 +75,10 @@ void player_think(Entity *self)
 		if (startCardMovement == 0)
 		{			
 			cardPointer = getTileOccupation(px, py);
+			if (cardPointer && cardPointer->_cardType == leader)
+			{
+				startCardMovement = 2;
+			}
 			if (cardPointer && cardPointer->_cardMoved == 0)
 			{
 				startCardMovement = 1;
@@ -176,6 +180,11 @@ void cardMovement(Entity *self,int x, int y,Card *cardPointer)
 	keys = SDL_GetKeyboardState(NULL);
 	if (keys[SDL_SCANCODE_R])
 	{
+		if (checkTileOccupation(px, py) == 1)
+		{
+			slog("Tile Occupied!");
+			return;
+		}
 		cardMove(px, py, cardPointer);
 		cardPointer = NULL;
 		moveCount = 0;
@@ -204,7 +213,7 @@ void cardMovement(Entity *self,int x, int y,Card *cardPointer)
 		{
 			return;
 		}
-		stopper = movementHelper(north, south);
+		stopper = movementHelperDouble(north, south);
 		if (stopper == 1)return;
 		
 		
@@ -221,7 +230,7 @@ void cardMovement(Entity *self,int x, int y,Card *cardPointer)
 		{
 			return;
 		}
-		stopper = movementHelper(south, north);
+		stopper = movementHelperDouble(south, north);
 		if (stopper == 1)return;
 		
 		py -= 1;
@@ -236,7 +245,7 @@ void cardMovement(Entity *self,int x, int y,Card *cardPointer)
 		{
 			return;
 		}
-		stopper = movementHelper(east,west);
+		stopper = movementHelperDouble(east,west);
 		if (stopper == 1)return;
 
 		px += 1;
@@ -251,7 +260,7 @@ void cardMovement(Entity *self,int x, int y,Card *cardPointer)
 		{
 			return;
 		}
-		stopper = movementHelper(west, east);
+		stopper = movementHelperDouble(west, east);
 		if (stopper == 1)return;
 		
 		px -= 1;
@@ -263,7 +272,7 @@ void cardMovement(Entity *self,int x, int y,Card *cardPointer)
 	}
 }
 
-int movementHelper(enum movement direction, enum movement opposite)
+int movementHelperDouble(enum movement direction, enum movement opposite)
 {
 	if (moveCount == 2)
 	{

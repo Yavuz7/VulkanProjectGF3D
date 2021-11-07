@@ -20,20 +20,24 @@ typedef struct
 	Uint16 cardDP; /*Defense value of a card*/
 	Uint16 cardHP; /*Health value of a card*/
 	Uint16 cardCost; /*Summoning cost of a card*/
-	Uint8 cardType; /* Card Type , Monster or Magic*/
+	
 
 	Uint8 cardXpos;/*x position of card*/
 	Uint8 cardYpos;/*y position of card*/
 	Uint8 _cardMoved;/*Checks if card moved*/
+	Uint8 _cardOwner;/*Owner of card 0 = you, 1 = not you*/
 	enum states _cardState;/*Keeps track of state of card*/
 	enum cardPosition _cardPosition;/*Keeps track of card position,*/
+	enum cardType _cardType; /* Stores card type*/
 
 }Card;
 
 /*States for _cardState*/
 enum states{ inDeck, inHand, inField,inGrave };
 /*BattlePositions for Cards*/
-enum cardPosition{fightPosition,blockPosition};
+enum cardPosition{faceUpFP,faceDownFP,faceUpDP,faceDownDP};
+/*Card types of cards*/
+enum cardType{monster,spell,trap,leader};
 /*
 *@Brief Loads character data of card from card ID, called when card is drawn
 *@Param ID number of card
@@ -60,7 +64,12 @@ void drawCard();
 */
 
 void endDuel();
+/*
+*@Brief Starts duel by summoning 2 players
+*/
 
+
+void startDuel();
 /*
 *@Brief Plays a card at index x y 
 *@Param X position on grid
