@@ -69,7 +69,10 @@ void player_think(Entity *self)
     vector3d_set_magnitude(&forward,1.0f);
     vector3d_set_magnitude(&right,1.0f);
     vector3d_set_magnitude(&up,0.1f);
-
+	if (timeEnd + cameraDelay > SDL_GetTicks())
+	{
+		return;
+	}
 	if (keys[SDL_SCANCODE_SPACE])
 	{
 		if (startCardMovement == 0)
@@ -78,11 +81,14 @@ void player_think(Entity *self)
 			if (cardPointer && cardPointer->_cardType == leader)
 			{
 				startCardMovement = 2;
+				
 			}
-			if (cardPointer && cardPointer->_cardMoved == 0)
+			if (cardPointer && cardPointer->_cardMoved == 0 && cardPointer->_cardType != leader)
 			{
 				slog("Start Card Movement");
 				startCardMovement = 1;
+				timeEnd = SDL_GetTicks();
+				return;
 			}
 		}		
 	}
@@ -97,12 +103,7 @@ void player_think(Entity *self)
 		self->rotation.z = -0.001f;
 		self->position.z = 37.0f;
 	}
-	if (timeEnd + cameraDelay > SDL_GetTicks())
-	{
-		return;
-	}
 
-	
     if (keys[SDL_SCANCODE_W])
     {   
 		if (py >= 6)
@@ -202,7 +203,13 @@ void cardMovement(Entity *self,int x, int y,Card *cardPointer)
 		if (checkTileOccupation(px, py) == 1)
 		{
 			setCardFight(cardPointer);
-			slog("Tile Occupied!");
+			movementHelperFight(cardPointer);
+			moveCount = 0;
+			moveHistory[0] = none;
+			moveHistory[1] = none;
+			startCardMovement = 0;
+			stopper = 0;
+			timeEnd = SDL_GetTicks();
 			return;
 		}
 		cardMove(px, py, cardPointer);
@@ -324,5 +331,40 @@ int movementHelperDouble(enum movement direction, enum movement opposite)
 	moveHistory[moveCount] = direction;
 	moveCount += 1;
 	return 0;
+}
+
+void movementHelperFight(Card *cardPointer)
+{
+	if (moveCount == 1)
+	{
+		cardPointer->_cardMoved = 1;
+		slog("Card Attacks, Stand Still");
+		return;
+	}
+	if (moveHistory[moveCount - 1] == north)
+	{
+		cardMove(px, py - 1, cardPointer);
+		slog("Card Attacks north, Card moves");
+		return;
+	}
+	if (moveHistory[moveCount - 1] == south)
+	{
+		cardMove(px, py + 1, cardPointer);
+		slog("Card Attacks south, Card moves");
+		return;
+	}
+	if (moveHistory[moveCount - 1] == east)
+	{
+		cardMove(px - 1, py, cardPointer);
+		slog("Card Attacks east, Card moves");
+		return;
+	}
+	if (moveHistory[moveCount - 1] == west)
+	{
+		cardMove(px + 1, py, cardPointer);
+		slog("Card Attacks west, Card moves");
+		return;
+	}
+	
 }
 /*eol@eof*/

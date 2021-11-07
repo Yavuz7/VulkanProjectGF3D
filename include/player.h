@@ -11,10 +11,13 @@
  */
 Entity *player_new(Vector3D position);
 /*Enumeration for card Movement system*/
-enum movement{north,south,west,east,none};
+enum movement{north,south,west,east,none,blocked};
 /*
 *@Brief Moves selected card up to 2 spaces
 *@Param Entity of player for camera movement
+*@Param x position of movement
+*@Param y position of movement
+*@Param Pointer to card being moved
 */
 void cardMovement(Entity *self, int x, int y, Card *cardPointer);
 
@@ -27,6 +30,10 @@ int movementHelperDouble(enum movement direction, enum movement opposite);
 
 void openHand();
 
+/*
+*@Brief Set x and y values to match the last move made
+*/
+void movementHelperFight(Card *cardPointer);
 
 
 #endif

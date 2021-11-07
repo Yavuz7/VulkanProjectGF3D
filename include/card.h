@@ -100,9 +100,12 @@ void cardMove(int x, int y, Card *cardPointer);
 
 /*
 *@Brief Sets Card to defense position
-*@Param Card being set to defense
+*@Param Card being set to defense postion 
 */
 void setCardDefense(Card *cardpointer);
-
+/*
+*@Brief Sets Card to Fight position
+*@Param Card being set to Fight position
+*/
 void setCardFight(Card *cardpointer);
 #endif
