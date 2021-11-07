@@ -160,12 +160,20 @@ void setCardData(Card *card)
 	}
 	card->cardName = gfc_allocate_array(sizeof(TextLine), 1);
 	card->cardText = gfc_allocate_array(sizeof(TextBlock), 1);
+	
 	memcpy(card->cardName, sj_get_string_value(sj_object_get_value(dataBuffer, "Name")), sizeof(TextLine));
 	memcpy(card->cardText, sj_get_string_value(sj_object_get_value(dataBuffer, "Text")), sizeof(TextBlock));
 
+	sj_get_integer_value(sj_object_get_value(dataBuffer, "cardAP"),&card->cardAP);
+	sj_get_integer_value(sj_object_get_value(dataBuffer, "cardDP"), &card->cardDP);
+	sj_get_integer_value(sj_object_get_value(dataBuffer, "cardHP"), &card->cardHP);
+	card->cardHPcurrent = card->cardHP;
 
 	slog("Card Name : %s", card->cardName);
 	slog("Card Text : %s", card->cardText);
+	slog("Card AP : %i", card->cardAP);
+	slog("Card AP : %i", card->cardDP);
+	slog("Card AP : %i", card->cardHP);
 	sj_free(cardData);
 	return;
 
@@ -195,11 +203,11 @@ void playCard(int x, int y, int handIndex)
 	}
 	
 	memcpy(&Field[fieldIndex], &Hand[handIndex], sizeof(Card));
-	slog("Hand test: %s", Field[fieldIndex].cardName);
 	memset(&Hand[handIndex], 0, sizeof(Card));
-	slog("Hand test: %s", Hand[handIndex].cardName);
+
 	//Set data of card on field
 	Field[fieldIndex]._cardState = inField;
+	setCardFight(&Field[fieldIndex]);
 	Field[fieldIndex].eP = entity_new();
 	Field[fieldIndex].eP->model = gf3d_model_load_plus("cardDefault","cardDefault");
 	Field[fieldIndex].eP->cfieldIndex = fieldIndex;
@@ -218,7 +226,8 @@ void cardMove(int x, int y, Card *cardPointer)
 {
 	if (!cardPointer)return;
 	setCardModelLocation(x, y, cardPointer->eP);
-	removeTileOccupation(cardPointer->cardXpos, cardPointer->cardYpos,cardPointer);
+	removeTileOccupation(cardPointer->cardXpos, cardPointer->cardYpos);
+	setTileOccupation(x, y, cardPointer);
 	cardPointer->cardXpos = x;
 	cardPointer->cardYpos = y;
 	cardPointer->_cardMoved = 1;
@@ -232,6 +241,25 @@ void setCardModelLocation(int x, int y, Entity *eCard)
 	eCard->position.z = -5.0f;
 	eCard->position.x = 1 + x*23.0f;
 	eCard->position.y = 1 + y*23.0f;
+	return;
+}
+void setCardDefense(Card *cardpointer)
+{
+	if (!cardpointer)return;
+	if (cardpointer->_cardPosition == Defense)return;
+	slog("Set Defense");
+	cardpointer->_cardPosition = Defense;
+	cardpointer->eP->rotation.z = 1.57f;
+	return;
+}
+
+void setCardFight(Card *cardpointer)
+{
+	if (!cardpointer)return;
+	if (cardpointer->_cardPosition == Fight)return;
+	slog("Set Fight");
+	cardpointer->_cardPosition = Fight;
+	cardpointer->eP->rotation.z = 0.0f;
 	return;
 }
 void destroyCard(Entity *eCard)
@@ -252,18 +280,25 @@ void startDuel()
 		Field[i]._cardState = inField;
 		Field[i].eP = entity_new();
 		Field[i].eP->model = gf3d_model_load_plus("cardDefault", "cardFace");
+		Field[i].eMP = entity_new();
+		Field[i].eMP->model = gf3d_model_load_plus("dino", "cardFace");
 		Field[i].eP->cfieldIndex = i;
 		Field[i]._cardType = leader;
+		Field[i].eMP->rotation.z = 3.14f;
 		x = 3;
 		y = 0;
 		if (checkTileOccupation(x, y) == 1)
 		{
 			x = 3;
 			y = 6;
+			Field[i].eMP->model = gf3d_model_load_plus("dino", "cardDefault");
+			Field[i].eMP->rotation.z = 0.0f;
 		}
 		Field[i].cardXpos = x;
 		Field[i].cardYpos = y;
 		setCardModelLocation(x, y, Field[i].eP);
+		setCardModelLocation(x, y, Field[i].eMP);
+		Field[i].eMP->position.z = 5.0f;
 		setTileOccupation(x, y, &Field[i]);
 	}
 }

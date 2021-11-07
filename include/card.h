@@ -19,6 +19,7 @@ typedef struct
 	Uint16 cardAP; /*Attack value of a card*/
 	Uint16 cardDP; /*Defense value of a card*/
 	Uint16 cardHP; /*Health value of a card*/
+	Uint16 cardHPcurrent; /*Current HP of a card*/
 	Uint16 cardCost; /*Summoning cost of a card*/
 	
 
@@ -35,7 +36,7 @@ typedef struct
 /*States for _cardState*/
 enum states{ inDeck, inHand, inField,inGrave };
 /*BattlePositions for Cards*/
-enum cardPosition{faceUpFP,faceDownFP,faceUpDP,faceDownDP};
+enum cardPosition{Fight,Defense};
 /*Card types of cards*/
 enum cardType{monster,spell,trap,leader};
 /*
@@ -97,4 +98,11 @@ void setCardModelLocation(int x, int y, Entity *eCard);
 */
 void cardMove(int x, int y, Card *cardPointer);
 
+/*
+*@Brief Sets Card to defense position
+*@Param Card being set to defense
+*/
+void setCardDefense(Card *cardpointer);
+
+void setCardFight(Card *cardpointer);
 #endif

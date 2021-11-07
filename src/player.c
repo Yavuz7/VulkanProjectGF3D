@@ -81,6 +81,7 @@ void player_think(Entity *self)
 			}
 			if (cardPointer && cardPointer->_cardMoved == 0)
 			{
+				slog("Start Card Movement");
 				startCardMovement = 1;
 			}
 		}		
@@ -111,7 +112,7 @@ void player_think(Entity *self)
 		self->position.y += 23;
 		py += 1;
 		timeEnd = SDL_GetTicks();
-		slog("position of py %i", py);
+		
 		//vector3d_add(self->position, self->position, -right);
         
     }
@@ -124,7 +125,7 @@ void player_think(Entity *self)
 		py -= 1;
 		timeEnd = SDL_GetTicks();
 		self->position.y -= 23;
-		slog("position of py %i", py);
+		
 		//vector3d_add(self->position, self->position, right);
     }
     if (keys[SDL_SCANCODE_D])
@@ -136,7 +137,7 @@ void player_think(Entity *self)
 		px += 1;
 		timeEnd = SDL_GetTicks();
 		self->position.x += 23;
-		slog("position of px %i", px);
+		
 		//vector3d_add(self->position, self->position, forward);
     }
     if (keys[SDL_SCANCODE_A])    
@@ -149,7 +150,7 @@ void player_think(Entity *self)
 		timeEnd = SDL_GetTicks();
 		self->position.x -= 23;
 
-		slog("position of px %i", px);
+		
 		//vector3d_add(self->position, self->position, -forward);
     }
     if (keys[SDL_SCANCODE_X])self->position.z += 0.40f;
@@ -176,23 +177,42 @@ void cardMovement(Entity *self,int x, int y,Card *cardPointer)
 	Vector3D up;
 	const Uint8 * keys;
 
-
+	if (timeEnd + cameraDelay > SDL_GetTicks())
+	{
+		return;
+	}
 	keys = SDL_GetKeyboardState(NULL);
 	if (keys[SDL_SCANCODE_R])
 	{
+		if (cardPointer->_cardPosition == Fight)
+		{
+			setCardDefense(cardPointer);
+			timeEnd = SDL_GetTicks();
+			return;
+		}
+		if (cardPointer->_cardPosition == Defense)
+		{
+			setCardFight(cardPointer);
+			timeEnd = SDL_GetTicks();
+			return;
+		}
+	}
+	if (keys[SDL_SCANCODE_SPACE])
+	{
 		if (checkTileOccupation(px, py) == 1)
 		{
+			setCardFight(cardPointer);
 			slog("Tile Occupied!");
 			return;
 		}
 		cardMove(px, py, cardPointer);
-		cardPointer = NULL;
+		//cardPointer = NULL;
 		moveCount = 0;
 		moveHistory[0] = none;
 		moveHistory[1] = none;
 		startCardMovement = 0;
 		stopper = 0;
-		
+		timeEnd = SDL_GetTicks();
 		return;
 	}
 	if (keys[SDL_SCANCODE_P])
@@ -201,10 +221,7 @@ void cardMovement(Entity *self,int x, int y,Card *cardPointer)
 		self->rotation.z = -0.001f;
 		self->position.z = 37.0f;
 	}
-	if (timeEnd + cameraDelay > SDL_GetTicks())
-	{
-		return;
-	}
+
 
 
 	if (keys[SDL_SCANCODE_W])
@@ -213,14 +230,15 @@ void cardMovement(Entity *self,int x, int y,Card *cardPointer)
 		{
 			return;
 		}
+
 		stopper = movementHelperDouble(north, south);
 		if (stopper == 1)return;
 		
-		
+		setCardFight(cardPointer);
 		py += 1;
 		self->position.y += 23;
 		timeEnd = SDL_GetTicks();
-		slog("position of py %i", py);
+		
 		//vector3d_add(self->position, self->position, -right);
 
 	}
@@ -230,13 +248,14 @@ void cardMovement(Entity *self,int x, int y,Card *cardPointer)
 		{
 			return;
 		}
+
 		stopper = movementHelperDouble(south, north);
 		if (stopper == 1)return;
-		
+		setCardFight(cardPointer);
 		py -= 1;
 		timeEnd = SDL_GetTicks();
 		self->position.y -= 23;
-		slog("position of py %i", py);
+		
 		//vector3d_add(self->position, self->position, right);
 	}
 	if (keys[SDL_SCANCODE_D])
@@ -247,11 +266,11 @@ void cardMovement(Entity *self,int x, int y,Card *cardPointer)
 		}
 		stopper = movementHelperDouble(east,west);
 		if (stopper == 1)return;
-
+		setCardFight(cardPointer);
 		px += 1;
 		timeEnd = SDL_GetTicks();
 		self->position.x += 23;
-		slog("position of px %i", px);
+		
 		//vector3d_add(self->position, self->position, forward);
 	}
 	if (keys[SDL_SCANCODE_A])
@@ -259,15 +278,15 @@ void cardMovement(Entity *self,int x, int y,Card *cardPointer)
 		if (px <= 0)
 		{
 			return;
-		}
+		} 
 		stopper = movementHelperDouble(west, east);
 		if (stopper == 1)return;
-		
+		setCardFight(cardPointer);
 		px -= 1;
 		timeEnd = SDL_GetTicks();
 		self->position.x -= 23;
 
-		slog("position of px %i", px);
+	
 		//vector3d_add(self->position, self->position, -forward);
 	}
 }

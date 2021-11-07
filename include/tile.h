@@ -38,8 +38,9 @@ void setTile(Tile *t,int x, int y);
 
 /*
 *@Brief Sets tile to occupied and sets pointer to card occupying
-*@Param x coordinate from where card was summoned
-*@Param y coordinate from where card was summoned
+*@Param x coordinate of card location
+*@Param y coordinate of card location
+*@Param Pointer to card that is now occupying tile
 */
 void setTileOccupation(Uint8 x, Uint8 y, void * Card);
 
@@ -59,6 +60,10 @@ int checkTileOccupation(int x, int y);
 *@Brief Draws tiles in main game loop
 */
 void drawTiles();
-
-void removeTileOccupation(int x, int y, void * Card);
+/*
+*@Brief Removes occupation on tile
+*@Param x coordinate of where card was
+*@Param y coordinate of where card was
+*/
+void removeTileOccupation(int x, int y);
 #endif

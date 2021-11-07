@@ -118,10 +118,9 @@ int checkTileOccupation(int x, int y)
 	return 0;
 }
 
-void removeTileOccupation(int x, int y, void*Card)
+void removeTileOccupation(int x, int y)
 {
-	if (!Card)return;
-	tileMap[x][y]._tileOccupied = 1;
+	tileMap[x][y]._tileOccupied = 0;
 	tileMap[x][y].occupation = NULL;
 	return;
 

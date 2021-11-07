@@ -62,6 +62,8 @@ int main(int argc,char *argv[])
 	setCardFileData();
 	setDeck("cards/deck1.txt");
 	startDuel();
+	playCard(2, 1, 4);
+	playCard(2, 0, 0);
 	playCard(1, 1, 3);
 	playCard(4,4,2);
 	playCard(3, 3, 1);
