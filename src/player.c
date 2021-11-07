@@ -11,8 +11,9 @@
 void player_think(Entity *self);
 void player_update(Entity *self);
 int px,py;
+int startx, starty;
 int stopper,startCardMovement;
-Card *cardPointer;
+Card *cardPointer,*defender,*attacker;
 
 Uint32 timeStart, timeEnd;
 const int cameraDelay = 240;
@@ -86,7 +87,10 @@ void player_think(Entity *self)
 			if (cardPointer && cardPointer->_cardMoved == 0 && cardPointer->_cardType != leader)
 			{
 				slog("Start Card Movement");
+				slog("%s (AP%i ,DP %i,HP %i)", cardPointer->cardName, cardPointer->cardAP, cardPointer->cardDP, cardPointer->cardHPcurrent);
 				startCardMovement = 1;
+				startx = px;
+				starty = py;
 				timeEnd = SDL_GetTicks();
 				return;
 			}
@@ -200,26 +204,43 @@ void cardMovement(Entity *self,int x, int y,Card *cardPointer)
 	}
 	if (keys[SDL_SCANCODE_SPACE])
 	{
+		if (px == startx && py == starty)
+		{
+			slog("Card set in same place");
+			//cardPointer->_cardMoved = 1;
+			resetMovement();
+			return;
+		}
 		if (checkTileOccupation(px, py) == 1)
 		{
+			attacker = getTileOccupation(startx, starty);
+			defender = getTileOccupation(px, py);
 			setCardFight(cardPointer);
-			movementHelperFight(cardPointer);
-			moveCount = 0;
-			moveHistory[0] = none;
-			moveHistory[1] = none;
-			startCardMovement = 0;
-			stopper = 0;
-			timeEnd = SDL_GetTicks();
-			return;
+			int result = cardFight(attacker,defender);
+			setCardHP(attacker);
+			setCardHP(defender);
+			if (result == 0)
+			{
+				cardMove(px, py, cardPointer);
+				resetMovement();
+				return;
+			}
+			if (result == 1)
+			{
+				removeTileOccupation(startx, starty);
+				resetMovement();
+				return;
+			}
+			if (result == 2)
+			{
+				movementHelperFight(cardPointer);
+				resetMovement();
+				return;
+			}
 		}
 		cardMove(px, py, cardPointer);
 		//cardPointer = NULL;
-		moveCount = 0;
-		moveHistory[0] = none;
-		moveHistory[1] = none;
-		startCardMovement = 0;
-		stopper = 0;
-		timeEnd = SDL_GetTicks();
+		resetMovement();
 		return;
 	}
 	if (keys[SDL_SCANCODE_P])
@@ -298,6 +319,41 @@ void cardMovement(Entity *self,int x, int y,Card *cardPointer)
 	}
 }
 
+int cardFight(Card *attacker,Card *defender)
+{
+	if (!attacker)return;
+	slog("%s (AP%i ,DP %i,HP %i)", defender->cardName, defender->cardAP, defender->cardDP, defender->cardHPcurrent);
+	//Attacking into a attack monster
+	if (defender->_cardPosition == Fight)
+	{		
+		defender->cardHPcurrent = defender->cardHPcurrent - (attacker->cardAP - (defender->cardDP / 2));
+		if (defender->cardHPcurrent <= 0)
+		{
+			slog("Defender Dead");
+			return 0; // Victor attacker
+		}
+		attacker->cardHPcurrent = attacker->cardHPcurrent - (defender->cardAP - (attacker->cardDP / 2));
+		if (attacker->cardHPcurrent <= 0)
+		{
+			slog("Attacker Dead, Defender HP %i",defender->cardHPcurrent);
+			return 1; // Victor defender
+		}
+		slog("Attacker Hp: %i, Defender HP: %i", attacker->cardHPcurrent, defender->cardHPcurrent);
+		return 2; //no victor
+	}
+	if (defender->_cardPosition == Defense)
+	{ 
+		defender->cardHPcurrent = defender->cardHPcurrent - (attacker->cardAP - defender->cardDP);
+		if (defender->cardHPcurrent <= 0)
+		{
+			slog("Defender Dead");
+			return 0; // Victor attacker
+		}
+		slog("Defender HP %i", defender->cardHPcurrent);
+		return 2;
+	}
+}
+
 int movementHelperDouble(enum movement direction, enum movement opposite)
 {
 	if (moveCount == 2)
@@ -337,7 +393,7 @@ void movementHelperFight(Card *cardPointer)
 {
 	if (moveCount == 1)
 	{
-		cardPointer->_cardMoved = 1;
+		//cardPointer->_cardMoved = 1;
 		slog("Card Attacks, Stand Still");
 		return;
 	}
@@ -366,5 +422,15 @@ void movementHelperFight(Card *cardPointer)
 		return;
 	}
 	
+}
+void resetMovement()
+{
+	moveCount = 0;
+	moveHistory[0] = none;
+	moveHistory[1] = none;
+	startCardMovement = 0;
+	stopper = 0;
+	timeEnd = SDL_GetTicks();
+	return;
 }
 /*eol@eof*/

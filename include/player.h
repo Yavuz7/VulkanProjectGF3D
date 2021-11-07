@@ -35,5 +35,11 @@ void openHand();
 */
 void movementHelperFight(Card *cardPointer);
 
+/*
+*@Brief resets movement data
+*/
+void resetMovement();
+
+int cardFight(Card *attacker, Card *defender);
 
 #endif

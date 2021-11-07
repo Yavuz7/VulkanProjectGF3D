@@ -207,6 +207,7 @@ void playCard(int x, int y, int handIndex)
 
 	//Set data of card on field
 	Field[fieldIndex]._cardState = inField;
+	Field[fieldIndex]._cardPosition = Fight;
 	setCardFight(&Field[fieldIndex]);
 	Field[fieldIndex].eP = entity_new();
 	Field[fieldIndex].eP->model = gf3d_model_load_plus("cardDefault","cardDefault");
@@ -230,7 +231,7 @@ void cardMove(int x, int y, Card *cardPointer)
 	setTileOccupation(x, y, cardPointer);
 	cardPointer->cardXpos = x;
 	cardPointer->cardYpos = y;
-	cardPointer->_cardMoved = 1;
+	//cardPointer->_cardMoved = 1;
 }
 void setCardModelLocation(int x, int y, Entity *eCard)
 {
@@ -300,5 +301,16 @@ void startDuel()
 		setCardModelLocation(x, y, Field[i].eMP);
 		Field[i].eMP->position.z = 5.0f;
 		setTileOccupation(x, y, &Field[i]);
+	}
+}
+void setCardHP(Card *cardpointer)
+{
+	for (int i = 0; i < 50; i++)
+	{
+		if (Field[i].cardXpos == cardpointer->cardXpos && Field[i].cardYpos == cardpointer->cardYpos)
+		{
+			Field[i].cardHPcurrent = cardpointer->cardHPcurrent;
+			return;
+		}
 	}
 }

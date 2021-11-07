@@ -19,7 +19,7 @@ typedef struct
 	Uint16 cardAP; /*Attack value of a card*/
 	Uint16 cardDP; /*Defense value of a card*/
 	Uint16 cardHP; /*Health value of a card*/
-	Uint16 cardHPcurrent; /*Current HP of a card*/
+	int cardHPcurrent; /*Current HP of a card*/
 	Uint16 cardCost; /*Summoning cost of a card*/
 	
 
@@ -108,4 +108,7 @@ void setCardDefense(Card *cardpointer);
 *@Param Card being set to Fight position
 */
 void setCardFight(Card *cardpointer);
+
+
+void setCardHP(Card *cardpointer);
 #endif
