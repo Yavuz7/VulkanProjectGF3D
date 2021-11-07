@@ -309,6 +309,7 @@ void setCardHP(Card *cardpointer)
 
 void destroyCard(Card *cardpointer)
 {
+	int g;
 	for (int i = 0; i < 50; i++)
 	{
 		if (Field[i].cardXpos == cardpointer->cardXpos && Field[i].cardYpos == cardpointer->cardYpos)
@@ -321,11 +322,11 @@ void destroyCard(Card *cardpointer)
 			slog("Card %s sent to grave", Field[i].cardName);
 			free(Field[i].cardName);
 			free(Field[i].cardText);
-			for (int g = 0; g < 120; g++)
+			for (g = 0; g < 120; g++)
 			{
 				if (graveyard[g]._cardState != inGrave)
 				{
-					//strcpy(graveyard[g].cardId, Field[i].cardId);
+					graveyard[g].cardId = Field[i].cardId;
 					graveyard[g]._cardState = inGrave;
 				}
 			}
