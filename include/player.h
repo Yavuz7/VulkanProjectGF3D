@@ -42,4 +42,6 @@ void resetMovement();
 
 int cardFight(Card *attacker, Card *defender);
 
+
+
 #endif

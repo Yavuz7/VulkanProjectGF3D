@@ -115,4 +115,6 @@ void setCardHP(Card *cardpointer);
 *@Param Card to be destroyed
 */
 void destroyCard(Card *cardpointer);
+
+void reward();
 #endif

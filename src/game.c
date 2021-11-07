@@ -67,7 +67,6 @@ int main(int argc,char *argv[])
 	playCard(1, 1, 3);
 	playCard(4,4,2);
 	playCard(3, 3, 1);
-	
     for (a = 0; a < 10;a++)
     {
         agumon_new(vector3d(a * 10 -50,0,0));

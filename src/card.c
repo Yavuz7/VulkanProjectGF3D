@@ -140,6 +140,37 @@ void drawCard()
 	return;
 }
 
+void reward()
+{
+	int g, count,rando,count2;
+	count2 = 0;
+	Card *rewards = {0};
+	rewards = gfc_allocate_array(sizeof(Card), 3);
+	for (g = 0; g < 120; g++)
+	{
+		if (graveyard[g]._cardState == inGrave)
+		{
+			count++;
+		}
+	}
+	do
+	{
+		rando = rand() % count;
+		if (rando < 0)
+		{
+			rando *= -1;
+		}
+		rewards[count2].cardId = graveyard[rando].cardId;
+		if (!rewards[count2].cardId)
+		{
+			rewards[count2].cardId = "00001";
+		}
+		setCardData(&rewards[count2]);
+		count2++;
+	} while (count2<3);
+	
+
+}
 void setCardData(Card *card)
 {
 	SJson *cardData, *dataBuffer;

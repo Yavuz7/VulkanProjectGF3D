@@ -101,6 +101,12 @@ void player_think(Entity *self)
 		cardMovement(self, px, py,cardPointer);
 		return;
 	}
+	if (keys[SDL_SCANCODE_M])
+	{
+		reward();
+		timeEnd = SDL_GetTicks();
+		return;
+	}
 	if (keys[SDL_SCANCODE_P])
 	{
 		self->rotation.x = 10.12f;
@@ -439,4 +445,6 @@ void resetMovement()
 	timeEnd = SDL_GetTicks();
 	return;
 }
+
+
 /*eol@eof*/
