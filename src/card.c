@@ -28,7 +28,7 @@ Uint8 cardsInDeck;
 	 cardsInField = 0;
 	 cardsInGrave = 0;
 	 playerDeck = gfc_allocate_array(sizeof(deckData), 50);
-	 graveyard = gfc_allocate_array(sizeof(deckData), 50);
+	 graveyard = gfc_allocate_array(sizeof(deckData), 120);
 	 Hand = gfc_allocate_array(sizeof(Card), 5);
 	 Field = gfc_allocate_array(sizeof(Card), 50);
  }
@@ -263,15 +263,7 @@ void setCardFight(Card *cardpointer)
 	cardpointer->eP->rotation.z = 0.0f;
 	return;
 }
-void destroyCard(Entity *eCard)
-{
-	if (eCard)
-	{
-		memset(&Field[eCard->cfieldIndex],0,sizeof(Card));
-		entity_free(eCard);
-	}
-	return;
-}
+
 
 void startDuel()
 {
@@ -310,6 +302,35 @@ void setCardHP(Card *cardpointer)
 		if (Field[i].cardXpos == cardpointer->cardXpos && Field[i].cardYpos == cardpointer->cardYpos)
 		{
 			Field[i].cardHPcurrent = cardpointer->cardHPcurrent;
+			return;
+		}
+	}
+}
+
+void destroyCard(Card *cardpointer)
+{
+	for (int i = 0; i < 50; i++)
+	{
+		if (Field[i].cardXpos == cardpointer->cardXpos && Field[i].cardYpos == cardpointer->cardYpos)
+		{
+			entity_free(Field[i].eP);
+			if (Field[i].eMP)
+			{
+				entity_free(Field[i].eMP);
+			}
+			slog("Card %s sent to grave", Field[i].cardName);
+			free(Field[i].cardName);
+			free(Field[i].cardText);
+			for (int g = 0; g < 120; g++)
+			{
+				if (graveyard[g]._cardState != inGrave)
+				{
+					//strcpy(graveyard[g].cardId, Field[i].cardId);
+					graveyard[g]._cardState = inGrave;
+				}
+			}
+			free(Field[i].cardId);
+			memset(&Field[i], 0, sizeof(Card));
 			return;
 		}
 	}

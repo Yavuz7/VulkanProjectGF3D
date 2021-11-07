@@ -79,11 +79,6 @@ void startDuel();
 void playCard(int x, int y, int handIndex);
 
 /*
-*@Brief Destroys card and entity
-*@Param Card to be destroyed
-*/
-void destroyCard(Entity *eCard);
-/*
 *@Brief setCard model location stuff
 *@Param X coordinate the model is moving to
 *@Param Y coordinate the model is moving to
@@ -109,6 +104,15 @@ void setCardDefense(Card *cardpointer);
 */
 void setCardFight(Card *cardpointer);
 
-
+/*
+*@BriefSets card hp from pointer
+*@Param Card hp is being set from
+*/
 void setCardHP(Card *cardpointer);
+
+/*
+*@Brief Destroys card and entity
+*@Param Card to be destroyed
+*/
+void destroyCard(Card *cardpointer);
 #endif

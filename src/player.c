@@ -221,20 +221,26 @@ void cardMovement(Entity *self,int x, int y,Card *cardPointer)
 			setCardHP(defender);
 			if (result == 0)
 			{
-				cardMove(px, py, cardPointer);
+				destroyCard(defender);
+				removeTileOccupation(px, py);
+				cardMove(px, py, cardPointer);				
 				resetMovement();
+				timeEnd = SDL_GetTicks();
 				return;
 			}
 			if (result == 1)
 			{
-				removeTileOccupation(startx, starty);
+				destroyCard(attacker);
+				removeTileOccupation(startx, starty);				
 				resetMovement();
+				timeEnd = SDL_GetTicks();
 				return;
 			}
 			if (result == 2)
 			{
 				movementHelperFight(cardPointer);
 				resetMovement();
+				timeEnd = SDL_GetTicks();
 				return;
 			}
 		}
