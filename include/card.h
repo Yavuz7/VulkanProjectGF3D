@@ -116,5 +116,4 @@ void setCardHP(Card *cardpointer);
 */
 void destroyCard(Card *cardpointer);
 
-void reward();
 #endif

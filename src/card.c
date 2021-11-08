@@ -16,6 +16,7 @@ Card *Hand = { 0 }; /*Player Hand*/
 Card *Field = { 0 };/* Cards on the field*/
 deckData *playerDeck = { 0 }; /*Deck of ids to pull from*/
 deckData *graveyard = { 0 }; /*Graveyard of ids to pull from*/
+Card *rewards = { 0 };
 Uint8 cardsInDeck;
  Uint8 cardsInHand;
  Uint8 cardsInField;
@@ -31,6 +32,7 @@ Uint8 cardsInDeck;
 	 graveyard = gfc_allocate_array(sizeof(deckData), 120);
 	 Hand = gfc_allocate_array(sizeof(Card), 5);
 	 Field = gfc_allocate_array(sizeof(Card), 50);
+	 rewards = gfc_allocate_array(sizeof(Card), 3);
  }
 
 void setDeck(char *deckName)
@@ -72,7 +74,6 @@ void setDeck(char *deckName)
 	{
 		drawCard();
 	}
-
 	fclose(deck);
 	free(buff);
 	return;
@@ -140,37 +141,6 @@ void drawCard()
 	return;
 }
 
-void reward()
-{
-	int g, count,rando,count2;
-	count2 = 0;
-	Card *rewards = {0};
-	rewards = gfc_allocate_array(sizeof(Card), 3);
-	for (g = 0; g < 120; g++)
-	{
-		if (graveyard[g]._cardState == inGrave)
-		{
-			count++;
-		}
-	}
-	do
-	{
-		rando = rand() % count;
-		if (rando < 0)
-		{
-			rando *= -1;
-		}
-		rewards[count2].cardId = graveyard[rando].cardId;
-		if (!rewards[count2].cardId)
-		{
-			rewards[count2].cardId = "00001";
-		}
-		setCardData(&rewards[count2]);
-		count2++;
-	} while (count2<3);
-	
-
-}
 void setCardData(Card *card)
 {
 	SJson *cardData, *dataBuffer;
@@ -258,6 +228,11 @@ void cardMove(int x, int y, Card *cardPointer)
 {
 	if (!cardPointer)return;
 	setCardModelLocation(x, y, cardPointer->eP);
+	if (cardPointer->eMP)
+	{
+		setCardModelLocation(x, y, cardPointer->eMP);
+		cardPointer->eMP->position.z = 5.0f;
+	}
 	removeTileOccupation(cardPointer->cardXpos, cardPointer->cardYpos);
 	setTileOccupation(x, y, cardPointer);
 	cardPointer->cardXpos = x;
@@ -273,6 +248,7 @@ void setCardModelLocation(int x, int y, Entity *eCard)
 	eCard->position.z = -5.0f;
 	eCard->position.x = 1 + x*23.0f;
 	eCard->position.y = 1 + y*23.0f;
+	
 	return;
 }
 void setCardDefense(Card *cardpointer)
@@ -307,7 +283,7 @@ void startDuel()
 		Field[i].eMP = entity_new();
 		Field[i].eMP->model = gf3d_model_load_plus("dino", "cardFace");
 		Field[i].eP->cfieldIndex = i;
-		Field[i]._cardType = leader;
+		//Field[i]._cardType = leader;
 		Field[i].eMP->rotation.z = 3.14f;
 		x = 3;
 		y = 0;
@@ -357,7 +333,7 @@ void destroyCard(Card *cardpointer)
 			{
 				if (graveyard[g]._cardState != inGrave)
 				{
-					graveyard[g].cardId = Field[i].cardId;
+					//memcpy(&graveyard[g].cardId,&Field[i].cardId, sizeof(TextWord));
 					graveyard[g]._cardState = inGrave;
 				}
 			}
