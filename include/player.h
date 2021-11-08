@@ -42,6 +42,6 @@ void resetMovement();
 
 int cardFight(Card *attacker, Card *defender);
 
-
+void openHand();
 
 #endif

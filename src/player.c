@@ -103,7 +103,6 @@ void player_think(Entity *self)
 	}
 	if (keys[SDL_SCANCODE_M])
 	{
-		reward();
 		timeEnd = SDL_GetTicks();
 		return;
 	}
