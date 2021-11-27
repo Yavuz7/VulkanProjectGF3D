@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "simple_json.h"
 #include "simple_logger.h"
+#include "gfc_list.h"
 #include "card.h"
 #include "tile.h"
 
@@ -12,10 +13,12 @@ typedef struct{
 	enum states _cardState; /*Identifies card position, for this struct it only keeps track of in deck or in hand*/
 }deckData;
 
-Card *Hand = { 0 }; /*Player Hand*/
+Card *player1deck = { 0 }; /*Deck storage*/
 Card *Field = { 0 };/* Cards on the field*/
 deckData *playerDeck = { 0 }; /*Deck of ids to pull from*/
 deckData *graveyard = { 0 }; /*Graveyard of ids to pull from*/
+Card *Hand = { 0 };
+List *playerDeckList;
 Card *rewards = { 0 };
 Uint8 cardsInDeck;
  Uint8 cardsInHand;
@@ -28,13 +31,92 @@ Uint8 cardsInDeck;
 	 cardsInHand = 0;
 	 cardsInField = 0;
 	 cardsInGrave = 0;
-	 playerDeck = gfc_allocate_array(sizeof(deckData), 50);
-	 graveyard = gfc_allocate_array(sizeof(deckData), 120);
-	 Hand = gfc_allocate_array(sizeof(Card), 5);
-	 Field = gfc_allocate_array(sizeof(Card), 50);
-	 rewards = gfc_allocate_array(sizeof(Card), 3);
+	 player1deck = gfc_allocate_array(sizeof(Card), 50);
+	 loadDeck(player1deck, "cards/deck2.json");
  }
 
+Entity newCard()
+ {
+	 /*
+	 Entity *ent = Entity_new();
+	 Card *c = gfc_allocate_array(sizeOf(Card),1);
+	 ent->customData = c;
+
+
+	 ent->OnDeath = destroyCard;
+	 ent->update = move card?
+	 ent->draw = // Draw function for cards, for drawing 1 or 2 models depending on card position
+	 return ent;
+
+	 *
+	 */
+ }
+void loadDeck(Card deck[50], char *deckname)
+{
+	SJson *cardData, *dataBuffer,*deckIdData,*cardIdFromFile;
+	if (!deck)
+	{
+		slog("Didn't get deck from param wat wat");
+		return;
+	}
+	cardData = sj_load("cards/cardData.json");
+	if (!cardData)
+	{
+		slog("Card Data not loaded from cards/cardData.json");
+		sj_free(cardData);
+		return;
+	}
+	deckIdData = sj_load(deckname);
+	if (!deckIdData)
+	{
+		slog("Card Data not loaded from %s", deckname);
+		sj_free(cardData);
+		sj_free(deckIdData);
+		return;
+	}
+	
+	for (int i = 1; i < 51; i++)
+	{
+		/*String conversion converted from : https://stackoverflow.com/questions/8257714/how-to-convert-an-int-to-string-in-c */
+		
+		char *stringBuffer = malloc(4);
+		snprintf(stringBuffer,4, "%d", i);
+		slog("Test 2 : %s", stringBuffer);
+
+
+		cardIdFromFile = sj_object_get_value(deckIdData,stringBuffer);
+		dataBuffer = sj_object_get_value(cardData, sj_get_string_value(cardIdFromFile));
+		if (!dataBuffer)
+		{
+			slog("Bad card Read:<");
+			free(stringBuffer);
+			continue;
+		}
+		
+		deck[i].cardName = gfc_allocate_array(sizeof(TextLine), 1);
+		deck[i].cardText = gfc_allocate_array(sizeof(TextBlock), 1);
+
+		memcpy(deck[i].cardName, sj_get_string_value(sj_object_get_value(dataBuffer, "Name")), sizeof(TextLine));
+		memcpy(deck[i].cardText, sj_get_string_value(sj_object_get_value(dataBuffer, "Text")), sizeof(TextBlock));
+		/*
+		sj_get_integer_value(sj_object_get_value(dataBuffer, "cardAP"), deck[i].cardAP);
+		sj_get_integer_value(sj_object_get_value(dataBuffer, "cardDP"), deck[i].cardDP);
+		sj_get_integer_value(sj_object_get_value(dataBuffer, "cardHP"), deck[i].cardHP);
+		deck[i].cardHPcurrent = deck[i].cardHP;/
+		*/
+		slog("Card Name : %s", deck[i].cardName);
+		slog("Card Text : %s", deck[i].cardText);
+		/*
+		slog("Card AP : %i", deck[i].cardAP);
+		slog("Card AP : %i", deck[i].cardDP);
+		slog("Card AP : %i", deck[i].cardHP);
+		*/				
+		free(stringBuffer);
+	}
+	sj_free(cardData);
+	sj_free(deckIdData);
+	return;
+}
 void setDeck(char *deckName)
 {
 	FILE *deck;
@@ -66,6 +148,9 @@ void setDeck(char *deckName)
 		fscanf(deck, "%s", buff);
 		playerDeck[x].cardId = buff;
 		playerDeck[x]._cardState = inDeck;
+		void* p = x;
+		playerDeckList = gfc_list_append(playerDeckList, p);
+		slog("p data: %i", playerDeckList->elements[x]);
 		slog("Deck index %i set to ID %s", x, playerDeck[x].cardId);
 	}
 	slog("Deck index 2 set to ID %s", playerDeck[2].cardId);
@@ -79,7 +164,7 @@ void setDeck(char *deckName)
 	return;
 }
 
-
+//Field Play
 void drawCard()
 {
 
@@ -179,13 +264,14 @@ void setCardData(Card *card)
 	return;
 
 }
+//owo
 void endDuel()
 {
 	free(Hand);
 	free(playerDeck);
 	return;
 }
-
+//Field Play
 void playCard(int x, int y, int handIndex)
 {
 	//Entity *eCard = entity_new();
@@ -223,7 +309,7 @@ void playCard(int x, int y, int handIndex)
 	
 	return;
 }
-
+//Field Play
 void cardMove(int x, int y, Card *cardPointer)
 {
 	if (!cardPointer)return;
@@ -239,6 +325,7 @@ void cardMove(int x, int y, Card *cardPointer)
 	cardPointer->cardYpos = y;
 	//cardPointer->_cardMoved = 1;
 }
+
 void setCardModelLocation(int x, int y, Entity *eCard)
 {
 	if (!eCard)return;
@@ -251,6 +338,7 @@ void setCardModelLocation(int x, int y, Entity *eCard)
 	
 	return;
 }
+
 void setCardDefense(Card *cardpointer)
 {
 	if (!cardpointer)return;
@@ -271,7 +359,7 @@ void setCardFight(Card *cardpointer)
 	return;
 }
 
-
+//Field Play
 void startDuel()
 {
 	int x, y;
@@ -313,7 +401,7 @@ void setCardHP(Card *cardpointer)
 		}
 	}
 }
-
+//Field Plays
 void destroyCard(Card *cardpointer)
 {
 	int g;

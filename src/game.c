@@ -60,17 +60,9 @@ int main(int argc,char *argv[])
 	loadMap("mapDat/map1.txt");
 	//w = world_load("models/cube.json");
 	setCardFileData();
-	setDeck("cards/deck1.txt");
-	startDuel();
-	playCard(2, 1, 4);
-	playCard(2, 0, 0);
-	playCard(1, 1, 3);
-	playCard(4,4,2);
-	playCard(3, 3, 1);
-    for (a = 0; a < 10;a++)
-    {
-        agumon_new(vector3d(a * 10 -50,0,0));
-    }
+	//startDuel();
+
+
     // main game loop
 	slog_sync();
     gf3d_camera_set_scale(vector3d(1,1,1));

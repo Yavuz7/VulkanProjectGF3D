@@ -45,6 +45,7 @@ enum cardType{monster,spell,trap,leader};
 */
 void setCardData(Card *card);
 
+Entity newCard();
 /*
 *@Brief Allocates memory for global variables in 
 */
@@ -115,5 +116,7 @@ void setCardHP(Card *cardpointer);
 *@Param Card to be destroyed
 */
 void destroyCard(Card *cardpointer);
+
+void loadDeck(Card *deck, char *deckname);
 
 #endif
