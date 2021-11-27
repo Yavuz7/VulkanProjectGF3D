@@ -5,6 +5,7 @@
 #include "gfc_text.h"
 #include "gf3d_model.h"
 #include "simple_json.h"
+#include "gfc_list.h"
 #include "entity.h"
 
 typedef struct
@@ -58,8 +59,9 @@ void setDeck(char *deckName);
 
 /*
 *@Brief Adds card to hand array
+*@Param Deck to draw cards from
 */
-void drawCard();
+void drawCard(List *deck);
 
 /*
 *@Brief Cleans up everything

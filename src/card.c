@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include "simple_json.h"
 #include "simple_logger.h"
-#include "gfc_list.h"
 #include "card.h"
 #include "tile.h"
 
@@ -35,8 +34,12 @@ Uint8 cardsInDeck;
 	 cardsInField = 0;
 	 cardsInGrave = 0;
 	 player1deck = gfc_allocate_array(sizeof(Card), 50);
-	 player1DeckList = gfc_list_new();
+	 player1DeckList = gfc_list_new_size(50);
+	 player1HandList = gfc_list_new_size(5);
 	 loadDeck(player1deck, "cards/deck2.json");
+	 do{
+		 drawCard(player1DeckList);
+	 } while (gfc_list_get_count(player1HandList) < 5);
  }
 
 
@@ -64,7 +67,7 @@ void loadDeck(Card deck[50], char *deckname)
 		return;
 	}
 	
-	for (int i = 1; i < 50; i++)
+	for (int i = 1; i < 51; i++)
 	{
 		/*String conversion converted from : https://stackoverflow.com/questions/8257714/how-to-convert-an-int-to-string-in-c */
 		
@@ -92,7 +95,7 @@ void loadDeck(Card deck[50], char *deckname)
 		sj_get_integer_value(sj_object_get_value(dataBuffer, "cardDP"), &deck[i].cardDP);
 		sj_get_integer_value(sj_object_get_value(dataBuffer, "cardHP"), &deck[i].cardHP);
 		deck[i].cardHPcurrent = deck[i].cardHP;
-		
+		deck[i].listReference = i;
 
 		void *p = i;
 		slog("Test 3 : %i", (int)p);
@@ -112,112 +115,35 @@ void loadDeck(Card deck[50], char *deckname)
 }
 
 //Field Play
-void drawCard()
+void drawCard(List *deck)
 {
-
-	if (cardsInHand >= 5)
-	{
-		slog("Hand full");
-		return;
-	}
-	
-	int rando,i;
-	
-	for (i = 0; i < 5; i++)
-	{
-		if (Hand[i]._cardState == inHand)
-		{
-			slog("Hand slot %i full moving to next position in hand", i);
-			continue;
-		}
-		else
-		{
-			slog("Card placed in hand slot %i", i);
-			break;
-		}
-	}
-	if (cardsInHand > 4)
-	{
-		slog("Hand is full");
-		return;
-	}
-	cardsInHand += 1;
-	// Srand gotten from : https://stackoverflow.com/a/9459063	
+	int rando;
+	// Srand modified from : https://stackoverflow.com/a/9459063	
 	srand((unsigned int)SDL_GetTicks());
 	
-	do
-	{	
-		rando = rand() % 50;
-		if (rando < 0)
-		{
-			rando *= -1;
-		}
-	} while (playerDeck[rando]._cardState != inDeck);
-
-	Hand[i].cardId = playerDeck[rando].cardId;
-	
-	Hand[i]._cardState = inHand;
-	playerDeck[rando]._cardState = inHand;
-
-	setCardData(&Hand[i]);
-	slog("Drew card %i from deck", rando);
-
-	cardsInDeck -= 1;
-	
-	slog("CardName of card 0: %s", Hand[0].cardName);
-	slog("CardName of card 1: %s", Hand[1].cardName);
-	slog("CardName of card 2: %s", Hand[2].cardName);
-	slog("CardName of card 3: %s", Hand[3].cardName);
-	slog("CardName of card 4: %s", Hand[4].cardName);
-
+	rando = rand() % gfc_list_get_count(deck);
+	void *p = gfc_list_get_nth(deck, rando);
+	gfc_list_append(player1HandList,p);
+	gfc_list_delete_nth(deck, rando);
+	slog("Drew Card : %s", player1deck[(int)p].cardName);
+	for (int i = 0; i < 5; i++)
+	{
+		if (gfc_list_get_nth(player1HandList, i) == 0)continue;
+		slog("Card ID in hand position %i : %i",i, gfc_list_get_nth(player1HandList, i));
+	}
 	return;
 }
 
-void setCardData(Card *card)
-{
-	SJson *cardData, *dataBuffer;
 
-	cardData = sj_load("cards/cardData.json");
-	if (!cardData)
-	{
-		slog("Card Data not loaded from cards/cardData.json");
-		sj_free(cardData);
-		return;
-	}
-	dataBuffer = sj_object_get_value(cardData, card->cardId);
-	if (!dataBuffer)
-	{
-		slog("Card Data for iD: [ %i ] not found", card->cardId);
-		sj_free(cardData);
-		return;
-	}
-	card->cardName = gfc_allocate_array(sizeof(TextLine), 1);
-	card->cardText = gfc_allocate_array(sizeof(TextBlock), 1);
-	
-	memcpy(card->cardName, sj_get_string_value(sj_object_get_value(dataBuffer, "Name")), sizeof(TextLine));
-	memcpy(card->cardText, sj_get_string_value(sj_object_get_value(dataBuffer, "Text")), sizeof(TextBlock));
-
-	sj_get_integer_value(sj_object_get_value(dataBuffer, "cardAP"),&card->cardAP);
-	sj_get_integer_value(sj_object_get_value(dataBuffer, "cardDP"), &card->cardDP);
-	sj_get_integer_value(sj_object_get_value(dataBuffer, "cardHP"), &card->cardHP);
-	card->cardHPcurrent = card->cardHP;
-
-	slog("Card Name : %s", card->cardName);
-	slog("Card Text : %s", card->cardText);
-	slog("Card AP : %i", card->cardAP);
-	slog("Card AP : %i", card->cardDP);
-	slog("Card AP : %i", card->cardHP);
-	sj_free(cardData);
-	return;
-
-}
 //owo
+
 void endDuel()
 {
 	free(Hand);
 	free(playerDeck);
 	return;
 }
+/*
 //Field Play
 void playCard(int x, int y, int handIndex)
 {
@@ -256,6 +182,7 @@ void playCard(int x, int y, int handIndex)
 	
 	return;
 }
+*/
 //Field Play
 void cardMove(int x, int y, Card *cardPointer)
 {
