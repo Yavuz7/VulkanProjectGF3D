@@ -22,7 +22,7 @@ typedef struct
 	int cardHPcurrent; /*Current HP of a card*/
 	Uint16 cardCost; /*Summoning cost of a card*/
 	
-
+	Uint8 listReference; /*Number that correlates to its list reference*/
 	Uint8 cardXpos;/*x position of card*/
 	Uint8 cardYpos;/*y position of card*/
 	Uint8 _cardMoved;/*Checks if card moved*/

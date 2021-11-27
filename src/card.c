@@ -18,7 +18,10 @@ Card *Field = { 0 };/* Cards on the field*/
 deckData *playerDeck = { 0 }; /*Deck of ids to pull from*/
 deckData *graveyard = { 0 }; /*Graveyard of ids to pull from*/
 Card *Hand = { 0 };
-List *playerDeckList;
+List *player1DeckList;
+List *player1HandList;
+List *fieldList;
+List *player1GraveyardList;
 Card *rewards = { 0 };
 Uint8 cardsInDeck;
  Uint8 cardsInHand;
@@ -32,25 +35,11 @@ Uint8 cardsInDeck;
 	 cardsInField = 0;
 	 cardsInGrave = 0;
 	 player1deck = gfc_allocate_array(sizeof(Card), 50);
+	 player1DeckList = gfc_list_new();
 	 loadDeck(player1deck, "cards/deck2.json");
  }
 
-Entity newCard()
- {
-	 /*
-	 Entity *ent = Entity_new();
-	 Card *c = gfc_allocate_array(sizeOf(Card),1);
-	 ent->customData = c;
 
-
-	 ent->OnDeath = destroyCard;
-	 ent->update = move card?
-	 ent->draw = // Draw function for cards, for drawing 1 or 2 models depending on card position
-	 return ent;
-
-	 *
-	 */
- }
 void loadDeck(Card deck[50], char *deckname)
 {
 	SJson *cardData, *dataBuffer,*deckIdData,*cardIdFromFile;
@@ -75,7 +64,7 @@ void loadDeck(Card deck[50], char *deckname)
 		return;
 	}
 	
-	for (int i = 1; i < 51; i++)
+	for (int i = 1; i < 50; i++)
 	{
 		/*String conversion converted from : https://stackoverflow.com/questions/8257714/how-to-convert-an-int-to-string-in-c */
 		
@@ -84,7 +73,7 @@ void loadDeck(Card deck[50], char *deckname)
 		slog("Test 2 : %s", stringBuffer);
 
 
-		cardIdFromFile = sj_object_get_value(deckIdData,stringBuffer);
+		cardIdFromFile = sj_object_get_value_countdown(deckIdData,stringBuffer);
 		dataBuffer = sj_object_get_value(cardData, sj_get_string_value(cardIdFromFile));
 		if (!dataBuffer)
 		{
@@ -98,69 +87,27 @@ void loadDeck(Card deck[50], char *deckname)
 
 		memcpy(deck[i].cardName, sj_get_string_value(sj_object_get_value(dataBuffer, "Name")), sizeof(TextLine));
 		memcpy(deck[i].cardText, sj_get_string_value(sj_object_get_value(dataBuffer, "Text")), sizeof(TextBlock));
-		/*
-		sj_get_integer_value(sj_object_get_value(dataBuffer, "cardAP"), deck[i].cardAP);
-		sj_get_integer_value(sj_object_get_value(dataBuffer, "cardDP"), deck[i].cardDP);
-		sj_get_integer_value(sj_object_get_value(dataBuffer, "cardHP"), deck[i].cardHP);
-		deck[i].cardHPcurrent = deck[i].cardHP;/
-		*/
+		
+		sj_get_integer_value(sj_object_get_value(dataBuffer, "cardAP"), &deck[i].cardAP);
+		sj_get_integer_value(sj_object_get_value(dataBuffer, "cardDP"), &deck[i].cardDP);
+		sj_get_integer_value(sj_object_get_value(dataBuffer, "cardHP"), &deck[i].cardHP);
+		deck[i].cardHPcurrent = deck[i].cardHP;
+		
+
+		void *p = i;
+		slog("Test 3 : %i", (int)p);
+		player1DeckList = gfc_list_append(player1DeckList, p);
 		slog("Card Name : %s", deck[i].cardName);
 		slog("Card Text : %s", deck[i].cardText);
-		/*
+		
 		slog("Card AP : %i", deck[i].cardAP);
 		slog("Card AP : %i", deck[i].cardDP);
 		slog("Card AP : %i", deck[i].cardHP);
-		*/				
+					
 		free(stringBuffer);
 	}
 	sj_free(cardData);
 	sj_free(deckIdData);
-	return;
-}
-void setDeck(char *deckName)
-{
-	FILE *deck;
-	char *buff = { 0 };
-	int x;
-	
-	if (!deckName)
-	{
-		slog("Didn't get Deck file parameter ,w,");
-		free(playerDeck);
-		free(Hand);
-		return;
-	}
-	deck = fopen(deckName, "r");
-	if (!deck)
-	{
-		slog("Didn't load the deck %s using fopen, ,w,", deck);
-		fclose(deck);
-		free(playerDeck);
-		free(Hand);
-		return;
-	}
-	slog("Deck Opened ^w^");
-	slog_sync();
-
-	for (x = 0; x < 50; x++)
-	{
-		buff = gfc_allocate_array(sizeof(char), 15);
-		fscanf(deck, "%s", buff);
-		playerDeck[x].cardId = buff;
-		playerDeck[x]._cardState = inDeck;
-		void* p = x;
-		playerDeckList = gfc_list_append(playerDeckList, p);
-		slog("p data: %i", playerDeckList->elements[x]);
-		slog("Deck index %i set to ID %s", x, playerDeck[x].cardId);
-	}
-	slog("Deck index 2 set to ID %s", playerDeck[2].cardId);
-	slog("Deck index 3 set to ID %s", playerDeck[3].cardId);
-	for (int i = 0; i < 5; i++)
-	{
-		drawCard();
-	}
-	fclose(deck);
-	free(buff);
 	return;
 }
 
