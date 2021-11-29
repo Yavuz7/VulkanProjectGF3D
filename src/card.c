@@ -6,16 +6,8 @@
 #include "tile.h"
 
 
-
-typedef struct{
-	TextWord  *cardId; /* Id to identify card*/
-	enum states _cardState; /*Identifies card position, for this struct it only keeps track of in deck or in hand*/
-}deckData;
-
-Card *player1deck = { 0 }; /*Deck storage*/
+Card *deckData = { 0 }; /*Deck storage*/
 Card *Field = { 0 };/* Cards on the field*/
-deckData *playerDeck = { 0 }; /*Deck of ids to pull from*/
-deckData *graveyard = { 0 }; /*Graveyard of ids to pull from*/
 Card *Hand = { 0 };
 List *player1DeckList;
 List *player1HandList;
@@ -33,17 +25,18 @@ Uint8 cardsInDeck;
 	 cardsInHand = 0;
 	 cardsInField = 0;
 	 cardsInGrave = 0;
-	 player1deck = gfc_allocate_array(sizeof(Card), 50);
+	 deckData = gfc_allocate_array(sizeof(Card), 50);
 	 player1DeckList = gfc_list_new_size(50);
 	 player1HandList = gfc_list_new_size(5);
-	 loadDeck(player1deck, "cards/deck2.json");
+	 fieldList = gfc_list_new_size(50);
+	 loadDeck(player1DeckList, "cards/deck2.json");
 	 do{
 		 drawCard(player1DeckList);
 	 } while (gfc_list_get_count(player1HandList) < 5);
  }
 
 
-void loadDeck(Card deck[50], char *deckname)
+void loadDeck(List *deck, char *deckname)
 {
 	SJson *cardData, *dataBuffer,*deckIdData,*cardIdFromFile;
 	if (!deck)
@@ -67,13 +60,16 @@ void loadDeck(Card deck[50], char *deckname)
 		return;
 	}
 	
-	for (int i = 1; i < 51; i++)
+	for (int i = 0; i < 50; i++)
 	{
 		/*String conversion converted from : https://stackoverflow.com/questions/8257714/how-to-convert-an-int-to-string-in-c */
-		
+		if (&deckData[49] == NULL)
+		{
+			i = i + 49;
+		}
 		char *stringBuffer = malloc(4);
 		snprintf(stringBuffer,4, "%d", i);
-		slog("Test 2 : %s", stringBuffer);
+		//slog("Test 2 : %s", stringBuffer);
 
 
 		cardIdFromFile = sj_object_get_value_countdown(deckIdData,stringBuffer);
@@ -85,29 +81,33 @@ void loadDeck(Card deck[50], char *deckname)
 			continue;
 		}
 		
-		deck[i].cardName = gfc_allocate_array(sizeof(TextLine), 1);
-		deck[i].cardText = gfc_allocate_array(sizeof(TextBlock), 1);
+		deckData[i].cardName = gfc_allocate_array(sizeof(TextLine), 1);
+		deckData[i].cardText = gfc_allocate_array(sizeof(TextBlock), 1);
 
-		memcpy(deck[i].cardName, sj_get_string_value(sj_object_get_value(dataBuffer, "Name")), sizeof(TextLine));
-		memcpy(deck[i].cardText, sj_get_string_value(sj_object_get_value(dataBuffer, "Text")), sizeof(TextBlock));
+		memcpy(deckData[i].cardName, sj_get_string_value(sj_object_get_value(dataBuffer, "Name")), sizeof(TextLine));
+		memcpy(deckData[i].cardText, sj_get_string_value(sj_object_get_value(dataBuffer, "Text")), sizeof(TextBlock));
 		
-		sj_get_integer_value(sj_object_get_value(dataBuffer, "cardAP"), &deck[i].cardAP);
-		sj_get_integer_value(sj_object_get_value(dataBuffer, "cardDP"), &deck[i].cardDP);
-		sj_get_integer_value(sj_object_get_value(dataBuffer, "cardHP"), &deck[i].cardHP);
-		deck[i].cardHPcurrent = deck[i].cardHP;
-		deck[i].listReference = i;
+		sj_get_integer_value(sj_object_get_value(dataBuffer, "cardAP"), &deckData[i].cardAP);
+		sj_get_integer_value(sj_object_get_value(dataBuffer, "cardDP"), &deckData[i].cardDP);
+		sj_get_integer_value(sj_object_get_value(dataBuffer, "cardHP"), &deckData[i].cardHP);
+		deckData[i].cardHPcurrent = deckData[i].cardHP;
+		deckData[i].listReference = i;
 
 		void *p = i;
-		slog("Test 3 : %i", (int)p);
-		player1DeckList = gfc_list_append(player1DeckList, p);
+		deck = gfc_list_append(deck, p);
+		/*
 		slog("Card Name : %s", deck[i].cardName);
 		slog("Card Text : %s", deck[i].cardText);
 		
 		slog("Card AP : %i", deck[i].cardAP);
 		slog("Card AP : %i", deck[i].cardDP);
 		slog("Card AP : %i", deck[i].cardHP);
-					
+			*/		
 		free(stringBuffer);
+		if (&deckData[50] == NULL)
+		{
+			i = i - 49;
+		}
 	}
 	sj_free(cardData);
 	sj_free(deckIdData);
@@ -125,7 +125,7 @@ void drawCard(List *deck)
 	void *p = gfc_list_get_nth(deck, rando);
 	gfc_list_append(player1HandList,p);
 	gfc_list_delete_nth(deck, rando);
-	slog("Drew Card : %s", player1deck[(int)p].cardName);
+	slog("Drew Card : %s", deckData[(int)p].cardName);
 	for (int i = 0; i < 5; i++)
 	{
 		if (gfc_list_get_nth(player1HandList, i) == 0)continue;
@@ -140,8 +140,17 @@ void drawCard(List *deck)
 void endDuel()
 {
 	free(Hand);
-	free(playerDeck);
+	//free(playerDeck);
 	return;
+}
+void playCard(int x, int y, int handIndex, List *hand)
+{
+	if (!hand)return;
+
+	void *p = gfc_list_get_nth(hand, handIndex);
+	gfc_list_append(fieldList, p);
+	gfc_list_delete_nth(hand, handIndex);
+
 }
 /*
 //Field Play
@@ -291,14 +300,7 @@ void destroyCard(Card *cardpointer)
 			slog("Card %s sent to grave", Field[i].cardName);
 			free(Field[i].cardName);
 			free(Field[i].cardText);
-			for (g = 0; g < 120; g++)
-			{
-				if (graveyard[g]._cardState != inGrave)
-				{
-					//memcpy(&graveyard[g].cardId,&Field[i].cardId, sizeof(TextWord));
-					graveyard[g]._cardState = inGrave;
-				}
-			}
+
 			free(Field[i].cardId);
 			memset(&Field[i], 0, sizeof(Card));
 			return;

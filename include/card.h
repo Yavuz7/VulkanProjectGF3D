@@ -78,8 +78,9 @@ void startDuel();
 *@Brief Plays a card at index x y 
 *@Param X position on grid
 *@Param Y position on grid
+*@Param Hand that card is being played from
 */
-void playCard(int x, int y, int handIndex);
+void playCard(int x, int y, int handIndex,List *hand);
 
 /*
 *@Brief setCard model location stuff
@@ -119,6 +120,12 @@ void setCardHP(Card *cardpointer);
 */
 void destroyCard(Card *cardpointer);
 
-void loadDeck(Card *deck, char *deckname);
+/*
+*@Brief Loads deck data 
+*@Param Deck list for card data to be loaded into
+*@Param Deck file for data to be loaded from, json
+*/
+
+void loadDeck(List *deck, char *deckname);
 
 #endif
