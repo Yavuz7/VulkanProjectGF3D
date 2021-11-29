@@ -6,33 +6,30 @@
 #include "tile.h"
 
 
-Card *cardData = { 0 }; /*Deck storage*/
-Card *Field = { 0 };/* Cards on the field*/
-Card *Hand = { 0 };
+Card *cardData = { 0 }; /*Holds all the Card Data of The Game*/
+
 List *player1DeckList;
 List *player1HandList;
+//List *player2DeckList;
+//List *player2HandList;
+
+List *graveyardList;
 List *fieldList;
-List *player1GraveyardList;
-Card *rewards = { 0 };
-Uint8 cardsInDeck;
- Uint8 cardsInHand;
- Uint8 cardsInField;
- Uint8 cardsInGrave;
 
  void setCardFileData()
  {
-	 cardsInDeck = 50;
-	 cardsInHand = 0;
-	 cardsInField = 0;
-	 cardsInGrave = 0;
+
 	 cardData = gfc_allocate_array(sizeof(Card), 100);
 	 player1DeckList = gfc_list_new_size(50);
 	 player1HandList = gfc_list_new_size(5);
+	 graveyardList = gfc_list_new_size(120);
 	 fieldList = gfc_list_new_size(50);
 	 loadDeck(player1DeckList, "cards/deck2.json");
 	 do{
-		 drawCard(player1DeckList);
+		 drawCard(player1DeckList,player1HandList);
 	 } while (gfc_list_get_count(player1HandList) < 5);
+	 playCard(2, 2, 0, player1HandList);
+	 playCard(1, 1, 2, player1HandList);
  }
 
 
@@ -115,21 +112,22 @@ void loadDeck(List *deck, char *deckname)
 }
 
 //Field Play
-void drawCard(List *deck)
+void drawCard(List *deck, List *Hand)
 {
 	int rando;
-	// Srand modified from : https://stackoverflow.com/a/9459063	
+	// Srand modified from : https://stackoverflow.com/a/9459063
+
 	srand((unsigned int)SDL_GetTicks());
 	
 	rando = rand() % gfc_list_get_count(deck);
 	void *p = gfc_list_get_nth(deck, rando);
-	gfc_list_append(player1HandList,p);
+	gfc_list_append(Hand,p);
 	gfc_list_delete_nth(deck, rando);
 	slog("Drew Card : %s", cardData[(int)p].cardName);
 	for (int i = 0; i < 5; i++)
 	{
-		if (gfc_list_get_nth(player1HandList, i) == 0)continue;
-		slog("Card ID in hand position %i : %i",i, gfc_list_get_nth(player1HandList, i));
+		if (gfc_list_get_nth(Hand, i) == 0)continue;
+		slog("Card ID in hand position %i : %i",i, gfc_list_get_nth(Hand, i));
 	}
 	return;
 }
@@ -139,8 +137,6 @@ void drawCard(List *deck)
 
 void endDuel()
 {
-	free(Hand);
-	//free(playerDeck);
 	return;
 }
 
@@ -151,32 +147,38 @@ void playCard(int x, int y, int handIndex, List *hand)
 	void *p = gfc_list_get_nth(hand, handIndex);
 	gfc_list_append(fieldList, p);
 	gfc_list_delete_nth(hand, handIndex);
-
+	cardData[(int)p].fieldReference = gfc_list_get_item_index(fieldList, p);
 	cardData[(int)p].cardXpos = x;
 	cardData[(int)p].cardYpos = y;
 	cardData[(int)p].eP = entity_new();
 	cardData[(int)p].eP->model = gf3d_model_load_plus("cardDefault", "cardDefault");
 
 	setCardModelLocation(x, y, cardData[(int)p].eP);
-	setTileOccupation(x, y, &cardData[(int)p]);
+	setTileOccupation(x, y, p);
 	return;
 }
 
 //Field Play
-void cardMove(int x, int y, Card *cardPointer)
+void cardMove(int x, int y, Card *cardP)
 {
-	if (!cardPointer)return;
-	setCardModelLocation(x, y, cardPointer->eP);
-	if (cardPointer->eMP)
+	if (!cardP)return;
+	setCardModelLocation(x, y, cardP->eP);
+	if (cardP->eMP)
 	{
-		setCardModelLocation(x, y, cardPointer->eMP);
-		cardPointer->eMP->position.z = 5.0f;
+		setCardModelLocation(x, y, cardP->eMP);
+		cardP->eMP->position.z = 5.0f;
 	}
-	removeTileOccupation(cardPointer->cardXpos, cardPointer->cardYpos);
-	setTileOccupation(x, y, cardPointer);
-	cardPointer->cardXpos = x;
-	cardPointer->cardYpos = y;
+	removeTileOccupation(cardP->cardXpos, cardP->cardYpos);
+	setTileOccupation(x, y, cardP->listReference);
+	cardP->cardXpos = x;
+	cardP->cardYpos = y;
 	//cardPointer->_cardMoved = 1;
+}
+
+Card *getCardPointer(void *p)
+{
+	if (!p)return NULL;
+	return &cardData[(int)p];
 }
 
 void setCardModelLocation(int x, int y, Entity *eCard)
@@ -215,6 +217,7 @@ void setCardFight(Card *cardpointer)
 //Field Play
 void startDuel()
 {
+	/*
 	int x, y;
 	for (int i = 0; i < 2; i++)
 	{
@@ -241,39 +244,37 @@ void startDuel()
 		setCardModelLocation(x, y, Field[i].eMP);
 		Field[i].eMP->position.z = 5.0f;
 		setTileOccupation(x, y, &Field[i]);
-	}
+		*/
+	
 }
 void setCardHP(Card *cardpointer)
 {
 	for (int i = 0; i < 50; i++)
 	{
-		if (Field[i].cardXpos == cardpointer->cardXpos && Field[i].cardYpos == cardpointer->cardYpos)
+		if (cardData[i].cardXpos == cardpointer->cardXpos && cardData[i].cardYpos == cardpointer->cardYpos)
 		{
-			Field[i].cardHPcurrent = cardpointer->cardHPcurrent;
+			cardData[i].cardHPcurrent = cardpointer->cardHPcurrent;
 			return;
 		}
 	}
 }
 //Field Plays
-void destroyCard(Card *cardpointer)
+void destroyCard(void *Cardp)
 {
-	int g;
-	for (int i = 0; i < 50; i++)
+	slog("Card %s sent to grave", cardData[(int)Cardp].cardName);
+	free(cardData[(int)Cardp].cardName);
+	free(cardData[(int)Cardp].cardText);
+	free(cardData[(int)Cardp].cardId);
+	entity_free(cardData[(int)Cardp].eP);
+	if (cardData[(int)Cardp].eMP)
 	{
-		if (Field[i].cardXpos == cardpointer->cardXpos && Field[i].cardYpos == cardpointer->cardYpos)
-		{
-			entity_free(Field[i].eP);
-			if (Field[i].eMP)
-			{
-				entity_free(Field[i].eMP);
-			}
-			slog("Card %s sent to grave", Field[i].cardName);
-			free(Field[i].cardName);
-			free(Field[i].cardText);
-
-			free(Field[i].cardId);
-			memset(&Field[i], 0, sizeof(Card));
-			return;
-		}
+		entity_free(cardData[(int)Cardp].eMP);
 	}
+	void *p = gfc_list_get_nth(fieldList, cardData[(int)Cardp].fieldReference); //Using the set field Reference, gets and removes from field list
+	gfc_list_append(graveyardList, p);
+	gfc_list_delete_nth(fieldList, cardData[(int)Cardp].fieldReference);
+	cardData[(int)Cardp].fieldReference = NULL;
+	memset(&cardData[(int)Cardp], 0, sizeof(Card));
+	
+	return;
 }

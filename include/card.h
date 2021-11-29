@@ -24,6 +24,7 @@ typedef struct
 	Uint16 cardCost; /*Summoning cost of a card*/
 	
 	Uint8 listReference; /*Number that correlates to its list reference*/
+	Uint8 fieldReference; /*Number that correlates to it's position on the field*/
 	Uint8 cardXpos;/*x position of card*/
 	Uint8 cardYpos;/*y position of card*/
 	Uint8 _cardMoved;/*Checks if card moved*/
@@ -60,8 +61,9 @@ void setDeck(char *deckName);
 /*
 *@Brief Adds card to hand array
 *@Param Deck to draw cards from
+*@Param Hand to add cards to
 */
-void drawCard(List *deck);
+void drawCard(List *deck, List *Hand);
 
 /*
 *@Brief Cleans up everything
@@ -93,9 +95,9 @@ void setCardModelLocation(int x, int y, Entity *eCard);
 *@Brief Move cards position and entity and sets new coordinates
 *@Param X coordinate of new position
 *@Param Y coordinate of new position
-*@Param Pointer to card being moved
+*@Param Pointer to card being moved, should be data from list
 */
-void cardMove(int x, int y, Card *cardPointer);
+void cardMove(int x, int y, Card *cardP);
 
 /*
 *@Brief Sets Card to defense position
@@ -118,7 +120,7 @@ void setCardHP(Card *cardpointer);
 *@Brief Destroys card and entity
 *@Param Card to be destroyed
 */
-void destroyCard(Card *cardpointer);
+void destroyCard(void *Cardp);
 
 /*
 *@Brief Loads deck data 
@@ -127,5 +129,7 @@ void destroyCard(Card *cardpointer);
 */
 
 void loadDeck(List *deck, char *deckname);
+
+Card *getCardPointer(void *p);
 
 #endif

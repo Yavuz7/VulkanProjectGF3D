@@ -78,7 +78,8 @@ void player_think(Entity *self)
 	{
 		if (startCardMovement == 0)
 		{			
-			cardPointer = getTileOccupation(px, py);
+			cardPointer = getCardPointer(getTileOccupation(px, py));
+			
 			if (cardPointer && cardPointer->_cardType == leader)
 			{
 				startCardMovement = 2;
@@ -218,15 +219,15 @@ void cardMovement(Entity *self,int x, int y,Card *cardPointer)
 		}
 		if (checkTileOccupation(px, py) == 1)
 		{
-			attacker = getTileOccupation(startx, starty);
-			defender = getTileOccupation(px, py);
+			attacker = getCardPointer(getTileOccupation(startx, starty));
+			defender = getCardPointer(getTileOccupation(px, py));
 			setCardFight(cardPointer);
 			int result = cardFight(attacker,defender);
-			setCardHP(attacker);
-			setCardHP(defender);
+			//setCardHP(attacker);
+			//setCardHP(defender);
 			if (result == 0)
 			{
-				destroyCard(defender);
+				destroyCard(defender->listReference);
 				removeTileOccupation(px, py);
 				cardMove(px, py, cardPointer);				
 				resetMovement();
@@ -235,7 +236,7 @@ void cardMovement(Entity *self,int x, int y,Card *cardPointer)
 			}
 			if (result == 1)
 			{
-				destroyCard(attacker);
+				destroyCard(attacker->listReference);
 				removeTileOccupation(startx, starty);				
 				resetMovement();
 				timeEnd = SDL_GetTicks();
