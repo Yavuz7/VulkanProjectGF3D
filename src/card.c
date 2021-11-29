@@ -6,7 +6,7 @@
 #include "tile.h"
 
 
-Card *deckData = { 0 }; /*Deck storage*/
+Card *cardData = { 0 }; /*Deck storage*/
 Card *Field = { 0 };/* Cards on the field*/
 Card *Hand = { 0 };
 List *player1DeckList;
@@ -25,7 +25,7 @@ Uint8 cardsInDeck;
 	 cardsInHand = 0;
 	 cardsInField = 0;
 	 cardsInGrave = 0;
-	 deckData = gfc_allocate_array(sizeof(Card), 50);
+	 cardData = gfc_allocate_array(sizeof(Card), 100);
 	 player1DeckList = gfc_list_new_size(50);
 	 player1HandList = gfc_list_new_size(5);
 	 fieldList = gfc_list_new_size(50);
@@ -38,24 +38,24 @@ Uint8 cardsInDeck;
 
 void loadDeck(List *deck, char *deckname)
 {
-	SJson *cardData, *dataBuffer,*deckIdData,*cardIdFromFile;
+	SJson *cardDataFromFile, *dataBuffer,*deckIdData,*cardIdFromFile;
 	if (!deck)
 	{
 		slog("Didn't get deck from param wat wat");
 		return;
 	}
-	cardData = sj_load("cards/cardData.json");
-	if (!cardData)
+	cardDataFromFile = sj_load("cards/cardData.json");
+	if (!cardDataFromFile)
 	{
 		slog("Card Data not loaded from cards/cardData.json");
-		sj_free(cardData);
+		sj_free(cardDataFromFile);
 		return;
 	}
 	deckIdData = sj_load(deckname);
 	if (!deckIdData)
 	{
 		slog("Card Data not loaded from %s", deckname);
-		sj_free(cardData);
+		sj_free(cardDataFromFile);
 		sj_free(deckIdData);
 		return;
 	}
@@ -63,7 +63,7 @@ void loadDeck(List *deck, char *deckname)
 	for (int i = 0; i < 50; i++)
 	{
 		/*String conversion converted from : https://stackoverflow.com/questions/8257714/how-to-convert-an-int-to-string-in-c */
-		if (&deckData[49] == NULL)
+		if (&cardData[49] == NULL)
 		{
 			i = i + 49;
 		}
@@ -73,7 +73,7 @@ void loadDeck(List *deck, char *deckname)
 
 
 		cardIdFromFile = sj_object_get_value_countdown(deckIdData,stringBuffer);
-		dataBuffer = sj_object_get_value(cardData, sj_get_string_value(cardIdFromFile));
+		dataBuffer = sj_object_get_value(cardDataFromFile, sj_get_string_value(cardIdFromFile));
 		if (!dataBuffer)
 		{
 			slog("Bad card Read:<");
@@ -81,17 +81,17 @@ void loadDeck(List *deck, char *deckname)
 			continue;
 		}
 		
-		deckData[i].cardName = gfc_allocate_array(sizeof(TextLine), 1);
-		deckData[i].cardText = gfc_allocate_array(sizeof(TextBlock), 1);
+		cardData[i].cardName = gfc_allocate_array(sizeof(TextLine), 1);
+		cardData[i].cardText = gfc_allocate_array(sizeof(TextBlock), 1);
 
-		memcpy(deckData[i].cardName, sj_get_string_value(sj_object_get_value(dataBuffer, "Name")), sizeof(TextLine));
-		memcpy(deckData[i].cardText, sj_get_string_value(sj_object_get_value(dataBuffer, "Text")), sizeof(TextBlock));
+		memcpy(cardData[i].cardName, sj_get_string_value(sj_object_get_value(dataBuffer, "Name")), sizeof(TextLine));
+		memcpy(cardData[i].cardText, sj_get_string_value(sj_object_get_value(dataBuffer, "Text")), sizeof(TextBlock));
 		
-		sj_get_integer_value(sj_object_get_value(dataBuffer, "cardAP"), &deckData[i].cardAP);
-		sj_get_integer_value(sj_object_get_value(dataBuffer, "cardDP"), &deckData[i].cardDP);
-		sj_get_integer_value(sj_object_get_value(dataBuffer, "cardHP"), &deckData[i].cardHP);
-		deckData[i].cardHPcurrent = deckData[i].cardHP;
-		deckData[i].listReference = i;
+		sj_get_integer_value(sj_object_get_value(dataBuffer, "cardAP"), &cardData[i].cardAP);
+		sj_get_integer_value(sj_object_get_value(dataBuffer, "cardDP"), &cardData[i].cardDP);
+		sj_get_integer_value(sj_object_get_value(dataBuffer, "cardHP"), &cardData[i].cardHP);
+		cardData[i].cardHPcurrent = cardData[i].cardHP;
+		cardData[i].listReference = i;
 
 		void *p = i;
 		deck = gfc_list_append(deck, p);
@@ -104,12 +104,12 @@ void loadDeck(List *deck, char *deckname)
 		slog("Card AP : %i", deck[i].cardHP);
 			*/		
 		free(stringBuffer);
-		if (&deckData[50] == NULL)
+		if (&cardData[50] == NULL)
 		{
 			i = i - 49;
 		}
 	}
-	sj_free(cardData);
+	sj_free(cardDataFromFile);
 	sj_free(deckIdData);
 	return;
 }
@@ -125,7 +125,7 @@ void drawCard(List *deck)
 	void *p = gfc_list_get_nth(deck, rando);
 	gfc_list_append(player1HandList,p);
 	gfc_list_delete_nth(deck, rando);
-	slog("Drew Card : %s", deckData[(int)p].cardName);
+	slog("Drew Card : %s", cardData[(int)p].cardName);
 	for (int i = 0; i < 5; i++)
 	{
 		if (gfc_list_get_nth(player1HandList, i) == 0)continue;
@@ -143,6 +143,7 @@ void endDuel()
 	//free(playerDeck);
 	return;
 }
+
 void playCard(int x, int y, int handIndex, List *hand)
 {
 	if (!hand)return;
@@ -151,47 +152,16 @@ void playCard(int x, int y, int handIndex, List *hand)
 	gfc_list_append(fieldList, p);
 	gfc_list_delete_nth(hand, handIndex);
 
-}
-/*
-//Field Play
-void playCard(int x, int y, int handIndex)
-{
-	//Entity *eCard = entity_new();
-	int fieldIndex; //Keeps track of positions of cards
-	for (fieldIndex = 0; fieldIndex < 50; fieldIndex++)
-	{
-		if (Field[fieldIndex]._cardState == inField)
-		{
-			continue;
-		}
-		else
-		{
-			slog("Card summoned into field index %i", fieldIndex);
-			break;
-		}
-	}
-	
-	memcpy(&Field[fieldIndex], &Hand[handIndex], sizeof(Card));
-	memset(&Hand[handIndex], 0, sizeof(Card));
+	cardData[(int)p].cardXpos = x;
+	cardData[(int)p].cardYpos = y;
+	cardData[(int)p].eP = entity_new();
+	cardData[(int)p].eP->model = gf3d_model_load_plus("cardDefault", "cardDefault");
 
-	//Set data of card on field
-	Field[fieldIndex]._cardState = inField;
-	Field[fieldIndex]._cardPosition = Fight;
-	setCardFight(&Field[fieldIndex]);
-	Field[fieldIndex].eP = entity_new();
-	Field[fieldIndex].eP->model = gf3d_model_load_plus("cardDefault","cardDefault");
-	Field[fieldIndex].eP->cfieldIndex = fieldIndex;
-	Field[fieldIndex].cardXpos = x;
-	Field[fieldIndex].cardYpos = y;
-	setCardModelLocation(x, y, Field[fieldIndex].eP);
-	setTileOccupation(x, y, &Field[fieldIndex]);
-	
-	cardsInHand -= 1;
-	cardsInField += 1;
-	
+	setCardModelLocation(x, y, cardData[(int)p].eP);
+	setTileOccupation(x, y, &cardData[(int)p]);
 	return;
 }
-*/
+
 //Field Play
 void cardMove(int x, int y, Card *cardPointer)
 {
