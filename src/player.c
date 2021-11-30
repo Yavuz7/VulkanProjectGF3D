@@ -223,8 +223,6 @@ void cardMovement(Entity *self,int x, int y,Card *cardPointer)
 			defender = getCardPointer(getTileOccupation(px, py));
 			setCardFight(cardPointer);
 			int result = cardFight(attacker,defender);
-			//setCardHP(attacker);
-			//setCardHP(defender);
 			if (result == 0)
 			{
 				destroyCard(defender->listReference);
@@ -331,40 +329,7 @@ void cardMovement(Entity *self,int x, int y,Card *cardPointer)
 	}
 }
 
-int cardFight(Card *attacker,Card *defender)
-{
-	if (!attacker)return;
-	slog("%s (AP%i ,DP %i,HP %i)", defender->cardName, defender->cardAP, defender->cardDP, defender->cardHPcurrent);
-	//Attacking into a attack monster
-	if (defender->_cardPosition == Fight)
-	{		
-		defender->cardHPcurrent = defender->cardHPcurrent - (attacker->cardAP - (defender->cardDP / 2));
-		if (defender->cardHPcurrent <= 0)
-		{
-			slog("Defender Dead");
-			return 0; // Victor attacker
-		}
-		attacker->cardHPcurrent = attacker->cardHPcurrent - (defender->cardAP - (attacker->cardDP / 2));
-		if (attacker->cardHPcurrent <= 0)
-		{
-			slog("Attacker Dead, Defender HP %i",defender->cardHPcurrent);
-			return 1; // Victor defender
-		}
-		slog("Attacker Hp: %i, Defender HP: %i", attacker->cardHPcurrent, defender->cardHPcurrent);
-		return 2; //no victor
-	}
-	if (defender->_cardPosition == Defense)
-	{ 
-		defender->cardHPcurrent = defender->cardHPcurrent - (attacker->cardAP - defender->cardDP);
-		if (defender->cardHPcurrent <= 0)
-		{
-			slog("Defender Dead");
-			return 0; // Victor attacker
-		}
-		slog("Defender HP %i", defender->cardHPcurrent);
-		return 2;
-	}
-}
+
 
 int movementHelperDouble(enum movement direction, enum movement opposite)
 {

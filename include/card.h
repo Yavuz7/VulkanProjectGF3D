@@ -91,30 +91,6 @@ void playCard(int x, int y, int handIndex,List *hand);
 *@Param Entity that is moving
 */
 void setCardModelLocation(int x, int y, Entity *eCard);
-/*
-*@Brief Move cards position and entity and sets new coordinates
-*@Param X coordinate of new position
-*@Param Y coordinate of new position
-*@Param Pointer to card being moved, should be data from list
-*/
-void cardMove(int x, int y, Card *cardP);
-
-/*
-*@Brief Sets Card to defense position
-*@Param Card being set to defense postion 
-*/
-void setCardDefense(Card *cardpointer);
-/*
-*@Brief Sets Card to Fight position
-*@Param Card being set to Fight position
-*/
-void setCardFight(Card *cardpointer);
-
-/*
-*@BriefSets card hp from pointer
-*@Param Card hp is being set from
-*/
-void setCardHP(Card *cardpointer);
 
 /*
 *@Brief Destroys card and entity

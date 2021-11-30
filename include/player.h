@@ -3,6 +3,7 @@
 
 #include "entity.h"
 #include "card.h"
+#include "field_play.h"
 
 /**
  * @brief Create a new player entity
@@ -40,7 +41,7 @@ void movementHelperFight(Card *cardPointer);
 */
 void resetMovement();
 
-int cardFight(Card *attacker, Card *defender);
+
 
 void openHand();
 
