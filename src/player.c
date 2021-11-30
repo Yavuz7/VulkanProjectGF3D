@@ -83,6 +83,7 @@ void player_think(Entity *self)
 			if (cardPointer && cardPointer->_cardType == leader)
 			{
 				startCardMovement = 2;
+				slog("card Movement set to 2");
 				
 			}
 			if (cardPointer && cardPointer->_cardMoved == 0 && cardPointer->_cardType != leader)
@@ -208,7 +209,8 @@ void cardMovement(Entity *self,int x, int y,Card *cardPointer)
 			return;
 		}
 	}
-	if (keys[SDL_SCANCODE_SPACE])
+
+	if (keys[SDL_SCANCODE_SPACE]) //Select Card
 	{
 		if (px == startx && py == starty)
 		{
@@ -253,7 +255,8 @@ void cardMovement(Entity *self,int x, int y,Card *cardPointer)
 		resetMovement();
 		return;
 	}
-	if (keys[SDL_SCANCODE_P])
+
+	if (keys[SDL_SCANCODE_P]) //Reset Camera
 	{
 		self->rotation.x = 10.12f;
 		self->rotation.z = -0.001f;

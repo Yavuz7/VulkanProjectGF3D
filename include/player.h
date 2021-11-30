@@ -11,6 +11,7 @@
  * @return NULL on error, or an player entity pointer on success
  */
 Entity *player_new(Vector3D position);
+
 /*Enumeration for card Movement system*/
 enum movement{north,south,west,east,none,blocked};
 /*
@@ -29,6 +30,9 @@ void cardMovement(Entity *self, int x, int y, Card *cardPointer);
 */
 int movementHelperDouble(enum movement direction, enum movement opposite);
 
+/*
+*@Brief Open Hand Menu
+*/
 void openHand();
 
 /*
@@ -37,12 +41,8 @@ void openHand();
 void movementHelperFight(Card *cardPointer);
 
 /*
-*@Brief resets movement data
+*@Brief resets movement data for reuse
 */
 void resetMovement();
-
-
-
-void openHand();
 
 #endif

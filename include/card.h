@@ -70,10 +70,10 @@ void drawCard(List *deck, List *Hand);
 */
 
 void endDuel();
-/*
-*@Brief Starts duel by summoning 2 players
-*/
 
+/*
+*@Brief Starts duel by summoning 2 players Deck Leaders
+*/
 
 void startDuel();
 /*
@@ -105,6 +105,11 @@ void destroyCard(void *Cardp);
 */
 
 void loadDeck(List *deck, char *deckname);
+
+/*
+*@Brief Returns card pointer from int data 
+*@Param Int that represents a card in data
+*/
 
 Card *getCardPointer(void *p);
 

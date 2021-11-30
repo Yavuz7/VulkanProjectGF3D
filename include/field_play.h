@@ -26,6 +26,11 @@ void setCardDefense(Card *cardpointer);
 */
 void setCardFight(Card *cardpointer);
 
+/*
+*@Brief Handles Card Battle equations
+*@Param The card that intiated the attack
+*@Param The card that is being attacked
+*/
 int cardFight(Card *attacker, Card *defender);
 
 #endif

@@ -22,7 +22,6 @@ void setCardFight(Card *cardpointer)
 	return;
 }
 
-//Field Play
 void cardMove(int x, int y, Card *cardP)
 {
 	if (!cardP)return;

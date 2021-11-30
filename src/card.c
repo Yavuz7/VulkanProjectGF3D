@@ -10,7 +10,7 @@ Card *cardData = { 0 }; /*Holds all the Card Data of The Game*/
 
 List *player1DeckList;
 List *player1HandList;
-//List *player2DeckList;
+List *player2DeckList;
 //List *player2HandList;
 
 List *graveyardList;
@@ -19,12 +19,15 @@ List *fieldList;
  void setCardFileData()
  {
 
-	 cardData = gfc_allocate_array(sizeof(Card), 100);
+	 cardData = gfc_allocate_array(sizeof(Card), 102);
 	 player1DeckList = gfc_list_new_size(50);
 	 player1HandList = gfc_list_new_size(5);
+	 player2DeckList = gfc_list_new_size(50);
 	 graveyardList = gfc_list_new_size(120);
 	 fieldList = gfc_list_new_size(50);
 	 loadDeck(player1DeckList, "cards/deck2.json");
+	 loadDeck(player2DeckList, "cards/deck2.json");
+	 startDuel();
 	 do{
 		 drawCard(player1DeckList,player1HandList);
 	 } while (gfc_list_get_count(player1HandList) < 5);
@@ -57,12 +60,12 @@ void loadDeck(List *deck, char *deckname)
 		return;
 	}
 	
-	for (int i = 0; i < 50; i++)
+	for (int i = 1; i <= 50; i++)
 	{
 		/*String conversion converted from : https://stackoverflow.com/questions/8257714/how-to-convert-an-int-to-string-in-c */
-		if (&cardData[49] == NULL)
+		if (deck == player2DeckList)
 		{
-			i = i + 49;
+			i = i + 50;
 		}
 		char *stringBuffer = malloc(4);
 		snprintf(stringBuffer,4, "%d", i);
@@ -92,6 +95,7 @@ void loadDeck(List *deck, char *deckname)
 
 		void *p = i;
 		deck = gfc_list_append(deck, p);
+		slog("P data : %i", (int)p);
 		/*
 		slog("Card Name : %s", deck[i].cardName);
 		slog("Card Text : %s", deck[i].cardText);
@@ -101,9 +105,9 @@ void loadDeck(List *deck, char *deckname)
 		slog("Card AP : %i", deck[i].cardHP);
 			*/		
 		free(stringBuffer);
-		if (&cardData[50] == NULL)
+		if (deck == player2DeckList)
 		{
-			i = i - 49;
+			i = i - 50;
 		}
 	}
 	sj_free(cardDataFromFile);
@@ -180,35 +184,20 @@ void setCardModelLocation(int x, int y, Entity *eCard)
 //Field Play
 void startDuel()
 {
+
+	int x, y;		
+	cardData[1]._cardType = leader;
+	cardData[51]._cardType = leader;
 	/*
-	int x, y;
-	for (int i = 0; i < 2; i++)
-	{
-	Field[i]._cardState = inField;
-	Field[i].eP = entity_new();
-	Field[i].eP->model = gf3d_model_load_plus("cardDefault", "cardFace");
-	Field[i].eMP = entity_new();
-	Field[i].eMP->model = gf3d_model_load_plus("dino", "cardFace");
-	Field[i].eP->cfieldIndex = i;
-	//Field[i]._cardType = leader;
-	Field[i].eMP->rotation.z = 3.14f;
+	cardData[0].eP->model = gf3d_model_load_plus("cardDefault", "cardFace");
+
+	*/
 	x = 3;
 	y = 0;
-	if (checkTileOccupation(x, y) == 1)
-	{
+	playCard(x, y, 0, player1DeckList);
 	x = 3;
 	y = 6;
-	Field[i].eMP->model = gf3d_model_load_plus("dino", "cardDefault");
-	Field[i].eMP->rotation.z = 0.0f;
-	}
-	Field[i].cardXpos = x;
-	Field[i].cardYpos = y;
-	setCardModelLocation(x, y, Field[i].eP);
-	setCardModelLocation(x, y, Field[i].eMP);
-	Field[i].eMP->position.z = 5.0f;
-	setTileOccupation(x, y, &Field[i]);
-	*/
-
+	playCard(x, y, 0, player2DeckList);
 }
 
 void destroyCard(void *Cardp)
