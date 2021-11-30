@@ -41,6 +41,7 @@ enum states{ inDeck, inHand, inField,inGrave };
 enum cardPosition{Fight,Defense};
 /*Card types of cards*/
 enum cardType{monster,spell,trap,leader};
+
 /*
 *@Brief Loads character data of card from card ID, called when card is drawn
 *@Param ID number of card

@@ -184,14 +184,11 @@ void setCardModelLocation(int x, int y, Entity *eCard)
 //Field Play
 void startDuel()
 {
-
 	int x, y;		
+	//First Cards Of Each Deck
 	cardData[1]._cardType = leader;
 	cardData[51]._cardType = leader;
-	/*
-	cardData[0].eP->model = gf3d_model_load_plus("cardDefault", "cardFace");
 
-	*/
 	x = 3;
 	y = 0;
 	playCard(x, y, 0, player1DeckList);
@@ -206,11 +203,13 @@ void destroyCard(void *Cardp)
 	/*free(cardData[(int)Cardp].cardName);
 	free(cardData[(int)Cardp].cardText);
 	free(cardData[(int)Cardp].cardId);*/
+	
 	entity_free(cardData[(int)Cardp].eP);
 	if (cardData[(int)Cardp].eMP)
 	{
 		entity_free(cardData[(int)Cardp].eMP);
 	}
+	
 	void *p = gfc_list_get_nth(fieldList, cardData[(int)Cardp].fieldReference); //Using the set field Reference, gets and removes from field list
 	gfc_list_append(graveyardList, p);
 	gfc_list_delete_nth(fieldList, cardData[(int)Cardp].fieldReference);
