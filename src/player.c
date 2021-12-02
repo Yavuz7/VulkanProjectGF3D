@@ -5,15 +5,19 @@
 #include "player.h"
 #include "SDL.h"
 #include "gfc_types.h"
-
+#include "gfc_audio.h"
 #include "tile.h"
 
 void player_think(Entity *self);
 void player_update(Entity *self);
+int activeP;
 int px,py;
 int startx, starty;
 int stopper,startCardMovement;
 Card *cardPointer,*defender,*attacker;
+Sound *cardMoveSound;
+Entity *player1, *player2;
+Vector3D player1position, player2position;
 
 Uint32 timeStart, timeEnd;
 const int cameraDelay = 240;
@@ -21,7 +25,7 @@ const int cameraDelay = 240;
 int moveCount;
 enum movement moveHistory[2];
 
-Entity *player_new(Vector3D position)
+Entity *player_new(int active)
 {
     Entity *ent = NULL;
     
@@ -31,30 +35,86 @@ Entity *player_new(Vector3D position)
         slog("UGH OHHHH, no player for you!");
         return NULL;
     }
-	px = 3;
-	py = 0;
-	
-//    ent->model = gf3d_model_load("dino");
-    ent->think = player_think;
-    ent->update = player_update;
-    vector3d_copy(ent->position,position);
-	ent->position.y = -46;
-	ent->position.x = 69;
-   // ent->rotation.x = -M_PI;
-	ent->rotation.x = 10.12f;
-	ent->rotation.z = -0.001f;
-	ent->position.z = 37.0f;
+	if (active == 1)
+	{
+		px = 3;
+		py = 0;
+		
+		ent->position.y = -46;
+		ent->position.x = 69;
+		// ent->rotation.x = -M_PI;
+		ent->rotation.x = 10.12f;
+		ent->rotation.z = -0.001f;
+		ent->position.z = 37.0f;
+		vector3d_copy(player1position, ent->position);
+	}
+	if (active == 0)
+	{
+		px = 3;
+		py = 6;
+
+		ent->position.y = 23*5;
+		ent->position.x = 69;
+		ent->rotation.x = 10.12f;
+		ent->rotation.z = -0.001f;
+		ent->position.z = -37.0f;
+		vector3d_copy(player2position, ent->position);
+
+	}
+	//ent->think = player_think;
+//	ent->update = player_update;
+	ent->_inuse = active;
 	moveCount = 0;
 	stopper = 0;
 	startCardMovement = 0;
-	
     return ent;
 }
 
+void setPlayers()
+{
+	player2 = player_new(0);
+	player2->update = NULL;
+	player2->think = NULL;
+	player1 = player_new(1);
+	player1->think = player_think;
+	player1->update = player_update;
+	activeP = 1;	
+	return;
+}
+
+void changeTurn()
+{
+	if (activeP == 1)
+	{
+		
+		gf3d_camera_set_position(player2->position);
+		gf3d_camera_set_rotation(player2->rotation);
+		
+		slog("player 1 camera y: %f", player1->position.y);
+	
+		activeP = 2;
+		return;
+
+	}
+	if (activeP == 2)
+	{
+
+		gf3d_camera_set_position(player1->position);
+		gf3d_camera_set_rotation(player1->rotation);
+
+		slog("player 2 camera y: %f", player2->position.y);
+
+		activeP = 1;
+		return;
+	}
+}
 
 void player_think(Entity *self)
 {
-
+	if (timeEnd + cameraDelay > SDL_GetTicks())
+	{
+		return;
+	}
 	//cardMovement(self,py,px);
 	//return;
     Vector3D forward;
@@ -70,10 +130,7 @@ void player_think(Entity *self)
     vector3d_set_magnitude(&forward,1.0f);
     vector3d_set_magnitude(&right,1.0f);
     vector3d_set_magnitude(&up,0.1f);
-	if (timeEnd + cameraDelay > SDL_GetTicks())
-	{
-		return;
-	}
+
 	if (keys[SDL_SCANCODE_SPACE])
 	{
 		if (startCardMovement == 0)
@@ -103,9 +160,11 @@ void player_think(Entity *self)
 		cardMovement(self, px, py,cardPointer);
 		return;
 	}
-	if (keys[SDL_SCANCODE_M])
+	if (keys[SDL_SCANCODE_BACKSPACE])
 	{
 		timeEnd = SDL_GetTicks();
+		changeTurn();
+		slog("end turn");
 		return;
 	}
 	if (keys[SDL_SCANCODE_P])
@@ -113,6 +172,8 @@ void player_think(Entity *self)
 		self->rotation.x = 10.12f;
 		self->rotation.z = -0.001f;
 		self->position.z = 37.0f;
+		timeEnd = SDL_GetTicks();
+		return;
 	}
 
     if (keys[SDL_SCANCODE_W])
@@ -184,15 +245,16 @@ void player_update(Entity *self)
 
 void cardMovement(Entity *self,int x, int y,Card *cardPointer)
 {
+	if (timeEnd + cameraDelay > SDL_GetTicks())
+	{
+		return;
+	}
 	Vector3D forward;
 	Vector3D right;
 	Vector3D up;
 	const Uint8 * keys;
 
-	if (timeEnd + cameraDelay > SDL_GetTicks())
-	{
-		return;
-	}
+
 	keys = SDL_GetKeyboardState(NULL);
 	if (keys[SDL_SCANCODE_R])
 	{
@@ -413,6 +475,10 @@ void resetMovement()
 	timeEnd = SDL_GetTicks();
 	return;
 }
+//Based on turn open that player's hand
+void openHand()
+{
 
+}
 
 /*eol@eof*/

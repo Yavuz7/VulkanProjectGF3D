@@ -1,16 +1,28 @@
 #ifndef __PLAYER_H__
 #define __PLAYER_H__
 
+
 #include "entity.h"
 #include "card.h"
 #include "field_play.h"
 
 /**
  * @brief Create a new player entity
- * @param position where to spawn the aguman at
+ * @int to set if player is active or not
  * @return NULL on error, or an player entity pointer on success
  */
-Entity *player_new(Vector3D position);
+Entity *player_new(int active);
+
+/**
+* @brief Creates 2 player entities, only one will be active at a time
+*/
+
+void setPlayers();
+
+/**
+* @brief Changes inuse player entity 
+*/
+void changeTurn();
 
 /*Enumeration for card Movement system*/
 enum movement{north,south,west,east,none,blocked};
@@ -27,6 +39,7 @@ void cardMovement(Entity *self, int x, int y, Card *cardPointer);
 *@Brief Helper function of cardMovement, keeps track of places cards moved 
 *@Param Enum direction card is moving too
 *@Param Enum direction opposite of card moving, to check if card is moving somewhere it was
+*@Return int to check whether or not to move
 */
 int movementHelperDouble(enum movement direction, enum movement opposite);
 

@@ -11,7 +11,7 @@ Card *cardData = { 0 }; /*Holds all the Card Data of The Game*/
 List *player1DeckList;
 List *player1HandList;
 List *player2DeckList;
-//List *player2HandList;
+List *player2HandList;
 
 List *graveyardList;
 List *fieldList;
@@ -20,17 +20,23 @@ List *fieldList;
  {
 
 	 cardData = gfc_allocate_array(sizeof(Card), 102);
+
 	 player1DeckList = gfc_list_new_size(50);
 	 player1HandList = gfc_list_new_size(5);
 	 player2DeckList = gfc_list_new_size(50);
+	 player2HandList = gfc_list_new_size(5);
 	 graveyardList = gfc_list_new_size(120);
 	 fieldList = gfc_list_new_size(50);
+
 	 loadDeck(player1DeckList, "cards/deck2.json");
 	 loadDeck(player2DeckList, "cards/deck2.json");
+
 	 startDuel();
+
 	 do{
 		 drawCard(player1DeckList,player1HandList);
 	 } while (gfc_list_get_count(player1HandList) < 5);
+
 	 playCard(2, 2, 0, player1HandList);
 	 playCard(1, 1, 2, player1HandList);
  }

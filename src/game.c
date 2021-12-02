@@ -50,25 +50,18 @@ int main(int argc,char *argv[])
     entity_system_init(1024);
 	//setCardData("00001", c );
 	//setCardData("00002", c);
-/*	for (int i = 0; i < 50; i++)
-	{
-		//drawCard();
-	}
-	*/
-	
-  //  w = world_load("config/testworld.json");
-	loadMap("mapDat/map1.txt");
-	//w = world_load("models/cube.json");
-	setCardFileData();
-	//startDuel();
 
+	loadMap("mapDat/map1.txt");
+	
+	setCardFileData();
 
     // main game loop
 	slog_sync();
     gf3d_camera_set_scale(vector3d(1,1,1));
 
     slog("gf3d main loop begin");
-    player_new(vector3d(0,0,20));
+	setPlayers();
+
     while(!done)
     {
         SDL_PumpEvents();   // update SDL's internal event structures
