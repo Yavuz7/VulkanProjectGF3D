@@ -10,14 +10,15 @@
 
 void player_think(Entity *self);
 void player_update(Entity *self);
-int activeP;
-int px,py;
-int startx, starty;
+Uint8 activeP;
+Uint8 px,py;
+Uint8 startx, starty;
 int stopper,startCardMovement;
 Card *cardPointer,*defender,*attacker;
 Sound *cardMoveSound;
-Entity *player1, *player2;
+Entity *playerCamera;
 Vector3D player1position, player2position;
+Uint8 px1, py1, px2, py2;
 
 Uint32 timeStart, timeEnd;
 const int cameraDelay = 240;
@@ -25,7 +26,7 @@ const int cameraDelay = 240;
 int moveCount;
 enum movement moveHistory[2];
 
-Entity *player_new(int active)
+Entity *player_new()
 {
     Entity *ent = NULL;
     
@@ -35,35 +36,21 @@ Entity *player_new(int active)
         slog("UGH OHHHH, no player for you!");
         return NULL;
     }
-	if (active == 1)
-	{
-		px = 3;
-		py = 0;
-		
-		ent->position.y = -46;
-		ent->position.x = 69;
+	ent->think = player_think;
+	ent->update = player_update;
+	px1 = 3;
+	py1 = 0;
+	px = px1;
+	py = py1;
+	ent->position.y = -46;
+	ent->position.x = 69;
+
 		// ent->rotation.x = -M_PI;
-		ent->rotation.x = 10.12f;
-		ent->rotation.z = -0.001f;
-		ent->position.z = 37.0f;
-		vector3d_copy(player1position, ent->position);
-	}
-	if (active == 0)
-	{
-		px = 3;
-		py = 6;
+	ent->rotation.x = 10.12f;
+	ent->rotation.z = -0.001f;
+	ent->position.z = 37.0f;
+	vector3d_copy(player1position, ent->position);
 
-		ent->position.y = 23*5;
-		ent->position.x = 69;
-		ent->rotation.x = 10.12f;
-		ent->rotation.z = -0.001f;
-		ent->position.z = -37.0f;
-		vector3d_copy(player2position, ent->position);
-
-	}
-	//ent->think = player_think;
-//	ent->update = player_update;
-	ent->_inuse = active;
 	moveCount = 0;
 	stopper = 0;
 	startCardMovement = 0;
@@ -72,13 +59,9 @@ Entity *player_new(int active)
 
 void setPlayers()
 {
-	player2 = player_new(0);
-	player2->update = NULL;
-	player2->think = NULL;
-	player1 = player_new(1);
-	player1->think = player_think;
-	player1->update = player_update;
-	activeP = 1;	
+	playerCamera = player_new();
+	activeP = 1;
+	player2position = vector3d(69.0,-46.0,37.0);
 	return;
 }
 
@@ -86,11 +69,14 @@ void changeTurn()
 {
 	if (activeP == 1)
 	{
-		
-		gf3d_camera_set_position(player2->position);
-		gf3d_camera_set_rotation(player2->rotation);
-		
-		slog("player 1 camera y: %f", player1->position.y);
+		px1 = px;
+		py1 = py;
+		player2position.x = px2 * 23;
+		player2position.y = py2 * 23;
+		vector3d_copy(playerCamera->position, player2position);
+		px = px2;
+		py = py2;
+		slog("player 1 camera y: %f", playerCamera->position.y);
 	
 		activeP = 2;
 		return;
@@ -98,11 +84,14 @@ void changeTurn()
 	}
 	if (activeP == 2)
 	{
-
-		gf3d_camera_set_position(player1->position);
-		gf3d_camera_set_rotation(player1->rotation);
-
-		slog("player 2 camera y: %f", player2->position.y);
+		px2 = px;
+		py2 = py;
+		player1position.x = px1 * 23;
+		player1position.y = py1 * 23;
+		vector3d_copy(playerCamera->position, player1position);
+		px = px1;
+		py = py1;
+		slog("player 2 camera y: %f", playerCamera->position.y);
 
 		activeP = 1;
 		return;

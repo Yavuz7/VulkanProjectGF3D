@@ -11,7 +11,7 @@
  * @int to set if player is active or not
  * @return NULL on error, or an player entity pointer on success
  */
-Entity *player_new(int active);
+Entity *player_new();
 
 /**
 * @brief Creates 2 player entities, only one will be active at a time
