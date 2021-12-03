@@ -6,6 +6,8 @@
 #include "entity.h"
 #include "gf3d_model.h"
 
+#define XPOSITIONOFFSET 23.1
+#define YPOSITIONOFFSET 22.3
 
 typedef struct{
 	Uint16 _tileType; /* Keeps track of Tile type*/
@@ -66,14 +68,5 @@ void drawTiles();
 *@Param y coordinate of where card was
 */
 void removeTileOccupation(int x, int y);
-/*
-*@Brief Sets position offsets from tile.h
-*@Param x offset to be set
-*/
-float getXOffset();
-/*
-*@Brief Sets position offsets from tile.h
-*@Param y offset to be set
-*/
-float getYOffset();
+
 #endif

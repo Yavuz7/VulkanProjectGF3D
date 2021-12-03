@@ -8,8 +8,7 @@
 #include "gfc_vector.h"
 
 Tile tileMap[7][7]; /*Array to store tile map in*/
-const float XPOSITIONOFFSET = 23.1;
-const float YPOSITIONOFFSET = 22.3;
+
 
 void loadMap(char *mapData)
 {
@@ -75,15 +74,6 @@ void setTile(Tile *t, int x, int y)
 	return;
 }
 
-float getXOffset()
-{
-	return XPOSITIONOFFSET;
-}
-
-float getYOffset()
-{
-	return YPOSITIONOFFSET;
-}
 void drawTiles()
 {
 

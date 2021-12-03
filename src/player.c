@@ -17,7 +17,9 @@ int stopper,startCardMovement;
 Card *cardPointer,*defender,*attacker;
 Sound *cardMoveSound;
 Entity *playerCamera;
+//Todo : Put these in a struct and intialize it so they are not global
 Vector3D player1position, player2position;
+Vector3D player1rotation, player2rotation;
 Uint8 px1, py1, px2, py2;
 
 Uint32 timeStart, timeEnd;
@@ -44,12 +46,15 @@ Entity *player_new()
 	py = py1;
 	ent->position.y = 0;
 	ent->position.x = 69;
+	ent->position.z = 37.0f;
 
 		// ent->rotation.x = -M_PI;
 	ent->rotation.x = 10.12f;
-	ent->rotation.z = -0.001f;
-	ent->position.z = 37.0f;
+	ent->rotation.z = 0.0f;
+	
 	vector3d_copy(player1position, ent->position);
+	vector3d_copy(player1rotation,ent->rotation);
+	vector3d_copy(player2rotation, ent->rotation);
 
 	moveCount = 0;
 	stopper = 0;
@@ -61,7 +66,10 @@ void setPlayers()
 {
 	playerCamera = player_new();
 	activeP = 1;
-	player2position = vector3d(69.0,-46.0,37.0);
+	player2position = vector3d(69.0,0,37.0);
+	player2rotation.z = GFC_PI;
+	px2 = 3;
+	py2 = 6;
 	return;
 }
 
@@ -71,9 +79,10 @@ void changeTurn()
 	{
 		px1 = px;
 		py1 = py;
-		player2position.x = px2 * 23;
-		player2position.y = py2 * 23;
+		player2position.x = px2 * XPOSITIONOFFSET;
+		player2position.y = (23*4) + py2 * YPOSITIONOFFSET;
 		vector3d_copy(playerCamera->position, player2position);
+		vector3d_copy(playerCamera->rotation, player2rotation);
 		px = px2;
 		py = py2;
 		slog("player 1 camera y: %f", playerCamera->position.y);
@@ -86,9 +95,10 @@ void changeTurn()
 	{
 		px2 = px;
 		py2 = py;
-		player1position.x = px1 * 23;
-		player1position.y = py1 * 23;
+		player1position.x = px1 * XPOSITIONOFFSET;
+		player1position.y = py1 * YPOSITIONOFFSET;
 		vector3d_copy(playerCamera->position, player1position);
+		vector3d_copy(playerCamera->rotation, player1rotation);
 		px = px1;
 		py = py1;
 		slog("player 2 camera y: %f", playerCamera->position.y);
@@ -171,7 +181,7 @@ void player_think(Entity *self)
 		{
 			return;
 		}
-		self->position.y += 23;
+		self->position.y += YPOSITIONOFFSET;
 		py += 1;
 		timeEnd = SDL_GetTicks();
 		
@@ -186,7 +196,7 @@ void player_think(Entity *self)
 		}
 		py -= 1;
 		timeEnd = SDL_GetTicks();
-		self->position.y -= 23;
+		self->position.y -= YPOSITIONOFFSET;
 		
 		//vector3d_add(self->position, self->position, right);
     }
@@ -198,7 +208,7 @@ void player_think(Entity *self)
 		}
 		px += 1;
 		timeEnd = SDL_GetTicks();
-		self->position.x += 23;
+		self->position.x += XPOSITIONOFFSET;
 		
 		//vector3d_add(self->position, self->position, forward);
     }
@@ -210,7 +220,7 @@ void player_think(Entity *self)
 		}
 		px -= 1;
 		timeEnd = SDL_GetTicks();
-		self->position.x -= 23;
+		self->position.x -= XPOSITIONOFFSET;
 
 		
 		//vector3d_add(self->position, self->position, -forward);
@@ -328,7 +338,7 @@ void cardMovement(Entity *self,int x, int y,Card *cardPointer)
 		
 		setCardFight(cardPointer);
 		py += 1;
-		self->position.y += 23;
+		self->position.y += YPOSITIONOFFSET;
 		timeEnd = SDL_GetTicks();
 		
 		//vector3d_add(self->position, self->position, -right);
@@ -346,7 +356,7 @@ void cardMovement(Entity *self,int x, int y,Card *cardPointer)
 		setCardFight(cardPointer);
 		py -= 1;
 		timeEnd = SDL_GetTicks();
-		self->position.y -= 23;
+		self->position.y -= YPOSITIONOFFSET;
 		
 		//vector3d_add(self->position, self->position, right);
 	}
@@ -361,7 +371,7 @@ void cardMovement(Entity *self,int x, int y,Card *cardPointer)
 		setCardFight(cardPointer);
 		px += 1;
 		timeEnd = SDL_GetTicks();
-		self->position.x += 23;
+		self->position.x += XPOSITIONOFFSET;
 		
 		//vector3d_add(self->position, self->position, forward);
 	}
@@ -376,7 +386,7 @@ void cardMovement(Entity *self,int x, int y,Card *cardPointer)
 		setCardFight(cardPointer);
 		px -= 1;
 		timeEnd = SDL_GetTicks();
-		self->position.x -= 23;
+		self->position.x -= XPOSITIONOFFSET;
 
 	
 		//vector3d_add(self->position, self->position, -forward);
