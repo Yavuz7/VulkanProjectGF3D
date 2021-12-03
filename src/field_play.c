@@ -1,6 +1,6 @@
 #include "field_play.h"
 
-
+Uint8 player1Resource, player2Resource;
 
 void setCardDefense(Card *cardpointer)
 {
@@ -70,5 +70,17 @@ int cardFight(Card *attacker, Card *defender)
 		}
 		slog("Defender HP %i", defender->cardHPcurrent);
 		return 2;
+	}
+}
+
+void generateResource(int player)
+{
+	if (player == 1)
+	{
+		player1Resource += 3;
+	}
+	if (player == 2)
+	{
+		player2Resource += 3;
 	}
 }

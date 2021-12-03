@@ -86,7 +86,16 @@ void loadDeck(List *deck, char *deckname)
 			free(stringBuffer);
 			continue;
 		}
+		if (i <= 50)
+		{
+			cardData[i]._cardOwner = 1;
+		}
+		else
+		{
+			cardData[i]._cardOwner = 2;
+		}
 		
+
 		cardData[i].cardName = gfc_allocate_array(sizeof(TextLine), 1);
 		cardData[i].cardText = gfc_allocate_array(sizeof(TextBlock), 1);
 
@@ -102,15 +111,8 @@ void loadDeck(List *deck, char *deckname)
 		void *p = i;
 		deck = gfc_list_append(deck, p);
 		slog("P data : %i", (int)p);
-		/*
-		slog("Card Name : %s", deck[i].cardName);
-		slog("Card Text : %s", deck[i].cardText);
-		
-		slog("Card AP : %i", deck[i].cardAP);
-		slog("Card AP : %i", deck[i].cardDP);
-		slog("Card AP : %i", deck[i].cardHP);
-			*/		
 		free(stringBuffer);
+
 		if (deck == player2DeckList)
 		{
 			i = i - 50;

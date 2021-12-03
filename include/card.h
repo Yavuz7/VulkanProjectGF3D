@@ -28,7 +28,7 @@ typedef struct
 	Uint8 cardXpos;/*x position of card*/
 	Uint8 cardYpos;/*y position of card*/
 	Uint8 _cardMoved;/*Checks if card moved*/
-	Uint8 _cardOwner;/*Owner of card 0 = you, 1 = not you*/
+	Uint8 _cardOwner;/*Owner of card 1 = player1, 2 = player2*/
 	enum states _cardState;/*Keeps track of state of card*/
 	enum cardPosition _cardPosition;/*Keeps track of card position,*/
 	enum cardType _cardType; /* Stores card type*/

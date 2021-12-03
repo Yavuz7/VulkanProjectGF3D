@@ -75,7 +75,7 @@ void setPlayers()
 
 void changeTurn()
 {
-	if (activeP == 1)
+	if (activeP == 1) // Change to Player 2 Turn
 	{
 		px1 = px;
 		py1 = py;
@@ -86,12 +86,12 @@ void changeTurn()
 		px = px2;
 		py = py2;
 		slog("player 1 camera y: %f", playerCamera->position.y);
-	
+		generateResource(activeP);
 		activeP = 2;
 		return;
 
 	}
-	if (activeP == 2)
+	if (activeP == 2) // Change to Player 1 Turn
 	{
 		px2 = px;
 		py2 = py;
@@ -102,7 +102,7 @@ void changeTurn()
 		px = px1;
 		py = py1;
 		slog("player 2 camera y: %f", playerCamera->position.y);
-
+		generateResource(activeP);
 		activeP = 1;
 		return;
 	}
@@ -137,13 +137,13 @@ void player_think(Entity *self)
 		{			
 			cardPointer = getCardPointer(getTileOccupation(px, py));
 			
-			if (cardPointer && cardPointer->_cardType == leader)
+			if (cardPointer && cardPointer->_cardType == leader && cardPointer->_cardOwner == activeP)
 			{
 				startCardMovement = 2;
 				slog("card Movement set to 2");
 				
 			}
-			if (cardPointer && cardPointer->_cardMoved == 0 && cardPointer->_cardType != leader)
+			if (cardPointer && cardPointer->_cardMoved == 0 && cardPointer->_cardType != leader && cardPointer->_cardOwner == activeP)
 			{
 				slog("Start Card Movement");
 				slog("%s (AP%i ,DP %i,HP %i)", cardPointer->cardName, cardPointer->cardAP, cardPointer->cardDP, cardPointer->cardHPcurrent);

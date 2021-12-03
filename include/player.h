@@ -57,6 +57,13 @@ void movementHelperFight(Card *cardPointer);
 *@Brief resets movement data for reuse
 */
 void resetMovement();
-
+/*
+*@Brief Sets Position variable and Changes Camera by offset
+*@Param Pointer to Position Variable to be Changed
+*@Param Whether pPointer is being increased or decreased
+*@Param Current Player 
+*@Param entity position to be changed
+*@Param Float to offset position
+*/
 void cameraMovement(Uint8 * pPointer, int pChange, int currentPlayer, float * pPosition, float offset);
 #endif

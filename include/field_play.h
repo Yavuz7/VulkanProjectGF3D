@@ -3,6 +3,7 @@
 
 #include "simple_logger.h"
 #include "gfc_types.h"
+#include "gfc_text.h"
 
 #include "card.h"
 #include "tile.h"
@@ -32,5 +33,11 @@ void setCardFight(Card *cardpointer);
 *@Param The card that is being attacked
 */
 int cardFight(Card *attacker, Card *defender);
+
+/*
+*@Brief Increments Resource by three
+*@Param Player whose resource will be incremented
+*/
+void generateResource(int player);
 
 #endif
