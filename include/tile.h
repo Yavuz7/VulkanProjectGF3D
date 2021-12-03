@@ -66,4 +66,14 @@ void drawTiles();
 *@Param y coordinate of where card was
 */
 void removeTileOccupation(int x, int y);
+/*
+*@Brief Sets position offsets from tile.h
+*@Param x offset to be set
+*/
+float getXOffset();
+/*
+*@Brief Sets position offsets from tile.h
+*@Param y offset to be set
+*/
+float getYOffset();
 #endif

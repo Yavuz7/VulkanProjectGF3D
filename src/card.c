@@ -176,13 +176,16 @@ Card *getCardPointer(void *p)
 
 void setCardModelLocation(int x, int y, Entity *eCard)
 {
+	float xoffset, yoffset;
+	xoffset = getXOffset();
+	yoffset = getYOffset();
 	if (!eCard)return;
 	eCard->scale.x = 2;
 	eCard->scale.y = 2;
 	eCard->scale.z = 2;
 	eCard->position.z = -5.0f;
-	eCard->position.x = 1 + x*23.0f;
-	eCard->position.y = 1 + y*23.0f;
+	eCard->position.x = 1 + x*xoffset;
+	eCard->position.y = 47 + y*yoffset;
 	
 	return;
 }

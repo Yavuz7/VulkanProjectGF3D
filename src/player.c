@@ -42,7 +42,7 @@ Entity *player_new()
 	py1 = 0;
 	px = px1;
 	py = py1;
-	ent->position.y = -46;
+	ent->position.y = 0;
 	ent->position.x = 69;
 
 		// ent->rotation.x = -M_PI;

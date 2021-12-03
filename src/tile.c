@@ -8,6 +8,8 @@
 #include "gfc_vector.h"
 
 Tile tileMap[7][7]; /*Array to store tile map in*/
+const float XPOSITIONOFFSET = 23.1;
+const float YPOSITIONOFFSET = 22.3;
 
 void loadMap(char *mapData)
 {
@@ -53,8 +55,9 @@ void clearTiles(){
 	{
 		for (y = 0; y < 7; y++)
 		{
-			gf3d_model_free(tileMap[x][y].tileModel);
-			
+			if (tileMap[x][y].tileModel){
+				gf3d_model_free(tileMap[x][y].tileModel);
+			}
 		}
 
 	}
@@ -67,11 +70,20 @@ void setTile(Tile *t, int x, int y)
 	t->tileModel = gf3d_model_load("tile1");
 
 	gfc_matrix_scale(t->tileModelMatrix, vector3d(2, 2, 2));
-	gfc_matrix_translate(t->tileModelMatrix, vector3d(1 + x * 23, 1 + y * 23, -10));
+	gfc_matrix_translate(t->tileModelMatrix, vector3d(1 + x * XPOSITIONOFFSET, 47 + y * YPOSITIONOFFSET, -10));
 	//gf3d_model_draw(t->tileModel, t->tileModelMatrix);
 	return;
 }
 
+float getXOffset()
+{
+	return XPOSITIONOFFSET;
+}
+
+float getYOffset()
+{
+	return YPOSITIONOFFSET;
+}
 void drawTiles()
 {
 
