@@ -216,9 +216,8 @@ void cameraMovement(Uint8 * pPointer, int pChange, int currentPlayer, float * pP
 {
 	if (!pPointer)return;
 	if (!pPosition) return;
-	slog("Pointer %i", *pPointer);
 	timeEnd = SDL_GetTicks();
-	slog("Current Player : %i", currentPlayer);
+
 	if (currentPlayer == 1)
 	{
 		if (pChange > 0)
@@ -346,16 +345,12 @@ void cardMovement(Entity *self,int x, int y,Card *cardPointer)
 		{
 			return;
 		}
-
 		stopper = movementHelperDouble(north, south);
 		if (stopper == 1)return;
 		
 		setCardFight(cardPointer);
-		py += 1;
-		self->position.y += YPOSITIONOFFSET;
-		timeEnd = SDL_GetTicks();
-		
-		//vector3d_add(self->position, self->position, -right);
+
+		cameraMovement(&py, 1, activeP, &self->position.y, YPOSITIONOFFSET);
 
 	}
 	if (keys[SDL_SCANCODE_S])
@@ -364,15 +359,13 @@ void cardMovement(Entity *self,int x, int y,Card *cardPointer)
 		{
 			return;
 		}
-
 		stopper = movementHelperDouble(south, north);
 		if (stopper == 1)return;
+
 		setCardFight(cardPointer);
-		py -= 1;
-		timeEnd = SDL_GetTicks();
-		self->position.y -= YPOSITIONOFFSET;
+
+		cameraMovement(&py, -1, activeP, &self->position.y, YPOSITIONOFFSET);
 		
-		//vector3d_add(self->position, self->position, right);
 	}
 	if (keys[SDL_SCANCODE_D])
 	{
@@ -382,28 +375,24 @@ void cardMovement(Entity *self,int x, int y,Card *cardPointer)
 		}
 		stopper = movementHelperDouble(east,west);
 		if (stopper == 1)return;
+
 		setCardFight(cardPointer);
-		px += 1;
-		timeEnd = SDL_GetTicks();
-		self->position.x += XPOSITIONOFFSET;
 		
-		//vector3d_add(self->position, self->position, forward);
+		cameraMovement(&px, 1, activeP, &self->position.x, XPOSITIONOFFSET);
+		
 	}
 	if (keys[SDL_SCANCODE_A])
 	{
 		if (px <= 0)
 		{
 			return;
-		} 
+		}
 		stopper = movementHelperDouble(west, east);
 		if (stopper == 1)return;
-		setCardFight(cardPointer);
-		px -= 1;
-		timeEnd = SDL_GetTicks();
-		self->position.x -= XPOSITIONOFFSET;
 
-	
-		//vector3d_add(self->position, self->position, -forward);
+		setCardFight(cardPointer);
+
+		cameraMovement(&px, -1, activeP, &self->position.x, XPOSITIONOFFSET);	
 	}
 }
 
