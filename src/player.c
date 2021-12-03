@@ -119,6 +119,7 @@ void player_think(Entity *self)
     Vector3D forward;
     Vector3D right;
     Vector3D up;
+	int multiple;
     const Uint8 * keys;
 	
 
@@ -161,7 +162,7 @@ void player_think(Entity *self)
 	}
 	if (keys[SDL_SCANCODE_BACKSPACE])
 	{
-		timeEnd = SDL_GetTicks();
+		timeEnd = SDL_GetTicks() + 500;
 		changeTurn();
 		slog("end turn");
 		return;
@@ -177,54 +178,35 @@ void player_think(Entity *self)
 
     if (keys[SDL_SCANCODE_W])
     {   
-		if (py >= 6)
-		{
-			return;
-		}
-		self->position.y += YPOSITIONOFFSET;
-		py += 1;
-		timeEnd = SDL_GetTicks();
-		
-		//vector3d_add(self->position, self->position, -right);
-        
+		multiple = cameraMovement(&py, 1, activeP);
+		if (multiple == 2)return;
+	
+		self->position.y += multiple*YPOSITIONOFFSET;
     }
     if (keys[SDL_SCANCODE_S])
     {
-		if (py <= 0)
-		{
-			return;
-		}
-		py -= 1;
-		timeEnd = SDL_GetTicks();
-		self->position.y -= YPOSITIONOFFSET;
+		multiple = cameraMovement(&py, -1, activeP);
+		if (multiple == 2)return;
+
+		self->position.y -= multiple*YPOSITIONOFFSET;
 		
-		//vector3d_add(self->position, self->position, right);
     }
     if (keys[SDL_SCANCODE_D])
     {
-		if (px >= 6)
-		{
-			return;
-		}
-		px += 1;
-		timeEnd = SDL_GetTicks();
-		self->position.x += XPOSITIONOFFSET;
+		multiple = cameraMovement(&px, 1, activeP);
+		if (multiple == 2)return;
+
+		self->position.x += multiple*XPOSITIONOFFSET;
 		
-		//vector3d_add(self->position, self->position, forward);
     }
     if (keys[SDL_SCANCODE_A])    
     {
-		if (px <= 0)
-		{
-			return;
-		}
-		px -= 1;
-		timeEnd = SDL_GetTicks();
-		self->position.x -= XPOSITIONOFFSET;
+		multiple = cameraMovement(&px, -1, activeP);
+		if (multiple == 2)return;
 
-		
-		//vector3d_add(self->position, self->position, -forward);
+		self->position.x -= multiple*XPOSITIONOFFSET;
     }
+
     if (keys[SDL_SCANCODE_X])self->position.z += 0.40f;
     if (keys[SDL_SCANCODE_Z])self->position.z -= 0.40f;
 
@@ -242,6 +224,44 @@ void player_update(Entity *self)
     gf3d_camera_set_rotation(self->rotation);
 }
 
+int cameraMovement(Uint8 * pPointer, int pChange, int currentPlayer)
+{
+	if (!pPointer)return 2;
+	slog("Pointer %i", *pPointer);
+	timeEnd = SDL_GetTicks();
+	slog("Current Player : %i", currentPlayer);
+	if (currentPlayer == 1)
+	{
+		if (pChange > 0)
+		{
+			if (*pPointer >= 6)return 2;
+		}
+		if (pChange < 0)
+		{
+			if (*pPointer <= 0)return 2;	
+		}
+		*pPointer += pChange;
+		slog("px : %i , py : %i", px, py);
+		return 1;
+	}
+	if (currentPlayer == 2)
+	{
+		if (pChange < 0)
+		{
+			if (*pPointer >= 6)return 2;
+		}
+		if (pChange > 0)
+		{
+			if (*pPointer <= 0)return 2;
+			
+		}
+		*pPointer -= pChange;
+		slog("px : %i , py : %i", px, py);
+		return -1;		
+	}
+	return 2;
+}
+
 void cardMovement(Entity *self,int x, int y,Card *cardPointer)
 {
 	if (timeEnd + cameraDelay > SDL_GetTicks())
@@ -255,6 +275,7 @@ void cardMovement(Entity *self,int x, int y,Card *cardPointer)
 
 
 	keys = SDL_GetKeyboardState(NULL);
+
 	if (keys[SDL_SCANCODE_R])
 	{
 		if (cardPointer->_cardPosition == Fight)
@@ -392,7 +413,6 @@ void cardMovement(Entity *self,int x, int y,Card *cardPointer)
 		//vector3d_add(self->position, self->position, -forward);
 	}
 }
-
 
 
 int movementHelperDouble(enum movement direction, enum movement opposite)

@@ -58,4 +58,5 @@ void movementHelperFight(Card *cardPointer);
 */
 void resetMovement();
 
+int cameraMovement(Uint8 * pPointer, int pChange, int currentPlayer);
 #endif
