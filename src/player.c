@@ -178,33 +178,21 @@ void player_think(Entity *self)
 
     if (keys[SDL_SCANCODE_W])
     {   
-		multiple = cameraMovement(&py, 1, activeP);
-		if (multiple == 2)return;
-	
-		self->position.y += multiple*YPOSITIONOFFSET;
+		cameraMovement(&py, 1, activeP, &self->position.y, YPOSITIONOFFSET);
     }
     if (keys[SDL_SCANCODE_S])
     {
-		multiple = cameraMovement(&py, -1, activeP);
-		if (multiple == 2)return;
-
-		self->position.y -= multiple*YPOSITIONOFFSET;
+		cameraMovement(&py, -1, activeP, &self->position.y, YPOSITIONOFFSET);
 		
     }
     if (keys[SDL_SCANCODE_D])
     {
-		multiple = cameraMovement(&px, 1, activeP);
-		if (multiple == 2)return;
-
-		self->position.x += multiple*XPOSITIONOFFSET;
+		cameraMovement(&px, 1, activeP, &self->position.x, XPOSITIONOFFSET);
 		
     }
     if (keys[SDL_SCANCODE_A])    
     {
-		multiple = cameraMovement(&px, -1, activeP);
-		if (multiple == 2)return;
-
-		self->position.x -= multiple*XPOSITIONOFFSET;
+		cameraMovement(&px, -1, activeP, &self->position.x, XPOSITIONOFFSET);
     }
 
     if (keys[SDL_SCANCODE_X])self->position.z += 0.40f;
@@ -224,9 +212,10 @@ void player_update(Entity *self)
     gf3d_camera_set_rotation(self->rotation);
 }
 
-int cameraMovement(Uint8 * pPointer, int pChange, int currentPlayer)
+void cameraMovement(Uint8 * pPointer, int pChange, int currentPlayer, float * pPosition, float offset)
 {
-	if (!pPointer)return 2;
+	if (!pPointer)return;
+	if (!pPosition) return;
 	slog("Pointer %i", *pPointer);
 	timeEnd = SDL_GetTicks();
 	slog("Current Player : %i", currentPlayer);
@@ -234,32 +223,36 @@ int cameraMovement(Uint8 * pPointer, int pChange, int currentPlayer)
 	{
 		if (pChange > 0)
 		{
-			if (*pPointer >= 6)return 2;
+			if (*pPointer >= 6)return;
+			*pPosition += offset;
 		}
 		if (pChange < 0)
 		{
-			if (*pPointer <= 0)return 2;	
+			if (*pPointer <= 0)return;	
+			*pPosition -= offset;
 		}
 		*pPointer += pChange;
 		slog("px : %i , py : %i", px, py);
-		return 1;
+		return;
 	}
 	if (currentPlayer == 2)
 	{
 		if (pChange < 0)
 		{
-			if (*pPointer >= 6)return 2;
+			if (*pPointer >= 6)return;
+			*pPosition += offset;
 		}
 		if (pChange > 0)
 		{
-			if (*pPointer <= 0)return 2;
+			if (*pPointer <= 0)return;
+			*pPosition -= offset;
 			
 		}
 		*pPointer -= pChange;
 		slog("px : %i , py : %i", px, py);
-		return -1;		
+		return;		
 	}
-	return 2;
+	return;
 }
 
 void cardMovement(Entity *self,int x, int y,Card *cardPointer)
