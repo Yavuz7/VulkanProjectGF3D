@@ -3,9 +3,9 @@
 
 #include "menu.h"
 
-int index,menuIndex;
+int selectionIndex,menuIndex,menuStateIndex;
 Uint32 timeEnd2;
-const int menuDelay = 100;
+const int menuDelay = 190;
 void menu_think();
 
 Entity *menu_new()
@@ -26,11 +26,12 @@ Entity *menu_new()
 
 void menu_think()
 {
+	//Indexs at 1 because in player.c startmenu 1 is for cardMovement
 	switch (menuIndex)
 	{
-	case 0:
-		break;
 	case 1:
+		break;
+	case 2:
 		openHand();
 		break;
 	}
@@ -39,25 +40,30 @@ void menu_think()
 
 void openMenu(int i)
 {
-	if (menuIndex == i)
-	{
-		menuIndex = 0;
-		return;
-	}
+	selectionIndex = 0;
+	menuStateIndex = 1;
 	menuIndex = i;
+	timeEnd2 = SDL_GetTicks() + 500;
 	return;
 }
 
 void openHand()
 {
-	if (menuSelection(0, 4, 1) == 0)
+	if (menuStateIndex == 2)
 	{
 		return;
 	}
+	menuStateIndex = menuSelection(4, 1);
+	return;
+
 }
 
+int checkMenuDone()
+{
+	return menuStateIndex;
+}
 
-int menuSelection(int min, int max, int orientation)
+int menuSelection(int max, int orientation)
 {
 	if (timeEnd2 + menuDelay > SDL_GetTicks())
 	{
@@ -65,32 +71,75 @@ int menuSelection(int min, int max, int orientation)
 	}
 	const Uint8 * keys;
 	keys = SDL_GetKeyboardState(NULL);
+
+	if (keys[SDL_SCANCODE_SPACE])
+	{
+		slog("Selection Made");
+		timeEnd2 = SDL_GetTicks();
+		return 2;
+		
+	}
 	//Vertical Menu
 	if (orientation == 0)
 	{
-	
+		if (keys[SDL_SCANCODE_W])
+		{
+			if (selectionIndex < max)
+			{
+				selectionIndex++;
+				slog("Moved index Up 1, Current Index : %i", selectionIndex);
+				timeEnd2 = SDL_GetTicks();
+			}
+			else
+			{
+				selectionIndex = max;
+			}
+		}
+		if (keys[SDL_SCANCODE_S])
+		{
+			if (selectionIndex > 0)
+			{
+				selectionIndex--;
+				slog("Moved index Down 1, Current Index : %i", selectionIndex);
+				timeEnd2 = SDL_GetTicks();
+			}
+			else
+			{
+				selectionIndex = 0;
+			}
+		}
+		return 1;
 	}
 	//Horizontal Menu
 	if (orientation == 1)
 	{
 		if (keys[SDL_SCANCODE_D])
 		{
-			if (index < max)
+			if (selectionIndex < max)
 			{
-				index++;
-				slog("Moved index to right 1, Current Index : %i",index);
+				selectionIndex++;
+				slog("Moved index to right 1, Current Index : %i", selectionIndex);
 				timeEnd2 = SDL_GetTicks();
+			}
+			else
+			{
+				selectionIndex = max;
 			}
 		}
 		if (keys[SDL_SCANCODE_A])
 		{
-			if (index > min)
+			if (selectionIndex > 0)
 			{
-				index--;
-				slog("Moved index to left 1, Current Index : %i", index);
+				selectionIndex--;
+				slog("Moved index to left 1, Current Index : %i", selectionIndex);
 				timeEnd2 = SDL_GetTicks();
 			}
+			else
+			{
+				selectionIndex = 0;
+			}
 		}
+		return 1;
 	}
-	return 0;
+	
 }

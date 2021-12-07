@@ -3,6 +3,7 @@
 
 #include "entity.h"
 #include "card.h"
+
 #include "field_play.h"
 
 
@@ -26,10 +27,16 @@ void openHand();
 
 /*
 *@brief Menu selection function for menus to use when open
-*@Brief Minimum value of menu index
-*@Brief Maximum value of menu index
+*@Brief Maximum value of menu index , Min is always 0
 *@Brief Whether the menu is vertical or horizontal for input controls
+*@returns 1 if still selecting something or 2 if done
 */
-int menuSelection(int min, int max, int orientation);
+int menuSelection(int max, int orientation);
+
+/*
+*@brief Checks if menu is done
+*@returns menuStateIndex, if it's 0 the menu is done
+*/
+int checkMenuDone();
 
 #endif

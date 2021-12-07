@@ -116,6 +116,23 @@ void player_think(Entity *self)
 	{
 		return;
 	}
+	if (startMenu != 0)
+	{
+		if (startMenu == 1)
+		{
+			cardMovement(self, px, py, cardPointer);
+			return;
+		}
+		if (checkMenuDone() == 0)
+		{
+			startMenu = 0;
+			slog("menu is done!");
+			return;
+		}
+		slog("checking if menu is done...");
+		timeEnd = SDL_GetTicks() + 1500;
+		return;
+	}
 	//cardMovement(self,py,px);
 	//return;
     Vector3D forward;
@@ -142,7 +159,9 @@ void player_think(Entity *self)
 			if (cardPointer && cardPointer->_cardType == leader && cardPointer->_cardOwner == activeP)
 			{
 				startMenu = 2;
+				openMenu(startMenu);
 				slog("card Movement set to 2");
+				return;
 				
 			}
 			if (cardPointer && cardPointer->_cardMoved == 0 && cardPointer->_cardType != leader && cardPointer->_cardOwner == activeP)
@@ -157,16 +176,8 @@ void player_think(Entity *self)
 			}
 		}		
 	}
-	if (startMenu == 1)
-	{
-		cardMovement(self, px, py,cardPointer);
-		return;
-	}
-	if (startMenu == 2)
-	{
-		openMenu(1);
-		return;
-	}
+
+
 	if (keys[SDL_SCANCODE_BACKSPACE])
 	{
 		timeEnd = SDL_GetTicks() + 500;

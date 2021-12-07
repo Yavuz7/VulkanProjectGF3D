@@ -17,6 +17,7 @@
 #include "world.h"
 #include "card.h"
 #include "tile.h"
+#include "menu.h"
 
 int main(int argc,char *argv[])
 {

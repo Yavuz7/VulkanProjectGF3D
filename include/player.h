@@ -42,7 +42,11 @@ void cardMovement(Entity *self, int x, int y, Card *cardPointer);
 */
 int movementHelperDouble(enum movement direction, enum movement opposite);
 
-
+/*
+*@Brief Sets state of menu
+*@Param Index of Menu being opened
+*/
+void setMenuState(int i);
 
 /*
 *@Brief Set x and y values to match the last move made
