@@ -61,6 +61,7 @@ int main(int argc,char *argv[])
 
     slog("gf3d main loop begin");
 	setPlayers();
+	
 
     while(!done)
     {

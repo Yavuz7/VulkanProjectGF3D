@@ -8,7 +8,6 @@
 
 /**
  * @brief Create a new player entity
- * @int to set if player is active or not
  * @return NULL on error, or an player entity pointer on success
  */
 Entity *player_new();
@@ -43,10 +42,7 @@ void cardMovement(Entity *self, int x, int y, Card *cardPointer);
 */
 int movementHelperDouble(enum movement direction, enum movement opposite);
 
-/*
-*@Brief Open Hand Menu
-*/
-void openHand();
+
 
 /*
 *@Brief Set x and y values to match the last move made

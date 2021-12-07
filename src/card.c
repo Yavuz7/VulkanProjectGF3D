@@ -136,11 +136,6 @@ void drawCard(List *deck, List *Hand)
 	gfc_list_append(Hand,p);
 	gfc_list_delete_nth(deck, rando);
 	slog("Drew Card : %s", cardData[(int)p].cardName);
-	for (int i = 0; i < 5; i++)
-	{
-		if (gfc_list_get_nth(Hand, i) == 0)continue;
-		slog("Card ID in hand position %i : %i",i, gfc_list_get_nth(Hand, i));
-	}
 	return;
 }
 

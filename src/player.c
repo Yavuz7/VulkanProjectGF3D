@@ -7,22 +7,23 @@
 #include "gfc_types.h"
 #include "gfc_audio.h"
 #include "tile.h"
+#include "menu.h"
 
 void player_think(Entity *self);
 void player_update(Entity *self);
 Uint8 activeP;
 Uint8 px,py;
 Uint8 startx, starty;
-int stopper,startCardMovement;
+int stopper,startMenu;
 Card *cardPointer,*defender,*attacker;
 Sound *cardMoveSound;
-Entity *playerCamera;
+Entity *playerCamera, *menus;
 //Todo : Put these in a struct and intialize it so they are not global
 Vector3D player1position, player2position;
 Vector3D player1rotation, player2rotation;
 Uint8 px1, py1, px2, py2;
 
-Uint32 timeStart, timeEnd;
+Uint32 timeEnd;
 const int cameraDelay = 240;
 
 int moveCount;
@@ -58,13 +59,14 @@ Entity *player_new()
 
 	moveCount = 0;
 	stopper = 0;
-	startCardMovement = 0;
+	startMenu = 0;
     return ent;
 }
 
 void setPlayers()
 {
 	playerCamera = player_new();
+	menus = menu_new();
 	activeP = 1;
 	player2position = vector3d(69.0,0,37.0);
 	player2rotation.z = GFC_PI;
@@ -133,13 +135,13 @@ void player_think(Entity *self)
 
 	if (keys[SDL_SCANCODE_SPACE])
 	{
-		if (startCardMovement == 0)
+		if (startMenu == 0)
 		{			
 			cardPointer = getCardPointer(getTileOccupation(px, py));
 			
 			if (cardPointer && cardPointer->_cardType == leader && cardPointer->_cardOwner == activeP)
 			{
-				startCardMovement = 2;
+				startMenu = 2;
 				slog("card Movement set to 2");
 				
 			}
@@ -147,7 +149,7 @@ void player_think(Entity *self)
 			{
 				slog("Start Card Movement");
 				slog("%s (AP%i ,DP %i,HP %i)", cardPointer->cardName, cardPointer->cardAP, cardPointer->cardDP, cardPointer->cardHPcurrent);
-				startCardMovement = 1;
+				startMenu = 1;
 				startx = px;
 				starty = py;
 				timeEnd = SDL_GetTicks();
@@ -155,9 +157,14 @@ void player_think(Entity *self)
 			}
 		}		
 	}
-	if (startCardMovement == 1)
+	if (startMenu == 1)
 	{
 		cardMovement(self, px, py,cardPointer);
+		return;
+	}
+	if (startMenu == 2)
+	{
+		openMenu(1);
 		return;
 	}
 	if (keys[SDL_SCANCODE_BACKSPACE])
@@ -471,15 +478,12 @@ void resetMovement()
 	moveCount = 0;
 	moveHistory[0] = none;
 	moveHistory[1] = none;
-	startCardMovement = 0;
+	startMenu = 0;
 	stopper = 0;
 	timeEnd = SDL_GetTicks();
 	return;
 }
-//Based on turn open that player's hand
-void openHand()
-{
 
-}
+
 
 /*eol@eof*/
