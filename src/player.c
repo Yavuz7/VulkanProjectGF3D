@@ -120,21 +120,31 @@ void player_think(Entity *self)
 	{
 		if (startMenu == 1)
 		{
-			cardMovement(self, px, py, cardPointer);
+			cardMovement(self, px, py, cardPointer, faceUp);
 			return;
 		}
-		if (checkMenuDone() == 0)
+		if (startMenu == 3)
+		{
+			cardMovement(self, px, py, cardPointer, summoning);
+			return;
+		}
+		int check = checkMenuDone();
+
+		if (check == 0)
 		{
 			startMenu = 0;
 			slog("menu is done!");
 			return;
 		}
-		slog("checking if menu is done...");
+		if (check == 2)
+		{
+			startMenu = 3;
+		}
+		slog("checking if menu is done..., state: %i", check);
 		timeEnd = SDL_GetTicks() + 1500;
 		return;
 	}
-	//cardMovement(self,py,px);
-	//return;
+
     Vector3D forward;
     Vector3D right;
     Vector3D up;
@@ -160,6 +170,8 @@ void player_think(Entity *self)
 			{
 				startMenu = 2;
 				openMenu(startMenu);
+				startx = px;
+				starty = py;
 				slog("card Movement set to 2");
 				return;
 				
@@ -272,7 +284,7 @@ void cameraMovement(Uint8 * pPointer, int pChange, int currentPlayer, float * pP
 	return;
 }
 
-void cardMovement(Entity *self,int x, int y,Card *cardPointer)
+void cardMovement(Entity *self, int x, int y, Card *cardPointer, enum cardSelectionState state)
 {
 	if (timeEnd + cameraDelay > SDL_GetTicks())
 	{
@@ -356,11 +368,19 @@ void cardMovement(Entity *self,int x, int y,Card *cardPointer)
 	}
 
 
-
 	if (keys[SDL_SCANCODE_W])
 	{
 		if (py >= 6)
 		{
+			return;
+		}
+		if (state == summoning)
+		{
+			if (summoningMovementHelper() == 1)
+			{
+				cameraMovement(&py, 1, activeP, &self->position.y, YPOSITIONOFFSET);
+				return;
+			}
 			return;
 		}
 		stopper = movementHelperDouble(north, south);
@@ -377,6 +397,15 @@ void cardMovement(Entity *self,int x, int y,Card *cardPointer)
 		{
 			return;
 		}
+		if (state == summoning)
+		{
+			if (summoningMovementHelper() == 1)
+			{
+				cameraMovement(&py, -1, activeP, &self->position.y, YPOSITIONOFFSET);
+				return;
+			}
+			return;
+		}
 		stopper = movementHelperDouble(south, north);
 		if (stopper == 1)return;
 
@@ -389,6 +418,15 @@ void cardMovement(Entity *self,int x, int y,Card *cardPointer)
 	{
 		if (px >= 6)
 		{
+			return;
+		}
+		if (state == summoning)
+		{
+			if (summoningMovementHelper() == 1)
+			{
+				cameraMovement(&px, 1, activeP, &self->position.x, XPOSITIONOFFSET);
+				return;
+			}
 			return;
 		}
 		stopper = movementHelperDouble(east,west);
@@ -405,6 +443,15 @@ void cardMovement(Entity *self,int x, int y,Card *cardPointer)
 		{
 			return;
 		}
+		if (state == summoning)
+		{
+			if (summoningMovementHelper() == 1)
+			{
+				cameraMovement(&px, -1, activeP, &self->position.x, XPOSITIONOFFSET);
+				return;
+			}
+			return;
+		}
 		stopper = movementHelperDouble(west, east);
 		if (stopper == 1)return;
 
@@ -414,6 +461,17 @@ void cardMovement(Entity *self,int x, int y,Card *cardPointer)
 	}
 }
 
+int summoningMovementHelper()
+{
+	if (px <= (startx + 1) && px <= 6 || px >= (startx - 1) && px >= 0)
+	{
+		if (py <= (starty + 1) && py <= 6 || py >= (starty - 1) && py >= 0)
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
 
 int movementHelperDouble(enum movement direction, enum movement opposite)
 {
@@ -495,6 +553,10 @@ void resetMovement()
 	return;
 }
 
+int getActivePlayer()
+{
+	return activeP;
+}
 
 
 /*eol@eof*/

@@ -26,6 +26,12 @@ void openMenu(int i);
 void openHand();
 
 /*
+*@brief Plays Card at index 
+*/
+
+void handSelectionFinal();
+
+/*
 *@brief Menu selection function for menus to use when open
 *@Brief Maximum value of menu index , Min is always 0
 *@Brief Whether the menu is vertical or horizontal for input controls

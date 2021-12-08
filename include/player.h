@@ -25,6 +25,8 @@ void changeTurn();
 
 /*Enumeration for card Movement system*/
 enum movement{north,south,west,east,none,blocked};
+
+enum cardSelectionState{faceDown,faceUp,summoning};
 /*
 *@Brief Moves selected card up to 2 spaces
 *@Param Entity of player for camera movement
@@ -32,7 +34,7 @@ enum movement{north,south,west,east,none,blocked};
 *@Param y position of movement
 *@Param Pointer to card being moved
 */
-void cardMovement(Entity *self, int x, int y, Card *cardPointer);
+void cardMovement(Entity *self, int x, int y, Card *cardPointer, enum cardSelectionState state);
 
 /*
 *@Brief Helper function of cardMovement, keeps track of places cards moved 
@@ -48,6 +50,11 @@ int movementHelperDouble(enum movement direction, enum movement opposite);
 */
 void setMenuState(int i);
 
+/*
+*@Brief Sets state of menu
+*@Return Integer Active Player
+*/
+int getActivePlayer();
 /*
 *@Brief Set x and y values to match the last move made
 */
@@ -66,4 +73,7 @@ void resetMovement();
 *@Param Float to offset position
 */
 void cameraMovement(Uint8 * pPointer, int pChange, int currentPlayer, float * pPosition, float offset);
+
+int summoningMovementHelper();
+
 #endif

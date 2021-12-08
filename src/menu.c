@@ -26,10 +26,10 @@ Entity *menu_new()
 
 void menu_think()
 {
-	//Indexs at 1 because in player.c startmenu 1 is for cardMovement
+	//Indexs at 2 because in player.c startmenu 1 is for cardMovement
 	switch (menuIndex)
 	{
-	case 1:
+	case 0:
 		break;
 	case 2:
 		openHand();
@@ -55,6 +55,15 @@ void openHand()
 	}
 	menuStateIndex = menuSelection(4, 1);
 	return;
+
+}
+
+void handSelectionFinal()
+{
+	if (timeEnd2 + menuDelay > SDL_GetTicks())
+	{
+		return;
+	}
 
 }
 
