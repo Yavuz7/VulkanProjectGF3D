@@ -16,7 +16,7 @@ Entity *agumon_new(Vector3D position)
         return NULL;
     }
     
-    ent->model = gf3d_model_load_plus("dino","tile1");
+   // ent->model = gf3d_model_load_plus("dino","tile1");
     ent->think = agumon_think;
     vector3d_copy(ent->position,position);
     return ent;

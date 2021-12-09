@@ -158,7 +158,7 @@ void playCard(int x, int y, int handIndex, List *hand)
 	cardData[(int)p].cardXpos = x;
 	cardData[(int)p].cardYpos = y;
 	cardData[(int)p].eP = entity_new();
-	cardData[(int)p].eP->model = gf3d_model_load_plus("cardDefault", "cardDefault");
+	cardData[(int)p].eP->model = gf3d_model_load("cardDefault");
 
 	setCardModelLocation(x, y, cardData[(int)p].eP);
 	setTileOccupation(x, y, p);
