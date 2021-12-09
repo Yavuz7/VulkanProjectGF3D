@@ -45,4 +45,10 @@ int menuSelection(int max, int orientation);
 */
 int checkMenuDone();
 
+/*
+*@brief Gets index of menu item
+*@returns SelectionIndex
+*/
+int getMenuIndex();
+
 #endif

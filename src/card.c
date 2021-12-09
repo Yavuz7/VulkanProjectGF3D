@@ -171,6 +171,17 @@ Card *getCardPointer(void *p)
 	return &cardData[(int)p];
 }
 
+List *getPlayerHand(int player)
+{
+	if (player == 1)
+	{
+		return player1HandList;
+	}
+	if (player == 2)
+	{
+		return player2HandList;
+	}
+}
 void setCardModelLocation(int x, int y, Entity *eCard)
 {
 	if (!eCard)return;

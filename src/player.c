@@ -141,7 +141,7 @@ void player_think(Entity *self)
 			startMenu = 3;
 		}
 		slog("checking if menu is done..., state: %i", check);
-		timeEnd = SDL_GetTicks() + 1500;
+		timeEnd = SDL_GetTicks() + 250;
 		return;
 	}
 
@@ -300,6 +300,11 @@ void cardMovement(Entity *self, int x, int y, Card *cardPointer, enum cardSelect
 
 	if (keys[SDL_SCANCODE_R])
 	{
+		if (state == summoning)
+		{
+			timeEnd = SDL_GetTicks();
+			return;
+		}
 		if (cardPointer->_cardPosition == Fight)
 		{
 			setCardDefense(cardPointer);
@@ -316,6 +321,24 @@ void cardMovement(Entity *self, int x, int y, Card *cardPointer, enum cardSelect
 
 	if (keys[SDL_SCANCODE_SPACE]) //Select Card
 	{
+		if (state == summoning)
+		{
+			if (checkTileOccupation(px, py) == 1)
+			{
+				slog("Can't summon on occupied square");
+				return;
+			}
+			List * playerHand = getPlayerHand(activeP);
+			if (playerHand)
+			{
+				playCard(px, py, getMenuIndex(),playerHand);
+			}
+			timeEnd = SDL_GetTicks() + 500;
+			startMenu = 0;
+			openMenu(startMenu);
+			resetMovement();
+			return;
+		}
 		if (px == startx && py == starty)
 		{
 			slog("Card set in same place");
@@ -374,6 +397,10 @@ void cardMovement(Entity *self, int x, int y, Card *cardPointer, enum cardSelect
 		{
 			return;
 		}
+
+		stopper = movementHelperDouble(north, south);
+		if (stopper == 1)return;
+
 		if (state == summoning)
 		{
 			if (summoningMovementHelper() == 1)
@@ -383,9 +410,6 @@ void cardMovement(Entity *self, int x, int y, Card *cardPointer, enum cardSelect
 			}
 			return;
 		}
-		stopper = movementHelperDouble(north, south);
-		if (stopper == 1)return;
-		
 		setCardFight(cardPointer);
 
 		cameraMovement(&py, 1, activeP, &self->position.y, YPOSITIONOFFSET);
@@ -397,6 +421,10 @@ void cardMovement(Entity *self, int x, int y, Card *cardPointer, enum cardSelect
 		{
 			return;
 		}
+
+		stopper = movementHelperDouble(south, north);
+		if (stopper == 1)return;
+
 		if (state == summoning)
 		{
 			if (summoningMovementHelper() == 1)
@@ -406,9 +434,6 @@ void cardMovement(Entity *self, int x, int y, Card *cardPointer, enum cardSelect
 			}
 			return;
 		}
-		stopper = movementHelperDouble(south, north);
-		if (stopper == 1)return;
-
 		setCardFight(cardPointer);
 
 		cameraMovement(&py, -1, activeP, &self->position.y, YPOSITIONOFFSET);
@@ -420,6 +445,10 @@ void cardMovement(Entity *self, int x, int y, Card *cardPointer, enum cardSelect
 		{
 			return;
 		}
+
+		stopper = movementHelperDouble(east,west);
+		if (stopper == 1)return;
+
 		if (state == summoning)
 		{
 			if (summoningMovementHelper() == 1)
@@ -429,8 +458,6 @@ void cardMovement(Entity *self, int x, int y, Card *cardPointer, enum cardSelect
 			}
 			return;
 		}
-		stopper = movementHelperDouble(east,west);
-		if (stopper == 1)return;
 
 		setCardFight(cardPointer);
 		
@@ -443,6 +470,10 @@ void cardMovement(Entity *self, int x, int y, Card *cardPointer, enum cardSelect
 		{
 			return;
 		}
+
+		stopper = movementHelperDouble(west, east);
+		if (stopper == 1)return;
+
 		if (state == summoning)
 		{
 			if (summoningMovementHelper() == 1)
@@ -452,9 +483,6 @@ void cardMovement(Entity *self, int x, int y, Card *cardPointer, enum cardSelect
 			}
 			return;
 		}
-		stopper = movementHelperDouble(west, east);
-		if (stopper == 1)return;
-
 		setCardFight(cardPointer);
 
 		cameraMovement(&px, -1, activeP, &self->position.x, XPOSITIONOFFSET);	
@@ -463,14 +491,7 @@ void cardMovement(Entity *self, int x, int y, Card *cardPointer, enum cardSelect
 
 int summoningMovementHelper()
 {
-	if (px <= (startx + 1) && px <= 6 || px >= (startx - 1) && px >= 0)
-	{
-		if (py <= (starty + 1) && py <= 6 || py >= (starty - 1) && py >= 0)
-		{
-			return 1;
-		}
-	}
-	return 0;
+	return 1;
 }
 
 int movementHelperDouble(enum movement direction, enum movement opposite)

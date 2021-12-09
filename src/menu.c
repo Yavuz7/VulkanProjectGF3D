@@ -72,6 +72,11 @@ int checkMenuDone()
 	return menuStateIndex;
 }
 
+int getMenuIndex()
+{
+	return selectionIndex;
+}
+
 int menuSelection(int max, int orientation)
 {
 	if (timeEnd2 + menuDelay > SDL_GetTicks())

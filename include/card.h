@@ -114,4 +114,11 @@ void loadDeck(List *deck, char *deckname);
 
 Card *getCardPointer(void *p);
 
+/*
+*@Brief getter function of player hand
+*@Param Int player
+*@Return Playyer list
+*/
+List *getPlayerHand(int player);
+
 #endif
