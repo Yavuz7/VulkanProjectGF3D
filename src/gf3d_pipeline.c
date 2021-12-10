@@ -176,13 +176,13 @@ void gf3d_pipeline_sprite_render_pass_setup(Pipeline *pipe)
     VkSubpassDescription subpass = {0};
     VkRenderPassCreateInfo renderPassInfo = {0};
     VkSubpassDependency dependency = {0};
-   // VkAttachmentDescription depthAttachment = {0};
-    //VkAttachmentReference depthAttachmentRef = {0};
-    VkAttachmentDescription attachments[1];
+    VkAttachmentDescription depthAttachment = {0};
+    VkAttachmentReference depthAttachmentRef = {0};
+    VkAttachmentDescription attachments[2];
     
-   // depthAttachmentRef.attachment = 1;
-    //depthAttachmentRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-	/*
+    depthAttachmentRef.attachment = 1;
+    depthAttachmentRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+	
     depthAttachment.format = gf3d_pipeline_find_depth_format();
     depthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
     depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_LOAD;
@@ -191,7 +191,7 @@ void gf3d_pipeline_sprite_render_pass_setup(Pipeline *pipe)
     depthAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
     depthAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
     depthAttachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-	*/
+	
     dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
     dependency.dstSubpass = 0;
     dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
@@ -212,13 +212,13 @@ void gf3d_pipeline_sprite_render_pass_setup(Pipeline *pipe)
     colorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
     subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
-    subpass.colorAttachmentCount = 1;
+    subpass.colorAttachmentCount = 2;
     subpass.pColorAttachments = &colorAttachmentRef;
-    //subpass.pDepthStencilAttachment = &depthAttachmentRef;
-	//subpass.pDepthStencilAttachment = NULL;
+    subpass.pDepthStencilAttachment = &depthAttachmentRef;
+	subpass.pDepthStencilAttachment = NULL;
     
     memcpy(&attachments[0],&colorAttachment,sizeof(VkAttachmentDescription));
-   // memcpy(&attachments[1],&depthAttachment,sizeof(VkAttachmentDescription));
+    memcpy(&attachments[1],&depthAttachment,sizeof(VkAttachmentDescription));
     
     renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
     renderPassInfo.attachmentCount = 1;

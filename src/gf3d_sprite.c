@@ -150,7 +150,7 @@ Sprite *gf3d_sprite_new()
     return NULL;
 }
 
-Sprite * gf3d_sprite_load(char * filename,int frame_width,int frame_height, Uint32 frames_per_line)
+Sprite * gf3d_sprite_load(char * filename,int frame_width,int frame_height, Uint32 frames_per_line, float heightScale, float widthScale)
 {
     Sprite *sprite;
     sprite = gf3d_sprite_get_by_filename(filename);
@@ -165,6 +165,9 @@ Sprite * gf3d_sprite_load(char * filename,int frame_width,int frame_height, Uint
         return NULL;
     }
     sprite->texture = gf3d_texture_load(filename);
+	sprite->texture->height = sprite->texture->height * heightScale;
+	sprite->texture->width = sprite->texture->width * widthScale;
+
     if (!sprite->texture)
     {
         slog("gf3d_sprite_load: failed to load texture for sprite");
@@ -248,6 +251,7 @@ void gf3d_sprite_draw(Sprite *sprite,Vector2D position,Vector2D scale,Uint32 fra
         slog("cannot render a NULL sprite");
         return;
     }
+
     commandBuffer = gf3d_vgraphics_get_current_command_overlay_buffer();
     buffer_frame = gf3d_vgraphics_get_current_buffer_frame();
 
@@ -257,9 +261,12 @@ void gf3d_sprite_draw(Sprite *sprite,Vector2D position,Vector2D scale,Uint32 fra
         slog("failed to get a free descriptor Set for sprite rendering");
         return;
     }
-    gfc_matrix_scale(
-        modelMat,
-        vector3d(scale.x,scale.y,1));
+	
+	
+	gfc_matrix_scale(
+		modelMat,
+		vector3d(scale.x, scale.y, 1));
+		
     gfc_matrix_make_translation(
         modelMat,
         vector3d(position.x*2/(float)extent.width,position.y*2/(float)extent.height,0));

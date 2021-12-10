@@ -43,7 +43,7 @@ void loadMap(char *mapData)
 			tileMap[x][y]._tileType = buff[0];
 			tileMap[x][y]._tileOccupied = 0;
 			setTile(&tileMap[x][y],x,y);
-			slog("Tile %d , %d set to Type %i", x, y, tileMap[x][y]._tileType);
+			//slog("Tile %d , %d set to Type %i", x, y, tileMap[x][y]._tileType);
 		}
 	}
 	fclose(map);
