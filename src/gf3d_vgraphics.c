@@ -472,7 +472,7 @@ void gf3d_vgraphics_render_end()
     VkSemaphore signalSemaphores[] = {gf3d_vgraphics.renderFinishedSemaphore};
     VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
     
-    
+
     gf3d_command_rendering_end(gf3d_vgraphics.commandModelBuffer);
     gf3d_command_rendering_end(gf3d_vgraphics.commandOverlayBuffer);
 
@@ -492,7 +492,7 @@ void gf3d_vgraphics_render_end()
     
     submitInfo.signalSemaphoreCount = 1;
     submitInfo.pSignalSemaphores = signalSemaphores;
-    
+  
     if (vkQueueSubmit(gf3d_vqueues_get_graphics_queue(), 1, &submitInfo, VK_NULL_HANDLE) != VK_SUCCESS)
     {
         slog("failed to submit draw command buffer!");

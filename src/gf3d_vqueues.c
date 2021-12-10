@@ -144,7 +144,7 @@ VkDeviceQueueCreateInfo gf3d_vqueues_get_graphics_queue_info()
     VkDeviceQueueCreateInfo queueCreateInfo = {0};
     queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
     queueCreateInfo.queueFamilyIndex = gf3d_vqueues.graphics_queue_family;
-    queueCreateInfo.queueCount = 1;
+    queueCreateInfo.queueCount = 2;
     queueCreateInfo.pQueuePriorities = &gf3d_vqueues.graphics_queue_priority;
     return queueCreateInfo;
 }

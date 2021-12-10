@@ -110,7 +110,7 @@ void loadDeck(List *deck, char *deckname)
 
 		void *p = i;
 		deck = gfc_list_append(deck, p);
-		slog("P data : %i", (int)p);
+		//slog("P data : %i", (int)p);
 		free(stringBuffer);
 
 		if (deck == player2DeckList)

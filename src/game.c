@@ -28,6 +28,7 @@ int main(int argc,char *argv[])
     const Uint8 * keys;
     
 	Sprite *mouse = NULL;
+	Sprite *overlay = NULL;
 	int mousex, mousey;
 	float mouseFrame = 0;
     World *w;
@@ -55,6 +56,8 @@ int main(int argc,char *argv[])
     entity_system_init(1024);
 
 	mouse = gf3d_sprite_load("images/pointer.png", 32, 32, 16);
+	//overlay = gf3d_sprite_load("images/temoverlay.png", 32, 32, 1);
+	slog_sync();
 	//setCardData("00001", c );
 	//setCardData("00002", c);
 
@@ -94,7 +97,7 @@ int main(int argc,char *argv[])
 				drawTiles();
 
 				gf3d_sprite_draw(mouse, vector2d(mousex, mousey), vector2d(1, 1), (Uint32)mouseFrame);
-
+				//gf3d_sprite_draw(overlay, vector2d(.2, .2), vector2d(2, 2), 1);
         gf3d_vgraphics_render_end();
 
         if (keys[SDL_SCANCODE_ESCAPE])done = 1; // exit condition
