@@ -81,9 +81,9 @@ void startDuel();
 *@Brief Plays a card at index x y 
 *@Param X position on grid
 *@Param Y position on grid
-*@Param Hand that card is being played from
+*@Param Active player
 */
-void playCard(int x, int y, int handIndex,List *hand);
+void playCard(int x, int y, int handIndex, int player);
 
 /*
 *@Brief setCard model location stuff

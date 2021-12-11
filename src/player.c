@@ -90,6 +90,7 @@ void changeTurn()
 		slog("player 1 camera y: %f", playerCamera->position.y);
 		generateResource(activeP);
 		activeP = 2;
+		resetMovement();
 		return;
 
 	}
@@ -106,6 +107,7 @@ void changeTurn()
 		slog("player 2 camera y: %f", playerCamera->position.y);
 		generateResource(activeP);
 		activeP = 1;
+		resetMovement();
 		return;
 	}
 }
@@ -290,9 +292,7 @@ void cardMovement(Entity *self, int x, int y, Card *cardPointer, enum cardSelect
 	{
 		return;
 	}
-	Vector3D forward;
-	Vector3D right;
-	Vector3D up;
+
 	const Uint8 * keys;
 
 
@@ -328,11 +328,8 @@ void cardMovement(Entity *self, int x, int y, Card *cardPointer, enum cardSelect
 				slog("Can't summon on occupied square");
 				return;
 			}
-			List * playerHand = getPlayerHand(activeP);
-			if (playerHand)
-			{
-				playCard(px, py, getMenuIndex(),playerHand);
-			}
+			playCard(px, py, getMenuIndex(),activeP);
+			
 			timeEnd = SDL_GetTicks() + 500;
 			startMenu = 0;
 			openMenu(startMenu);
@@ -350,6 +347,12 @@ void cardMovement(Entity *self, int x, int y, Card *cardPointer, enum cardSelect
 		{
 			attacker = getCardPointer(getTileOccupation(startx, starty));
 			defender = getCardPointer(getTileOccupation(px, py));
+			if (defender->_cardOwner == attacker->_cardOwner)
+			{
+				slog("no friendly fire");
+				resetMovement();
+				return;
+			}
 			setCardFight(cardPointer);
 			int result = cardFight(attacker,defender);
 			if (result == 0)
@@ -393,8 +396,9 @@ void cardMovement(Entity *self, int x, int y, Card *cardPointer, enum cardSelect
 
 	if (keys[SDL_SCANCODE_W])
 	{
-		if (py >= 6)
+		if (py > 6)
 		{
+			py = 6;
 			return;
 		}
 
@@ -417,8 +421,9 @@ void cardMovement(Entity *self, int x, int y, Card *cardPointer, enum cardSelect
 	}
 	if (keys[SDL_SCANCODE_S])
 	{
-		if (py <= 0)
+		if (py < 0)
 		{
+			py = 0;
 			return;
 		}
 
@@ -441,8 +446,9 @@ void cardMovement(Entity *self, int x, int y, Card *cardPointer, enum cardSelect
 	}
 	if (keys[SDL_SCANCODE_D])
 	{
-		if (px >= 6)
+		if (px > 6)
 		{
+			px = 6;
 			return;
 		}
 
@@ -466,8 +472,9 @@ void cardMovement(Entity *self, int x, int y, Card *cardPointer, enum cardSelect
 	}
 	if (keys[SDL_SCANCODE_A])
 	{
-		if (px <= 0)
+		if (px < 0)
 		{
+			px = 0;
 			return;
 		}
 
@@ -496,9 +503,20 @@ int summoningMovementHelper()
 
 int movementHelperDouble(enum movement direction, enum movement opposite)
 {
+	enum movement d, o;
+	if (activeP == 1)
+	{
+		d = direction;
+		o = opposite;
+	}
+	else
+	{
+		d = opposite;
+		o = direction;
+	}
 	if (moveCount == 2)
 	{
-		if (moveHistory[moveCount - 1] == opposite)
+		if (moveHistory[moveCount - 1] == o)
 		{
 			moveCount -= 1;
 			moveHistory[moveCount] = none;
@@ -506,7 +524,7 @@ int movementHelperDouble(enum movement direction, enum movement opposite)
 		}
 		if (moveHistory[moveCount - 1] == none)
 		{
-			moveHistory[moveCount-1] = direction;
+			moveHistory[moveCount-1] = d;
 			moveCount += 1;
 			return 0;
 		}
@@ -517,14 +535,14 @@ int movementHelperDouble(enum movement direction, enum movement opposite)
 	}
 	if (moveCount == 1)
 	{
-		if (moveHistory[moveCount - 1] == opposite)
+		if (moveHistory[moveCount - 1] == o)
 		{
 			moveCount -= 1;
 			moveHistory[moveCount] = none;
 			return 0;
 		}
 	}
-	moveHistory[moveCount] = direction;
+	moveHistory[moveCount] = d;
 	moveCount += 1;
 	return 0;
 }

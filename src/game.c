@@ -55,7 +55,7 @@ int main(int argc,char *argv[])
     
     entity_system_init(1024);
 
-	mouse = gf3d_sprite_load("images/pointer.png", 32, 32, 16,5.0,5.0);
+	mouse = gf3d_sprite_load("images/pointer.png", 32, 32, 16,1.0,1.0);
 	overlay = gf3d_sprite_load("images/overlay.png", -1, -1, 1,1.35,1.25);
 	slog_sync();
 	//setCardData("00001", c );

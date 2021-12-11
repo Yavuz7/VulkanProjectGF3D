@@ -36,9 +36,12 @@ List *fieldList;
 	 do{
 		 drawCard(player1DeckList,player1HandList);
 	 } while (gfc_list_get_count(player1HandList) < 5);
+	 do{
+		 drawCard(player2DeckList, player2HandList);
+	 } while (gfc_list_get_count(player2HandList) < 5);
 
-	 playCard(2, 2, 0, player1HandList);
-	 playCard(1, 1, 2, player1HandList);
+	 playCard(2, 2, 0, 1);
+	 playCard(1, 1, 2, 2);
  }
 
 
@@ -147,18 +150,30 @@ void endDuel()
 	return;
 }
 
-void playCard(int x, int y, int handIndex, List *hand)
+void playCard(int x, int y, int handIndex, Uint8 player)
 {
+	List * hand = NULL;
+	if (player == 1)
+	{
+		hand = player1HandList;
+	}
+	else
+	{
+		hand = player2HandList;
+	}
 	if (!hand)return;
-
+	
 	void *p = gfc_list_get_nth(hand, handIndex);
 	gfc_list_append(fieldList, p);
 	gfc_list_delete_nth(hand, handIndex);
+
 	cardData[(int)p].fieldReference = gfc_list_get_item_index(fieldList, p);
 	cardData[(int)p].cardXpos = x;
 	cardData[(int)p].cardYpos = y;
 	cardData[(int)p].eP = entity_new();
 	cardData[(int)p].eP->model = gf3d_model_load("cardDefault");
+
+		cardData[(int)p]._cardOwner = player;
 
 	setCardModelLocation(x, y, cardData[(int)p].eP);
 	setTileOccupation(x, y, p);
@@ -167,7 +182,11 @@ void playCard(int x, int y, int handIndex, List *hand)
 
 Card *getCardPointer(void *p)
 {
-	if (!p)return NULL;
+	if (!p)
+	{
+		//slog("Card pointer not gotten");
+		return NULL;
+	}
 	return &cardData[(int)p];
 }
 
@@ -198,17 +217,46 @@ void setCardModelLocation(int x, int y, Entity *eCard)
 //Field Play
 void startDuel()
 {
-	int x, y;		
-	//First Cards Of Each Deck
+	int x, y, index,player;
 	cardData[1]._cardType = leader;
 	cardData[51]._cardType = leader;
+	List *deck;
+	void *p;
+	for (int i = 0; i < 2; i++)
+	{
+		if (i == 0)
+		{
+			x = 3;
+			y = 0;
+			index = 0;
+			player = 1;
+			deck = player1DeckList;			
+		}
+		else
+		{
+			x = 3;
+			y = 6;
+			index = 0;
+			player = 2;
+			deck = player2DeckList;
+		}
+		p = gfc_list_get_nth(deck, index);			
+		gfc_list_append(fieldList, p);
+		gfc_list_delete_nth(deck, index);
 
-	x = 3;
-	y = 0;
-	playCard(x, y, 0, player1DeckList);
-	x = 3;
-	y = 6;
-	playCard(x, y, 0, player2DeckList);
+		cardData[(int)p].fieldReference = gfc_list_get_item_index(fieldList, p);
+		cardData[(int)p].cardXpos = x;
+		cardData[(int)p].cardYpos = y;
+		cardData[(int)p].eP = entity_new();
+		cardData[(int)p].eP->model = gf3d_model_load("cardDefault");
+
+		cardData[(int)p]._cardOwner = player;
+
+		setCardModelLocation(x, y, cardData[(int)p].eP);
+		setTileOccupation(x, y, p);
+
+		
+	}
 }
 
 void destroyCard(void *Cardp)
