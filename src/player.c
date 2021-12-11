@@ -77,7 +77,9 @@ void setPlayers()
 
 void changeTurn()
 {
+	slog("Changing Turn");
 	resetCardMoves();
+	refillHands();
 	if (activeP == 1) // Change to Player 2 Turn
 	{
 		px1 = px;

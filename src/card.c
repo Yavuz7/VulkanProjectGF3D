@@ -159,6 +159,24 @@ void resetCardMoves()
 	}
 	return;
 }
+
+void refillHands()
+{
+	if (gfc_list_get_count(player1HandList) < 5)
+	{
+		do{
+			drawCard(player1DeckList, player1HandList);
+		} while (gfc_list_get_count(player1HandList) < 5);
+	}
+	if (gfc_list_get_count(player2HandList) < 5)
+	{
+		do{
+			drawCard(player2DeckList, player2HandList);
+		} while (gfc_list_get_count(player2HandList) < 5);
+	}
+}
+
+
 void playCard(int x, int y, int handIndex, Uint8 player)
 {
 	List * hand = NULL;

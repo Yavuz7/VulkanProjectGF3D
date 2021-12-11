@@ -126,4 +126,10 @@ List *getPlayerHand(int player);
 
 void resetCardMoves();
 
+/*
+*@Brief Draws cards until hands have 5 cards
+*/
+
+void refillHands();
+
 #endif
