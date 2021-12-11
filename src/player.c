@@ -77,6 +77,7 @@ void setPlayers()
 
 void changeTurn()
 {
+	resetCardMoves();
 	if (activeP == 1) // Change to Player 2 Turn
 	{
 		px1 = px;
@@ -168,7 +169,7 @@ void player_think(Entity *self)
 		{			
 			cardPointer = getCardPointer(getTileOccupation(px, py));
 			
-			if (cardPointer && cardPointer->_cardType == leader && cardPointer->_cardOwner == activeP)
+			if (cardPointer && cardPointer->_cardType == leader && cardPointer->_cardOwner == activeP && cardPointer->_cardMoved == 0)
 			{
 				startMenu = 2;
 				openMenu(startMenu);
@@ -178,13 +179,27 @@ void player_think(Entity *self)
 				return;
 				
 			}
-			if (cardPointer && cardPointer->_cardMoved == 0 && cardPointer->_cardType != leader && cardPointer->_cardOwner == activeP)
+			if (cardPointer && cardPointer->_cardMoved == 0 && cardPointer->_cardType != leader && cardPointer->_cardOwner == activeP && cardPointer->_cardMoved == 0)
 			{
 				slog("Start Card Movement");
 				slog("%s (AP%i ,DP %i,HP %i)", cardPointer->cardName, cardPointer->cardAP, cardPointer->cardDP, cardPointer->cardHPcurrent);
 				startMenu = 1;
 				startx = px;
 				starty = py;
+				timeEnd = SDL_GetTicks();
+				return;
+			}
+			if (cardPointer->_cardMoved == 1)
+			{
+				slog("Card Acted This Turn");
+				slog("%s (AP%i ,DP %i,HP %i)", cardPointer->cardName, cardPointer->cardAP, cardPointer->cardDP, cardPointer->cardHPcurrent);
+				timeEnd = SDL_GetTicks();
+				return;
+			}
+			if (cardPointer->_cardOwner != activeP)
+			{
+				slog("Opponent Card");
+				slog("%s (AP%i ,DP %i,HP %i)", cardPointer->cardName, cardPointer->cardAP, cardPointer->cardDP, cardPointer->cardHPcurrent);
 				timeEnd = SDL_GetTicks();
 				return;
 			}
@@ -329,7 +344,7 @@ void cardMovement(Entity *self, int x, int y, Card *cardPointer, enum cardSelect
 				return;
 			}
 			playCard(px, py, getMenuIndex(),activeP);
-			
+			cardPointer->_cardMoved = 1;
 			timeEnd = SDL_GetTicks() + 500;
 			startMenu = 0;
 			openMenu(startMenu);
@@ -341,6 +356,7 @@ void cardMovement(Entity *self, int x, int y, Card *cardPointer, enum cardSelect
 			slog("Card set in same place");
 			//cardPointer->_cardMoved = 1;
 			resetMovement();
+			cardPointer->_cardMoved = 1;
 			return;
 		}
 		if (checkTileOccupation(px, py) == 1)
@@ -362,6 +378,7 @@ void cardMovement(Entity *self, int x, int y, Card *cardPointer, enum cardSelect
 				cardMove(px, py, cardPointer);				
 				resetMovement();
 				timeEnd = SDL_GetTicks();
+				cardPointer->_cardMoved = 1;
 				return;
 			}
 			if (result == 1)
@@ -370,6 +387,7 @@ void cardMovement(Entity *self, int x, int y, Card *cardPointer, enum cardSelect
 				removeTileOccupation(startx, starty);				
 				resetMovement();
 				timeEnd = SDL_GetTicks();
+				cardPointer->_cardMoved = 1;
 				return;
 			}
 			if (result == 2)
@@ -377,10 +395,12 @@ void cardMovement(Entity *self, int x, int y, Card *cardPointer, enum cardSelect
 				movementHelperFight(cardPointer);
 				resetMovement();
 				timeEnd = SDL_GetTicks();
+				cardPointer->_cardMoved = 1;
 				return;
 			}
 		}
 		cardMove(px, py, cardPointer);
+		cardPointer->_cardMoved = 1;
 		//cardPointer = NULL;
 		resetMovement();
 		return;

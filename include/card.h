@@ -120,5 +120,10 @@ Card *getCardPointer(void *p);
 *@Return Playyer list
 */
 List *getPlayerHand(int player);
+/*
+*@Brief Resets movement of all the cards on the field
+*/
+
+void resetCardMoves();
 
 #endif

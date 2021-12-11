@@ -24,6 +24,10 @@ void openMenu(int i);
 *@brief Hand Menu Functions
 */
 void openHand();
+/*
+*@brief Main Menu Functions
+*/
+void openMainMenu();
 
 /*
 *@brief Plays Card at index 

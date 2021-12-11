@@ -22,9 +22,9 @@ List *fieldList;
 	 cardData = gfc_allocate_array(sizeof(Card), 102);
 
 	 player1DeckList = gfc_list_new_size(50);
-	 player1HandList = gfc_list_new_size(5);
+	 player1HandList = gfc_list_new_size(6);
 	 player2DeckList = gfc_list_new_size(50);
-	 player2HandList = gfc_list_new_size(5);
+	 player2HandList = gfc_list_new_size(6);
 	 graveyardList = gfc_list_new_size(120);
 	 fieldList = gfc_list_new_size(50);
 
@@ -40,8 +40,8 @@ List *fieldList;
 		 drawCard(player2DeckList, player2HandList);
 	 } while (gfc_list_get_count(player2HandList) < 5);
 
-	 playCard(2, 2, 0, 1);
-	 playCard(1, 1, 2, 2);
+	 //playCard(2, 2, 0, 1);
+	 //playCard(1, 1, 2, 2);
  }
 
 
@@ -136,7 +136,7 @@ void drawCard(List *deck, List *Hand)
 	
 	rando = rand() % gfc_list_get_count(deck);
 	void *p = gfc_list_get_nth(deck, rando);
-	gfc_list_append(Hand,p);
+	Hand = gfc_list_append(Hand,p);
 	gfc_list_delete_nth(deck, rando);
 	slog("Drew Card : %s", cardData[(int)p].cardName);
 	return;
@@ -150,6 +150,15 @@ void endDuel()
 	return;
 }
 
+void resetCardMoves()
+{
+	for (int i = 0; i < gfc_list_get_count(fieldList); i++)
+	{
+		void *p = gfc_list_get_nth(fieldList, i);
+		cardData[(int)p]._cardMoved = 0;
+	}
+	return;
+}
 void playCard(int x, int y, int handIndex, Uint8 player)
 {
 	List * hand = NULL;
@@ -164,7 +173,7 @@ void playCard(int x, int y, int handIndex, Uint8 player)
 	if (!hand)return;
 	
 	void *p = gfc_list_get_nth(hand, handIndex);
-	gfc_list_append(fieldList, p);
+	fieldList = gfc_list_append(fieldList, p);
 	gfc_list_delete_nth(hand, handIndex);
 
 	cardData[(int)p].fieldReference = gfc_list_get_item_index(fieldList, p);
@@ -241,7 +250,7 @@ void startDuel()
 			deck = player2DeckList;
 		}
 		p = gfc_list_get_nth(deck, index);			
-		gfc_list_append(fieldList, p);
+		fieldList = gfc_list_append(fieldList, p);
 		gfc_list_delete_nth(deck, index);
 
 		cardData[(int)p].fieldReference = gfc_list_get_item_index(fieldList, p);
@@ -273,7 +282,7 @@ void destroyCard(void *Cardp)
 	}
 	
 	void *p = gfc_list_get_nth(fieldList, cardData[(int)Cardp].fieldReference); //Using the set field Reference, gets and removes from field list
-	gfc_list_append(graveyardList, p);
+	graveyardList = gfc_list_append(graveyardList, p);
 	gfc_list_delete_nth(fieldList, cardData[(int)Cardp].fieldReference);
 	cardData[(int)Cardp].fieldReference = NULL;
 	//memset(&cardData[(int)Cardp], 0, sizeof(Card));

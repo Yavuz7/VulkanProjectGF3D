@@ -34,6 +34,8 @@ void menu_think()
 	case 2:
 		openHand();
 		break;
+	case 3:
+		break;
 	}
 	return;
 }
@@ -56,6 +58,12 @@ void openHand()
 	menuStateIndex = menuSelection(4, 1);
 	return;
 
+}
+
+void openMainMenu()
+{
+	menuStateIndex = menuSelection(2, 1);
+	return;
 }
 
 void handSelectionFinal()
