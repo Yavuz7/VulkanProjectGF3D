@@ -27,10 +27,8 @@ int main(int argc,char *argv[])
     Uint8 validate = 0;
     const Uint8 * keys;
     
-	Sprite *mouse = NULL;
 	Sprite *overlay = NULL;
-	int mousex, mousey;
-	float mouseFrame = 0;
+
     World *w;
     
     for (a = 1; a < argc;a++)
@@ -55,7 +53,6 @@ int main(int argc,char *argv[])
     
     entity_system_init(1024);
 
-	mouse = gf3d_sprite_load("images/pointer.png", 32, 32, 16,1.0,1.0);
 	overlay = gf3d_sprite_load("images/overlay.png", -1, -1, 1,1.35,1.25);
 	slog_sync();
 	//setCardData("00001", c );
@@ -78,11 +75,6 @@ int main(int argc,char *argv[])
         SDL_PumpEvents();   // update SDL's internal event structures
         keys = SDL_GetKeyboardState(NULL); // get the keyboard state for this frame
 
-		SDL_GetMouseState(&mousex, &mousey);
-
-		mouseFrame += 0.01;
-		if (mouseFrame >= 16)mouseFrame = 0;
-
         entity_think_all();
         entity_update_all();
         gf3d_camera_update_view();
@@ -95,8 +87,7 @@ int main(int argc,char *argv[])
               //  world_draw(w);
                 entity_draw_all();
 				drawTiles();
-				gf3d_sprite_draw(overlay, vector2d(0, -27.0), vector2d(5.0, 5.0), 1);
-				gf3d_sprite_draw(mouse, vector2d(mousex, mousey), vector2d(1, 1), (Uint32)mouseFrame);
+				sprite_draw_all();
 				
         gf3d_vgraphics_render_end();
 

@@ -59,7 +59,7 @@ Entity *player_new()
 
 	moveCount = 0;
 	stopper = 0;
-	startMenu = 0;
+	startMenu = 4;
     return ent;
 }
 
@@ -72,6 +72,10 @@ void setPlayers()
 	player2rotation.z = GFC_PI;
 	px2 = 3;
 	py2 = 6;
+	loadMainMenuUI();
+	openMenu(4);
+	
+	//startMenu = 4;
 	return;
 }
 

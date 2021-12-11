@@ -238,7 +238,7 @@ void gf3d_sprite_render(Sprite *sprite,VkCommandBuffer commandBuffer, VkDescript
 }
 
 
-void gf3d_sprite_draw(Sprite *sprite,Vector2D position,Vector2D scale,Uint32 frame)
+void gf3d_sprite_draw(Sprite *sprite)
 {
     VkDescriptorSet *descriptorSet = NULL;
     Matrix4 modelMat;
@@ -251,7 +251,14 @@ void gf3d_sprite_draw(Sprite *sprite,Vector2D position,Vector2D scale,Uint32 fra
         slog("cannot render a NULL sprite");
         return;
     }
-
+	if (!sprite->frame)
+	{
+		sprite->frame = 1;
+	}
+	if (!sprite->position.x)
+	{
+		sprite->position = vector2d(0, 0);
+	}
     commandBuffer = gf3d_vgraphics_get_current_command_overlay_buffer();
     buffer_frame = gf3d_vgraphics_get_current_buffer_frame();
 
@@ -262,17 +269,28 @@ void gf3d_sprite_draw(Sprite *sprite,Vector2D position,Vector2D scale,Uint32 fra
         return;
     }
 	
+	//sprite->texture->height = sprite->texture->height*scale.x;
+	//sprite->texture->height = sprite->texture->height*scale.y;
 	
-	gfc_matrix_scale(
-		modelMat,
-		vector3d(scale.x, scale.y, 1));
 		
     gfc_matrix_make_translation(
         modelMat,
-        vector3d(position.x*2/(float)extent.width,position.y*2/(float)extent.height,0));
+		vector3d(sprite->position.x * 2 / (float)extent.width, sprite->position.y * 2 / (float)extent.height, 0));
 
-    gf3d_sprite_update_basic_descriptor_set(sprite,*descriptorSet,buffer_frame,modelMat,frame);
+	gf3d_sprite_update_basic_descriptor_set(sprite, *descriptorSet, buffer_frame, modelMat, sprite->frame);
     gf3d_sprite_render(sprite,commandBuffer,descriptorSet);
+}
+void sprite_draw_all()
+{
+	int i;
+	for (i = 0; i < gf3d_sprite.max_sprites; i++)
+	{
+		if (!gf3d_sprite.sprite_list[i]._inuse)// not used yet
+		{
+			continue;// skip this iteration of the loop
+		}
+		gf3d_sprite_draw(&gf3d_sprite.sprite_list[i]);
+	}
 }
 
 void gf3d_sprite_create_vertex_buffer(Sprite *sprite)

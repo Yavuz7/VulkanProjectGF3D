@@ -1,12 +1,14 @@
 #include "SDL.h"
 #include "simple_logger.h"
 
+#include "gf3d_sprite.h"
 #include "menu.h"
 
-int selectionIndex,menuIndex,menuStateIndex;
+int selectionIndex,menuIndex,menuStateIndex,tempIndex;
 Uint32 timeEnd2;
 const int menuDelay = 190;
 void menu_think();
+Sprite *tempMenu,*button1,*button2,*arrows;
 
 Entity *menu_new()
 {
@@ -34,7 +36,8 @@ void menu_think()
 	case 2:
 		openHand();
 		break;
-	case 3:
+	case 4:
+		openMainMenu();
 		break;
 	}
 	return;
@@ -43,6 +46,7 @@ void menu_think()
 void openMenu(int i)
 {
 	selectionIndex = 0;
+	tempIndex = 0;
 	menuStateIndex = 1;
 	menuIndex = i;
 	timeEnd2 = SDL_GetTicks() + 500;
@@ -53,6 +57,7 @@ void openHand()
 {
 	if (menuStateIndex == 2)
 	{
+		menuIndex = 0;
 		return;
 	}
 	menuStateIndex = menuSelection(4, 1);
@@ -62,7 +67,25 @@ void openHand()
 
 void openMainMenu()
 {
-	menuStateIndex = menuSelection(2, 1);
+	if (menuStateIndex == 2)
+	{
+		if (selectionIndex == 1)
+		{
+			menuStateIndex = 1;
+		}
+		if (selectionIndex == 0)
+		{
+			gf3d_sprite_free(tempMenu);
+			gf3d_sprite_free(button1);
+			gf3d_sprite_free(button2);
+			gf3d_sprite_free(arrows);
+			menuStateIndex = 0;
+			menuIndex = 0;
+			return;
+		}
+	}
+	menuStateIndex = menuSelection(1, 0);
+	drawMainMenuUI();
 	return;
 }
 
@@ -75,6 +98,40 @@ void handSelectionFinal()
 
 }
 
+void loadMainMenuUI()
+{
+	if (!tempMenu)
+	{
+		slog("Loading Menu Sprites");
+		tempMenu = gf3d_sprite_load("images/mainmenu.png", -1, -1, 1, 1.35, 1.25);
+		button1 = gf3d_sprite_load("images/mainmenustart.png", -1, -1, 1, 1, 1);
+		button2 = gf3d_sprite_load("images/aibuttong.png", -1, -1, 1, 1, 1);
+		arrows = gf3d_sprite_load("images/arrows.png", -1, -1, 1, 1, 1);
+		button1->position = vector2d(100,25);
+		button2->position = vector2d(100, 240);
+		arrows->position = vector2d(100, 25);
+	}
+
+}
+
+void drawMainMenuUI()
+{
+	if (tempIndex == selectionIndex)
+	{
+		return;
+	}
+	if (selectionIndex == 0)
+	{
+		arrows->position = vector2d(100, 25);
+		tempIndex = selectionIndex;
+	}
+	else
+	{
+		arrows->position = vector2d(100, 240);
+		tempIndex = selectionIndex;
+	}
+
+}
 int checkMenuDone()
 {
 	return menuStateIndex;
@@ -106,28 +163,28 @@ int menuSelection(int max, int orientation)
 	{
 		if (keys[SDL_SCANCODE_W])
 		{
-			if (selectionIndex < max)
+			if (selectionIndex > 0)
 			{
-				selectionIndex++;
+				selectionIndex--;
 				slog("Moved index Up 1, Current Index : %i", selectionIndex);
 				timeEnd2 = SDL_GetTicks();
 			}
 			else
 			{
-				selectionIndex = max;
+				selectionIndex = 0;
 			}
 		}
 		if (keys[SDL_SCANCODE_S])
 		{
-			if (selectionIndex > 0)
+			if (selectionIndex < max)
 			{
-				selectionIndex--;
+				selectionIndex++;
 				slog("Moved index Down 1, Current Index : %i", selectionIndex);
 				timeEnd2 = SDL_GetTicks();
 			}
 			else
 			{
-				selectionIndex = 0;
+				selectionIndex = max;
 			}
 		}
 		return 1;

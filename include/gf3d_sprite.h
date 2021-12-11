@@ -43,6 +43,8 @@ typedef struct
     VkBuffer                   *uniformBuffers;         /**<handles for the UBO*/
     VkDeviceMemory             *uniformBuffersMemory;   /**<memory handle for the UBO memory*/
     Uint32                      uniformBufferCount;     /**<how many UBOs for the sprite*/
+	Vector2D					position;				/*position of sprite*/
+	Uint32						frame;
 }Sprite;
 
 /**
@@ -85,6 +87,8 @@ void gf3d_sprite_draw(Sprite *sprite,Vector2D position,Vector2D scale,Uint32 fra
 VkVertexInputBindingDescription * gf3d_sprite_get_bind_description();
 
 VkVertexInputAttributeDescription * gf3d_sprite_get_attribute_descriptions(Uint32 *count);
+
+void sprite_draw_all();
 
 
 #endif

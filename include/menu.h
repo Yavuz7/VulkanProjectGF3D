@@ -30,6 +30,12 @@ void openHand();
 void openMainMenu();
 
 /*
+*@Brief Menu UI
+*/
+void loadMainMenuUI();
+
+void drawMainMenuUI();
+/*
 *@brief Plays Card at index 
 */
 
