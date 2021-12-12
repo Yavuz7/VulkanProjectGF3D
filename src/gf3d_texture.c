@@ -220,7 +220,7 @@ Texture *gf3d_texture_load(char *filename)
     VkImageCreateInfo imageInfo = {0};
     VkMemoryRequirements memRequirements;
     VkMemoryAllocateInfo allocInfo = {0};
-	if (gfc_line_cmp(filename, "images/tile1.png") == 0 || gfc_line_cmp(filename, "images/cardDefault.png") == 0)
+	if (gfc_line_cmp(filename, "images/tile1.png") == 0 || gfc_line_cmp(filename, "images/cardDefault.png") == 0 || gfc_line_cmp(filename, "images/dino.png") == 0)
 	{
 		tex = gf3d_texture_get_by_filename(filename);
 	}

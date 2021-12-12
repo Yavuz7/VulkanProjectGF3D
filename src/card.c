@@ -17,6 +17,8 @@ List *player2HandList;
 List *graveyardList;
 List *fieldList;
 
+void cardLeaderthink(Entity *self);
+
  void setCardFileData()
  {
 
@@ -300,16 +302,44 @@ void startDuel()
 		cardData[(int)p].eP = entity_new();
 		cardData[(int)p].eP->model = gf3d_model_load("cardDefault");
 		cardData[(int)p].cardHPcurrent = 5;
-
+		cardData[(int)p].eMP = entity_new();
+		cardData[(int)p].eMP->model = gf3d_model_load("dino");
 		cardData[(int)p]._cardOwner = player;
-
+		Entity *e = NULL;
 		setCardModelLocation(x, y, cardData[(int)p].eP,player);
+		setCardModelLocation(x, y, cardData[(int)p].eMP, player);
+		cardData[(int)p].eMP->rotation.z += GFC_PI;
+		cardData[(int)p].eMP->position.z = 0.0f;
+		cardData[(int)p].eMP->scale.x = 0.5;
+		cardData[(int)p].eMP->scale.y = 0.5;
+		cardData[(int)p].eMP->scale.z = 0.5;
+		e = cardData[(int)p].eMP;
+		e->think = cardLeaderthink;
 		setTileOccupation(x, y, p);
 
 		
 	}
 }
 
+void cardLeaderthink(Entity *self)
+{
+	if (!self)return;
+	if (self->customData == 1)
+	{
+		self->position.z -= .08;
+		if (self->position.z <= 0.0f)
+		{
+			self->customData = 0;
+		}
+		return;
+	}
+	self->position.z += .08;
+	if (self->position.z >= 4.0f)
+	{
+		self->customData = 1;
+	}
+	
+}
 void destroyCard(void *Cardp)
 {
 	slog("Card %s sent to grave", cardData[(int)Cardp].cardName);
