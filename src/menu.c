@@ -147,7 +147,7 @@ int getMenuIndex()
 
 void loadHandUI(int player)
 {
-	
+
 	cardImage0 = gf3d_sprite_load(getImageFromData(player, 0), -1, -1, 1, 0.4, 0.4);
 	cardImage0->position = vector2d(90, 290);
 
@@ -170,12 +170,14 @@ void loadHandUI(int player)
 
 void freeHandUI()
 {
+
 	gf3d_sprite_free(cardImage0);
 	gf3d_sprite_free(cardImage1);
 	gf3d_sprite_free(cardImage2);
 	gf3d_sprite_free(cardImage3);
 	gf3d_sprite_free(cardImage4);
 	gf3d_sprite_free(cardBack);
+	gf3d_texture_delete_unused();
 }
 
 

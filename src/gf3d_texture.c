@@ -103,6 +103,18 @@ void gf3d_texture_free(Texture *tex)
     tex->_refcount--;
 }
 
+void gf3d_texture_delete_unused()
+{
+	int i;
+	for (i = 0; i < gf3d_texture.max_textures; i++)
+	{
+		if (&gf3d_texture.texture_list[i]._refcount <= 0)
+		{
+			gf3d_texture_delete(&gf3d_texture.texture_list[i]);
+		}
+	}
+}
+
 void gf3d_texture_delete_all()
 {
     int i;

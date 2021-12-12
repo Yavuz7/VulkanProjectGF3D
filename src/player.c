@@ -185,6 +185,7 @@ void player_think(Entity *self)
 				starty = py;
 				slog("card Movement set to 2");
 				loadHandUI(activeP);
+				timeEnd = SDL_GetTicks();
 				return;
 				
 			}
