@@ -25,11 +25,17 @@ void openMenu(int i);
 */
 void openHand();
 
+/*
+*@brief Create sprites for cards in hand
+*@Param hand of player to be displayed
+*/
 void loadHandUI(int player);
 
+/*
+*@brief Frees sprites from UI
+*/
 void freeHandUI();
 
-void drawHandUI();
 
 /*
 *@brief Main Menu Functions

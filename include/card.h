@@ -91,8 +91,9 @@ void playCard(int x, int y, int handIndex, int player);
 *@Param X coordinate the model is moving to
 *@Param Y coordinate the model is moving to
 *@Param Entity that is moving
+*@Param Player to decide card rotation
 */
-void setCardModelLocation(int x, int y, Entity *eCard);
+void setCardModelLocation(int x, int y, Entity *eCard, int player);
 
 /*
 *@Brief Destroys card and entity

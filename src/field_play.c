@@ -12,23 +12,30 @@ void setCardDefense(Card *cardpointer)
 	return;
 }
 
-void setCardFight(Card *cardpointer)
+void setCardFight(Card *cardpointer, int player)
 {
 	if (!cardpointer)return;
 	if (cardpointer->_cardPosition == Fight)return;
 	slog("Set Fight");
 	cardpointer->_cardPosition = Fight;
-	cardpointer->eP->rotation.z = 0.0f;
+	if (player == 1)
+	{
+		cardpointer->eP->rotation.z = 0.0f;
+	}
+	else
+	{
+		cardpointer->eP->rotation.z = GFC_PI;
+	}
 	return;
 }
 
 void cardMove(int x, int y, Card *cardP)
 {
 	if (!cardP)return;
-	setCardModelLocation(x, y, cardP->eP);
+	setCardModelLocation(x, y, cardP->eP,1);
 	if (cardP->eMP)
 	{
-		setCardModelLocation(x, y, cardP->eMP);
+		setCardModelLocation(x, y, cardP->eMP,1);
 		cardP->eMP->position.z = 5.0f;
 	}
 	removeTileOccupation(cardP->cardXpos, cardP->cardYpos);

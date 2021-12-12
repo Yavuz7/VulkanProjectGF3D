@@ -40,8 +40,7 @@ List *fieldList;
 		 drawCard(player2DeckList, player2HandList);
 	 } while (gfc_list_get_count(player2HandList) < 5);
 
-	 //playCard(2, 2, 0, 1);
-	 //playCard(1, 1, 2, 2);
+	
  }
 
 
@@ -198,7 +197,7 @@ void playCard(int x, int y, int handIndex, Uint8 player)
 
 		cardData[(int)p]._cardOwner = player;
 
-	setCardModelLocation(x, y, cardData[(int)p].eP);
+	setCardModelLocation(x, y, cardData[(int)p].eP,player);
 	setTileOccupation(x, y, p);
 	return;
 }
@@ -245,7 +244,7 @@ char *getNameFromData(int player, int index)
 	return c->cardName;
 }
 
-void setCardModelLocation(int x, int y, Entity *eCard)
+void setCardModelLocation(int x, int y, Entity *eCard, int player)
 {
 	if (!eCard)return;
 	eCard->scale.x = 2;
@@ -254,6 +253,10 @@ void setCardModelLocation(int x, int y, Entity *eCard)
 	eCard->position.z = -5.0f;
 	eCard->position.x = 1 + x*XPOSITIONOFFSET;
 	eCard->position.y = 47 + y*YPOSITIONOFFSET;
+	if (player == 2)
+	{
+		eCard->rotation.z = GFC_PI;
+	}
 	
 	return;
 }
@@ -297,7 +300,7 @@ void startDuel()
 
 		cardData[(int)p]._cardOwner = player;
 
-		setCardModelLocation(x, y, cardData[(int)p].eP);
+		setCardModelLocation(x, y, cardData[(int)p].eP,player);
 		setTileOccupation(x, y, p);
 
 		

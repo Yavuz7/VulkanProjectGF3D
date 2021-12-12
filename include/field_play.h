@@ -25,7 +25,7 @@ void setCardDefense(Card *cardpointer);
 *@Brief Sets Card to Fight position
 *@Param Card being set to Fight position
 */
-void setCardFight(Card *cardpointer);
+void setCardFight(Card *cardpointer, int player);
 
 /*
 *@Brief Handles Card Battle equations

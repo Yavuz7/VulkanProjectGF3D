@@ -337,7 +337,7 @@ void cardMovement(Entity *self, int x, int y, Card *cardPointer, enum cardSelect
 		}
 		if (cardPointer->_cardPosition == Defense)
 		{
-			setCardFight(cardPointer);
+			setCardFight(cardPointer,activeP);
 			timeEnd = SDL_GetTicks();
 			return;
 		}
@@ -379,7 +379,7 @@ void cardMovement(Entity *self, int x, int y, Card *cardPointer, enum cardSelect
 				resetMovement();
 				return;
 			}
-			setCardFight(cardPointer);
+			setCardFight(cardPointer,activeP);
 			int result = cardFight(attacker,defender);
 			if (result == 0)
 			{
@@ -444,7 +444,7 @@ void cardMovement(Entity *self, int x, int y, Card *cardPointer, enum cardSelect
 			}
 			return;
 		}
-		setCardFight(cardPointer);
+		setCardFight(cardPointer,activeP);
 
 		cameraMovement(&py, 1, activeP, &self->position.y, YPOSITIONOFFSET);
 
@@ -469,7 +469,7 @@ void cardMovement(Entity *self, int x, int y, Card *cardPointer, enum cardSelect
 			}
 			return;
 		}
-		setCardFight(cardPointer);
+		setCardFight(cardPointer,activeP);
 
 		cameraMovement(&py, -1, activeP, &self->position.y, YPOSITIONOFFSET);
 		
@@ -495,7 +495,7 @@ void cardMovement(Entity *self, int x, int y, Card *cardPointer, enum cardSelect
 			return;
 		}
 
-		setCardFight(cardPointer);
+		setCardFight(cardPointer,activeP);
 		
 		cameraMovement(&px, 1, activeP, &self->position.x, XPOSITIONOFFSET);
 		
@@ -520,7 +520,7 @@ void cardMovement(Entity *self, int x, int y, Card *cardPointer, enum cardSelect
 			}
 			return;
 		}
-		setCardFight(cardPointer);
+		setCardFight(cardPointer,activeP);
 
 		cameraMovement(&px, -1, activeP, &self->position.x, XPOSITIONOFFSET);	
 	}

@@ -167,17 +167,7 @@ void loadHandUI(int player)
 	cardBack->position = vector2d(80, 250);
 }
 
-void drawHandUI()
-{
-/*	if (cardImage0)
-	{
-		gf3d_sprite_draw(cardImage0);
-		gf3d_sprite_draw(cardImage1);
-		gf3d_sprite_draw(cardImage2);
-		gf3d_sprite_draw(cardImage3);
-		gf3d_sprite_draw(cardImage4);
-	}*/
-}
+
 void freeHandUI()
 {
 	gf3d_sprite_free(cardImage0);
