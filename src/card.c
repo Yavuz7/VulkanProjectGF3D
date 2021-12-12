@@ -100,10 +100,14 @@ void loadDeck(List *deck, char *deckname)
 		
 
 		cardData[i].cardName = gfc_allocate_array(sizeof(TextLine), 1);
+		cardData[i].imageFileName = gfc_allocate_array(sizeof(TextLine), 1);
 		cardData[i].cardText = gfc_allocate_array(sizeof(TextBlock), 1);
+		
 
 		memcpy(cardData[i].cardName, sj_get_string_value(sj_object_get_value(dataBuffer, "Name")), sizeof(TextLine));
+		memcpy(cardData[i].imageFileName, sj_get_string_value(sj_object_get_value(dataBuffer, "imageFileName")), sizeof(TextLine));
 		memcpy(cardData[i].cardText, sj_get_string_value(sj_object_get_value(dataBuffer, "Text")), sizeof(TextBlock));
+		
 		
 		sj_get_integer_value(sj_object_get_value(dataBuffer, "cardAP"), &cardData[i].cardAP);
 		sj_get_integer_value(sj_object_get_value(dataBuffer, "cardDP"), &cardData[i].cardDP);
@@ -179,15 +183,7 @@ void refillHands()
 
 void playCard(int x, int y, int handIndex, Uint8 player)
 {
-	List * hand = NULL;
-	if (player == 1)
-	{
-		hand = player1HandList;
-	}
-	else
-	{
-		hand = player2HandList;
-	}
+	List * hand = getPlayerHand(player);
 	if (!hand)return;
 	
 	void *p = gfc_list_get_nth(hand, handIndex);
@@ -228,6 +224,27 @@ List *getPlayerHand(int player)
 		return player2HandList;
 	}
 }
+
+char *getImageFromData(int player, int index)
+{
+	List *hand = getPlayerHand(player);
+	if (!hand)return;
+	void *p = gfc_list_get_nth(hand, index);
+	Card*c = getCardPointer(p);
+	if (!c)return;
+	return c->imageFileName;
+}
+
+char *getNameFromData(int player, int index)
+{
+	List *hand = getPlayerHand(player);
+	if (!hand)return;
+	void *p = gfc_list_get_nth(hand, index);
+	Card*c = getCardPointer(p);
+	if (!c)return;
+	return c->cardName;
+}
+
 void setCardModelLocation(int x, int y, Entity *eCard)
 {
 	if (!eCard)return;

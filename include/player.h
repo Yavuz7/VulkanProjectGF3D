@@ -76,4 +76,6 @@ void cameraMovement(Uint8 * pPointer, int pChange, int currentPlayer, float * pP
 
 int summoningMovementHelper();
 
+
+
 #endif

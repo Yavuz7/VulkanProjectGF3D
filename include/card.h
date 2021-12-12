@@ -12,6 +12,7 @@ typedef struct
 {
 	TextBlock *cardText; /* Text of a card*/
 	TextLine *cardName; /* Card Name*/
+	TextLine *imageFileName; /*String of file name*/
 	TextWord *cardId; /* Id to identify card*/
 	Entity *eP; /*Pointer to associated entity*/
 	Entity *eMP;/*Pointer to monster entity*/
@@ -131,5 +132,20 @@ void resetCardMoves();
 */
 
 void refillHands();
+
+/*
+*@Brief Gets the image file location
+*@Param Player Hand to get card from
+*@Param Index of card
+*@Returns string with image location
+*/
+char *getImageFromData(int player, int index);
+/*
+*@Brief Gets the Name
+*@Param Player Hand to get card from
+*@Param Index of card
+*@Returns string with image hand
+*/
+char *getNameFromData(int player, int index);
 
 #endif

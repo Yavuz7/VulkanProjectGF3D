@@ -53,7 +53,9 @@ int main(int argc,char *argv[])
     
     entity_system_init(1024);
 
-	overlay = gf3d_sprite_load("images/overlay.png", -1, -1, 1,1.35,1.25);
+	
+	overlay = gf3d_sprite_load("images/overlay.png", -1, -1, 1, 1.35, 1.25);
+	//freeHandUI();
 	slog_sync();
 	//setCardData("00001", c );
 	//setCardData("00002", c);
@@ -88,6 +90,7 @@ int main(int argc,char *argv[])
                 entity_draw_all();
 				drawTiles();
 				sprite_draw_all();
+
 				
         gf3d_vgraphics_render_end();
 

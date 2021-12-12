@@ -24,6 +24,13 @@ void openMenu(int i);
 *@brief Hand Menu Functions
 */
 void openHand();
+
+void loadHandUI(int player);
+
+void freeHandUI();
+
+void drawHandUI(int player);
+
 /*
 *@brief Main Menu Functions
 */
@@ -33,7 +40,9 @@ void openMainMenu();
 *@Brief Menu UI
 */
 void loadMainMenuUI();
-
+/*
+*@Brief Changes Arrow Sprite position
+*/
 void drawMainMenuUI();
 /*
 *@brief Plays Card at index 

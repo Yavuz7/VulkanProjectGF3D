@@ -23,6 +23,7 @@ Vector3D player1position, player2position;
 Vector3D player1rotation, player2rotation;
 Uint8 px1, py1, px2, py2;
 
+
 Uint32 timeEnd;
 const int cameraDelay = 240;
 
@@ -72,8 +73,8 @@ void setPlayers()
 	player2rotation.z = GFC_PI;
 	px2 = 3;
 	py2 = 6;
-	loadMainMenuUI();
-	openMenu(4);
+	//loadMainMenuUI();
+	//openMenu(4);
 	
 	//startMenu = 4;
 	return;
@@ -182,6 +183,7 @@ void player_think(Entity *self)
 				startx = px;
 				starty = py;
 				slog("card Movement set to 2");
+				loadHandUI(activeP);
 				return;
 				
 			}
@@ -354,6 +356,7 @@ void cardMovement(Entity *self, int x, int y, Card *cardPointer, enum cardSelect
 			timeEnd = SDL_GetTicks() + 500;
 			startMenu = 0;
 			openMenu(startMenu);
+			freeHandUI();
 			resetMovement();
 			return;
 		}
@@ -607,6 +610,8 @@ void movementHelperFight(Card *cardPointer)
 	}
 	
 }
+
+
 void resetMovement()
 {
 	moveCount = 0;

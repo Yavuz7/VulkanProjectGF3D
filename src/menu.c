@@ -9,6 +9,8 @@ Uint32 timeEnd2;
 const int menuDelay = 190;
 void menu_think();
 Sprite *tempMenu,*button1,*button2,*arrows;
+Sprite *cardBack, *cardImage0, *cardImage1, *cardImage2, *cardImage3, *cardImage4;
+
 
 Entity *menu_new()
 {
@@ -64,6 +66,7 @@ void openHand()
 	return;
 
 }
+
 
 void openMainMenu()
 {
@@ -141,6 +144,39 @@ int getMenuIndex()
 {
 	return selectionIndex;
 }
+
+void loadHandUI(int player)
+{
+
+	cardImage0 = gf3d_sprite_load(getImageFromData(player, 0), -1, -1, 1, 0.4, 0.4);
+	cardImage0->position = vector2d(240, 250);
+
+	cardImage1 = gf3d_sprite_load(getImageFromData(player, 1), -1, -1, 1, 0.4, 0.4);
+	cardImage1->position = vector2d(240*3, 250);
+	
+	cardImage2 = gf3d_sprite_load(getImageFromData(player, 2), -1, -1, 1, 0.4, 0.4);
+	cardImage2->position = vector2d(240*5, 250);
+
+	cardImage3 = gf3d_sprite_load(getImageFromData(player, 3), -1, -1, 1, 0.4, 0.4);
+	cardImage3->position = vector2d(240 * 7, 250);
+
+	cardImage4 = gf3d_sprite_load(getImageFromData(player, 4), -1, -1, 1, 0.4, 0.4);
+	cardImage4->position = vector2d(240 * 9, 250);
+
+	cardBack = gf3d_sprite_load("images/cardDefaultFace.png", 2050, -1, 1, 0.4, 0.4);
+	cardBack->position = vector2d(80, 250);
+}
+
+void freeHandUI()
+{
+	gf3d_sprite_free(cardImage0);
+	gf3d_sprite_free(cardImage1);
+	gf3d_sprite_free(cardImage2);
+	gf3d_sprite_free(cardImage3);
+	gf3d_sprite_free(cardImage4);
+	gf3d_sprite_free(cardBack);
+}
+
 
 int menuSelection(int max, int orientation)
 {

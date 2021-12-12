@@ -60,7 +60,7 @@ Texture *gf3d_texture_new()
             return &gf3d_texture.texture_list[i];
         }
     }
-    for (i = 0; i < gf3d_texture.max_textures; i++)
+  /*  for (i = 0; i < gf3d_texture.max_textures; i++)
     {
         if (!gf3d_texture.texture_list[i]._refcount)
         {
@@ -69,7 +69,7 @@ Texture *gf3d_texture_new()
             gf3d_texture.texture_list[i]._inuse = 1;
             return &gf3d_texture.texture_list[i];
         }
-    }
+    }*/
     slog("no free texture space");
     return NULL;
 }

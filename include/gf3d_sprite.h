@@ -79,7 +79,7 @@ void gf3d_sprite_free(Sprite *sprite);
  * @param scale amount to scale the sprite by.  (1,1) is no scale
  * @param frame the frame of the sprite to draw
  */
-void gf3d_sprite_draw(Sprite *sprite,Vector2D position,Vector2D scale,Uint32 frame);
+void gf3d_sprite_draw(Sprite *sprite);
 
 /**
  * @brief get the binding description for a sprite
