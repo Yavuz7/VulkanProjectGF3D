@@ -29,7 +29,7 @@ void loadHandUI(int player);
 
 void freeHandUI();
 
-void drawHandUI(int player);
+void drawHandUI();
 
 /*
 *@brief Main Menu Functions

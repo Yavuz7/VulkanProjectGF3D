@@ -147,26 +147,37 @@ int getMenuIndex()
 
 void loadHandUI(int player)
 {
-
+	
 	cardImage0 = gf3d_sprite_load(getImageFromData(player, 0), -1, -1, 1, 0.4, 0.4);
-	cardImage0->position = vector2d(240, 250);
+	cardImage0->position = vector2d(90, 290);
 
 	cardImage1 = gf3d_sprite_load(getImageFromData(player, 1), -1, -1, 1, 0.4, 0.4);
-	cardImage1->position = vector2d(240*3, 250);
+	cardImage1->position = vector2d(280, 290);
 	
 	cardImage2 = gf3d_sprite_load(getImageFromData(player, 2), -1, -1, 1, 0.4, 0.4);
-	cardImage2->position = vector2d(240*5, 250);
+	cardImage2->position = vector2d(490, 290);
 
 	cardImage3 = gf3d_sprite_load(getImageFromData(player, 3), -1, -1, 1, 0.4, 0.4);
-	cardImage3->position = vector2d(240 * 7, 250);
+	cardImage3->position = vector2d(700, 290);
 
 	cardImage4 = gf3d_sprite_load(getImageFromData(player, 4), -1, -1, 1, 0.4, 0.4);
-	cardImage4->position = vector2d(240 * 9, 250);
+	cardImage4->position = vector2d(910, 290);
 
-	cardBack = gf3d_sprite_load("images/cardDefaultFace.png", 2050, -1, 1, 0.4, 0.4);
+	cardBack = gf3d_sprite_load("images/cardDefaultFace.png", 2050, -1, 1, 0.5, 0.4);
 	cardBack->position = vector2d(80, 250);
 }
 
+void drawHandUI()
+{
+/*	if (cardImage0)
+	{
+		gf3d_sprite_draw(cardImage0);
+		gf3d_sprite_draw(cardImage1);
+		gf3d_sprite_draw(cardImage2);
+		gf3d_sprite_draw(cardImage3);
+		gf3d_sprite_draw(cardImage4);
+	}*/
+}
 void freeHandUI()
 {
 	gf3d_sprite_free(cardImage0);

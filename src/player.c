@@ -73,10 +73,10 @@ void setPlayers()
 	player2rotation.z = GFC_PI;
 	px2 = 3;
 	py2 = 6;
-	//loadMainMenuUI();
-	//openMenu(4);
-	
-	//startMenu = 4;
+	/*loadMainMenuUI();
+	openMenu(4);	
+	startMenu = 4;
+	*/
 	return;
 }
 
@@ -143,6 +143,7 @@ void player_think(Entity *self)
 		if (check == 0)
 		{
 			startMenu = 0;
+			timeEnd = SDL_GetTicks() + 250;
 			slog("menu is done!");
 			return;
 		}

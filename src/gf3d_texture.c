@@ -60,7 +60,7 @@ Texture *gf3d_texture_new()
             return &gf3d_texture.texture_list[i];
         }
     }
-  /*  for (i = 0; i < gf3d_texture.max_textures; i++)
+    for (i = 0; i < gf3d_texture.max_textures; i++)
     {
         if (!gf3d_texture.texture_list[i]._refcount)
         {
@@ -69,7 +69,7 @@ Texture *gf3d_texture_new()
             gf3d_texture.texture_list[i]._inuse = 1;
             return &gf3d_texture.texture_list[i];
         }
-    }*/
+    }
     slog("no free texture space");
     return NULL;
 }
@@ -194,22 +194,24 @@ void gf3d_texture_create_sampler(Texture *tex)
         slog("failed to create texture sampler!");
         return;
     }
-    slog("created texture sampler");
+   // slog("created texture sampler");
 }
 
 Texture *gf3d_texture_load(char *filename)
 {
     SDL_Surface * surface;
     void* data;
-    Texture *tex;
+    Texture *tex = NULL;
     VkDeviceSize imageSize;
     VkBuffer stagingBuffer;
     VkDeviceMemory stagingBufferMemory;
     VkImageCreateInfo imageInfo = {0};
     VkMemoryRequirements memRequirements;
     VkMemoryAllocateInfo allocInfo = {0};
-
-    tex = gf3d_texture_get_by_filename(filename);
+	if (gfc_line_cmp(filename, "images/tile1.png") == 0 || gfc_line_cmp(filename, "images/cardDefault.png") == 0)
+	{
+		tex = gf3d_texture_get_by_filename(filename);
+	}
     if (tex)
     {
         tex->_refcount++;
@@ -291,7 +293,7 @@ Texture *gf3d_texture_load(char *filename)
     vkDestroyBuffer(gf3d_texture.device, stagingBuffer, NULL);
     vkFreeMemory(gf3d_texture.device, stagingBufferMemory, NULL);
     SDL_FreeSurface(surface);
-    slog("created texture for image: %s",filename);
+    //slog("created texture for image: %s",filename);
     return tex;
 }
 

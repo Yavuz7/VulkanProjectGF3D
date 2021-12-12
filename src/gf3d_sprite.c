@@ -128,10 +128,10 @@ Sprite *gf3d_sprite_get_by_filename(char *filename)
     for (i = 0; i < gf3d_sprite.max_sprites; i++)
     {
         if (!gf3d_sprite.sprite_list[i]._inuse)continue;
-        if (gfc_line_cmp(gf3d_sprite.sprite_list[i].filename,filename) == 0)
+      /*  if (gfc_line_cmp(gf3d_sprite.sprite_list[i].filename,filename) == 0)
         {
             return &gf3d_sprite.sprite_list[i];
-        }
+        }*/
     }
     return NULL;
 }
@@ -152,8 +152,8 @@ Sprite *gf3d_sprite_new()
 
 Sprite * gf3d_sprite_load(char * filename,int frame_width,int frame_height, Uint32 frames_per_line, float heightScale, float widthScale)
 {
-    Sprite *sprite;
-    sprite = gf3d_sprite_get_by_filename(filename);
+    Sprite *sprite = NULL;
+    //sprite = gf3d_sprite_get_by_filename(filename);
     if (sprite)
     {
         sprite->_inuse++;
@@ -205,12 +205,12 @@ void gf3d_sprite_delete(Sprite *sprite)
     if (sprite->buffer != VK_NULL_HANDLE)
     {
         vkDestroyBuffer(gf3d_sprite.device, sprite->buffer, NULL);
-        slog("sprite %s vert buffer freed",sprite->filename);
+        //slog("sprite %s vert buffer freed",sprite->filename);
     }
     if (sprite->bufferMemory != VK_NULL_HANDLE)
     {
         vkFreeMemory(gf3d_sprite.device, sprite->bufferMemory, NULL);
-        slog("sprite %s vert buffer memory freed",sprite->filename);
+        //slog("sprite %s vert buffer memory freed",sprite->filename);
     }
 
     gf3d_texture_free(sprite->texture);

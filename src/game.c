@@ -90,7 +90,7 @@ int main(int argc,char *argv[])
                 entity_draw_all();
 				drawTiles();
 				sprite_draw_all();
-
+				
 				
         gf3d_vgraphics_render_end();
 
