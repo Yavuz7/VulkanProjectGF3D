@@ -62,7 +62,7 @@ Texture *gf3d_texture_new()
     }
     for (i = 0; i < gf3d_texture.max_textures; i++)
     {
-        if (!gf3d_texture.texture_list[i]._refcount)
+		if (!gf3d_texture.texture_list[i]._refcount || !gf3d_texture.texture_list[i]._inuse)
         {
             gf3d_texture_delete(&gf3d_texture.texture_list[i]);
             gf3d_texture.texture_list[i]._refcount = 1;
@@ -305,7 +305,7 @@ Texture *gf3d_texture_load(char *filename)
     vkDestroyBuffer(gf3d_texture.device, stagingBuffer, NULL);
     vkFreeMemory(gf3d_texture.device, stagingBufferMemory, NULL);
     SDL_FreeSurface(surface);
-    //slog("created texture for image: %s",filename);
+    slog("created texture for image: %s",filename);
     return tex;
 }
 

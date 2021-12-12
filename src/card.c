@@ -8,6 +8,7 @@
 
 Card *cardData = { 0 }; /*Holds all the Card Data of The Game*/
 
+int previousCardIndex;
 List *player1DeckList;
 List *player1HandList;
 List *player2DeckList;
@@ -20,7 +21,7 @@ List *fieldList;
  {
 
 	 cardData = gfc_allocate_array(sizeof(Card), 102);
-
+	 int previousCardIndex = 0;
 	 player1DeckList = gfc_list_new_size(50);
 	 player1HandList = gfc_list_new_size(6);
 	 player2DeckList = gfc_list_new_size(50);
@@ -139,7 +140,8 @@ void drawCard(List *deck, List *Hand)
 	
 	rando = rand() % gfc_list_get_count(deck);
 	void *p = gfc_list_get_nth(deck, rando);
-	Hand = gfc_list_append(Hand,p);
+	//Hand = gfc_list_append(Hand,p);
+	Hand = gfc_list_insert(Hand, p, previousCardIndex);
 	gfc_list_delete_nth(deck, rando);
 	slog("Drew Card : %s", cardData[(int)p].cardName);
 	return;
@@ -187,6 +189,7 @@ void playCard(int x, int y, int handIndex, Uint8 player)
 	
 	void *p = gfc_list_get_nth(hand, handIndex);
 	fieldList = gfc_list_append(fieldList, p);
+	previousCardIndex = handIndex;
 	gfc_list_delete_nth(hand, handIndex);
 
 	cardData[(int)p].fieldReference = gfc_list_get_item_index(fieldList, p);

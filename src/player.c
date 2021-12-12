@@ -184,8 +184,8 @@ void player_think(Entity *self)
 				startx = px;
 				starty = py;
 				slog("card Movement set to 2");
-				loadHandUI(activeP);
-				timeEnd = SDL_GetTicks();
+				timeEnd = SDL_GetTicks() + 100;
+				loadHandUI(activeP);			
 				return;
 				
 			}
@@ -358,7 +358,7 @@ void cardMovement(Entity *self, int x, int y, Card *cardPointer, enum cardSelect
 			timeEnd = SDL_GetTicks() + 500;
 			startMenu = 0;
 			openMenu(startMenu);
-			freeHandUI();
+			//freeHandUI();
 			resetMovement();
 			return;
 		}

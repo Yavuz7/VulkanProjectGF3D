@@ -59,6 +59,7 @@ void openHand()
 {
 	if (menuStateIndex == 2)
 	{
+		freeHandUI();
 		menuIndex = 0;
 		return;
 	}
@@ -170,13 +171,20 @@ void loadHandUI(int player)
 
 void freeHandUI()
 {
-
+	cardImage0->_inuse = 0;
+	cardImage1->_inuse = 0;
+	cardImage2->_inuse = 0;
+	cardImage3->_inuse = 0;
+	cardImage4->_inuse = 0;
+	cardBack->_inuse = 0;
+	/*
 	gf3d_sprite_free(cardImage0);
 	gf3d_sprite_free(cardImage1);
 	gf3d_sprite_free(cardImage2);
 	gf3d_sprite_free(cardImage3);
 	gf3d_sprite_free(cardImage4);
 	gf3d_sprite_free(cardBack);
+	*/
 	//gf3d_texture_delete_unused();
 }
 
