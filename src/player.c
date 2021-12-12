@@ -645,6 +645,7 @@ void aiAction()
 {
 	int rando;
 	int rando2;
+	int count = 0;
 	// Srand modified from : https://stackoverflow.com/a/9459063
 	for (int p = 0; p < 3; p++)
 	{
@@ -660,6 +661,7 @@ void aiAction()
 			Card * c;
 			for (int i = 0; i < getNumberOfCardsOnField(); i++)
 			{
+				if (count == 2)break;
 				c = getCardPointer(getCardOnField(i));
 				if (c->_cardOwner == 2 && c->_cardType != leader)
 				{
@@ -668,10 +670,14 @@ void aiAction()
 						if (checkTileOccupation(c->cardXpos, c->cardYpos - 1) == 0)
 						{
 							cardMove(c->cardXpos, c->cardYpos - 1, c);
+							count++;
+							continue;
 						}
 						else
 						{
 							aiCombat(c, c->cardXpos, c->cardYpos - 1);
+							count++;
+							continue;
 						}
 					}
 					if (px > 0 && px < 6)
@@ -681,10 +687,14 @@ void aiAction()
 							if (checkTileOccupation(c->cardXpos + 1, c->cardYpos) == 0)
 							{
 								cardMove(c->cardXpos + 1, c->cardYpos, c);
+								count++;
+								continue;
 							}
 							else
 							{
 								aiCombat(c, c->cardXpos+1, c->cardYpos);
+								count++;
+								continue;
 							}
 						}
 						if (px > 3)
@@ -692,10 +702,14 @@ void aiAction()
 							if (checkTileOccupation(c->cardXpos-1, c->cardYpos) == 0)
 							{
 								cardMove(c->cardXpos - 1, c->cardYpos, c);
+								count++;
+								continue;
 							}
 							else
 							{
 								aiCombat(c, c->cardXpos -1, c->cardYpos);
+								count++;
+								continue;
 							}
 						}
 						if (px == 3)
@@ -703,16 +717,20 @@ void aiAction()
 							if (checkTileOccupation(c->cardXpos, c->cardYpos - 1) == 0)
 							{
 								cardMove(c->cardXpos, c->cardYpos - 1, c);
+								count++;
+								continue;
 							}
 							else
 							{
 								aiCombat(c, c->cardXpos, c->cardYpos - 1);
+								count++;
+								continue;
 							}
 						}
 						
 					}
 				}
-				rando = 0;
+				
 			}
 		}
 		if (rando == 0)
