@@ -52,7 +52,13 @@ int main(int argc,char *argv[])
 	slog_sync();
     
     entity_system_init(1024);
-	
+	gfc_audio_init(
+		512,
+		16,
+		16,
+		16,
+		NULL,
+		NULL);
 	overlay = gf3d_sprite_load("images/overlay.png", -1, -1, 1, 1.35, 1.25);
 	//freeHandUI();
 	slog_sync();

@@ -22,7 +22,7 @@ Entity *playerCamera, *menus;
 Vector3D player1position, player2position;
 Vector3D player1rotation, player2rotation;
 Uint8 px1, py1, px2, py2;
-
+Sound *move, *select;
 
 Uint32 timeEnd;
 const int cameraDelay = 240;
@@ -73,6 +73,12 @@ void setPlayers()
 	player2rotation.z = GFC_PI;
 	px2 = 3;
 	py2 = 6;
+	move = gfc_sound_load("sounds/moveSound.wav", 1.0, 1);
+	select = gfc_sound_load("sounds/select.wav", 0.7, 1);
+	if (!move)
+	{
+		slog("sound not loaded TwT");
+	}
 	/*loadMainMenuUI();
 	openMenu(4);	
 	startMenu = 4;
@@ -85,6 +91,8 @@ void changeTurn()
 	slog("Changing Turn");
 	resetCardMoves();
 	refillHands();
+	gfc_sound_play(select, 0, 1, -1, -1);
+
 	if (activeP == 1) // Change to Player 2 Turn
 	{
 		px1 = px;
@@ -185,7 +193,8 @@ void player_think(Entity *self)
 				starty = py;
 				slog("card Movement set to 2");
 				timeEnd = SDL_GetTicks() + 100;
-				loadHandUI(activeP);			
+				loadHandUI(activeP);	
+				gfc_sound_play(select, 0, 1, -1, -1);
 				return;
 				
 			}
@@ -197,6 +206,7 @@ void player_think(Entity *self)
 				startx = px;
 				starty = py;
 				timeEnd = SDL_GetTicks();
+				gfc_sound_play(select, 0, 1, -1, -1);
 				return;
 			}
 			if (cardPointer->_cardMoved == 1)
@@ -289,6 +299,7 @@ void cameraMovement(Uint8 * pPointer, int pChange, int currentPlayer, float * pP
 		}
 		*pPointer += pChange;
 		slog("px : %i , py : %i", px, py);
+		gfc_sound_play(move, 0, 1, 1,-1);
 		return;
 	}
 	if (currentPlayer == 2)
@@ -306,6 +317,7 @@ void cameraMovement(Uint8 * pPointer, int pChange, int currentPlayer, float * pP
 		}
 		*pPointer -= pChange;
 		slog("px : %i , py : %i", px, py);
+		gfc_sound_play(move, 0, 1, -1, -1);
 		return;		
 	}
 	return;
@@ -358,6 +370,7 @@ void cardMovement(Entity *self, int x, int y, Card *cardPointer, enum cardSelect
 			timeEnd = SDL_GetTicks() + 500;
 			startMenu = 0;
 			openMenu(startMenu);
+			gfc_sound_play(select, 0, 1, -1, -1);
 			//freeHandUI();
 			resetMovement();
 			return;
@@ -390,6 +403,7 @@ void cardMovement(Entity *self, int x, int y, Card *cardPointer, enum cardSelect
 				resetMovement();
 				timeEnd = SDL_GetTicks();
 				cardPointer->_cardMoved = 1;
+				gfc_sound_play(select, 0, 1, -1, -1);
 				return;
 			}
 			if (result == 1)
@@ -399,6 +413,7 @@ void cardMovement(Entity *self, int x, int y, Card *cardPointer, enum cardSelect
 				resetMovement();
 				timeEnd = SDL_GetTicks();
 				cardPointer->_cardMoved = 1;
+				gfc_sound_play(select, 0, 1, -1, -1);
 				return;
 			}
 			if (result == 2)
@@ -407,6 +422,7 @@ void cardMovement(Entity *self, int x, int y, Card *cardPointer, enum cardSelect
 				resetMovement();
 				timeEnd = SDL_GetTicks();
 				cardPointer->_cardMoved = 1;
+				gfc_sound_play(select, 0, 1, -1, -1);
 				return;
 			}
 		}
@@ -414,6 +430,7 @@ void cardMovement(Entity *self, int x, int y, Card *cardPointer, enum cardSelect
 		cardPointer->_cardMoved = 1;
 		//cardPointer = NULL;
 		resetMovement();
+		gfc_sound_play(select, 0, 1, -1, -1);
 		return;
 	}
 

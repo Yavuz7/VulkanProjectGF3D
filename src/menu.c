@@ -2,6 +2,7 @@
 #include "simple_logger.h"
 
 #include "gf3d_sprite.h"
+#include "gfc_audio.h"
 #include "menu.h"
 
 int selectionIndex,menuIndex,menuStateIndex,tempIndex;
@@ -10,6 +11,7 @@ const int menuDelay = 190;
 void menu_think();
 Sprite *tempMenu,*button1,*button2,*arrows;
 Sprite *cardBack, *cardImage0, *cardImage1, *cardImage2, *cardImage3, *cardImage4;
+Sound *move2,*select2;
 
 
 Entity *menu_new()
@@ -52,6 +54,11 @@ void openMenu(int i)
 	menuStateIndex = 1;
 	menuIndex = i;
 	timeEnd2 = SDL_GetTicks() + 500;
+	if (!move2)
+	{
+		move2 = gfc_sound_load("sounds/moveSound.wav", 1.0, 1);
+		select2 = gfc_sound_load("sounds/select.wav", 0.7, 1);
+	}
 	return;
 }
 
@@ -148,7 +155,7 @@ int getMenuIndex()
 
 void loadHandUI(int player)
 {
-
+	
 	cardImage0 = gf3d_sprite_load(getImageFromData(player, 0), -1, -1, 1, 0.4, 0.4);
 	cardImage0->position = vector2d(90, 290);
 
@@ -171,20 +178,14 @@ void loadHandUI(int player)
 
 void freeHandUI()
 {
-	cardImage0->_inuse = 0;
-	cardImage1->_inuse = 0;
-	cardImage2->_inuse = 0;
-	cardImage3->_inuse = 0;
-	cardImage4->_inuse = 0;
-	cardBack->_inuse = 0;
-	/*
+
 	gf3d_sprite_free(cardImage0);
 	gf3d_sprite_free(cardImage1);
 	gf3d_sprite_free(cardImage2);
 	gf3d_sprite_free(cardImage3);
 	gf3d_sprite_free(cardImage4);
 	gf3d_sprite_free(cardBack);
-	*/
+	
 	//gf3d_texture_delete_unused();
 }
 
@@ -202,6 +203,7 @@ int menuSelection(int max, int orientation)
 	{
 		slog("Selection Made");
 		timeEnd2 = SDL_GetTicks();
+		gfc_sound_play(select2, 0, 1, -1, -1);
 		return 2;
 		
 	}
@@ -215,10 +217,13 @@ int menuSelection(int max, int orientation)
 				selectionIndex--;
 				slog("Moved index Up 1, Current Index : %i", selectionIndex);
 				timeEnd2 = SDL_GetTicks();
+				gfc_sound_play(move2, 0, 1, -1, -1);
 			}
 			else
 			{
+				
 				selectionIndex = 0;
+				timeEnd2 = SDL_GetTicks();
 			}
 		}
 		if (keys[SDL_SCANCODE_S])
@@ -228,10 +233,13 @@ int menuSelection(int max, int orientation)
 				selectionIndex++;
 				slog("Moved index Down 1, Current Index : %i", selectionIndex);
 				timeEnd2 = SDL_GetTicks();
+				gfc_sound_play(move2, 0, 1, -1, -1);
 			}
 			else
 			{
+				
 				selectionIndex = max;
+				timeEnd2 = SDL_GetTicks();
 			}
 		}
 		return 1;
@@ -246,10 +254,13 @@ int menuSelection(int max, int orientation)
 				selectionIndex++;
 				slog("Moved index to right 1, Current Index : %i", selectionIndex);
 				timeEnd2 = SDL_GetTicks();
+				gfc_sound_play(move2, 0, 1, -1, -1);
 			}
 			else
 			{
+				
 				selectionIndex = max;
+				timeEnd2 = SDL_GetTicks();
 			}
 		}
 		if (keys[SDL_SCANCODE_A])
@@ -259,10 +270,13 @@ int menuSelection(int max, int orientation)
 				selectionIndex--;
 				slog("Moved index to left 1, Current Index : %i", selectionIndex);
 				timeEnd2 = SDL_GetTicks();
+				gfc_sound_play(move2, 0, 1, -1, -1);
 			}
 			else
 			{
+				
 				selectionIndex = 0;
+				timeEnd2 = SDL_GetTicks();
 			}
 		}
 		return 1;
