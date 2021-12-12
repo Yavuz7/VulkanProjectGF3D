@@ -177,7 +177,7 @@ void freeHandUI()
 	gf3d_sprite_free(cardImage3);
 	gf3d_sprite_free(cardImage4);
 	gf3d_sprite_free(cardBack);
-	gf3d_texture_delete_unused();
+	//gf3d_texture_delete_unused();
 }
 
 
