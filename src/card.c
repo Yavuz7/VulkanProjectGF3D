@@ -293,6 +293,7 @@ void startDuel()
 		cardData[(int)p].cardYpos = y;
 		cardData[(int)p].eP = entity_new();
 		cardData[(int)p].eP->model = gf3d_model_load("cardDefault");
+		cardData[(int)p].cardHPcurrent = 5;
 
 		cardData[(int)p]._cardOwner = player;
 

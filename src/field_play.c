@@ -40,6 +40,16 @@ void cardMove(int x, int y, Card *cardP)
 
 int cardFight(Card *attacker, Card *defender)
 {
+	if (defender->_cardType == leader)
+	{
+		defender->cardHPcurrent-= 1;
+		slog("Attack Leader! Remaining Hp: %i", defender->cardHPcurrent);
+		if (defender->cardHPcurrent == 0)
+		{
+			slog("Game End!");
+		}
+		return 2;
+	}
 	if (!attacker)return;
 	slog("%s (AP%i ,DP %i,HP %i)", defender->cardName, defender->cardAP, defender->cardDP, defender->cardHPcurrent);
 	//Attacking into a attack monster
