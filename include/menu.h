@@ -76,4 +76,6 @@ int checkMenuDone();
 */
 int getMenuIndex();
 
+int getAiSetting();
+
 #endif

@@ -76,6 +76,8 @@ void cameraMovement(Uint8 * pPointer, int pChange, int currentPlayer, float * pP
 
 int summoningMovementHelper();
 
+void aiAction();
 
+void aiCombat(Card* c, int x, int y);
 
 #endif

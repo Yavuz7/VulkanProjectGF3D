@@ -12,6 +12,7 @@ void menu_think();
 Sprite *tempMenu,*button1,*button2,*arrows;
 Sprite *cardBack, *cardImage0, *cardImage1, *cardImage2, *cardImage3, *cardImage4;
 Sound *move2,*select2;
+int aiSetting;
 
 
 Entity *menu_new()
@@ -75,7 +76,10 @@ void openHand()
 
 }
 
-
+int getAiSetting()
+{
+	return aiSetting;
+}
 void openMainMenu()
 {
 	if (menuStateIndex == 2)
@@ -83,6 +87,16 @@ void openMainMenu()
 		if (selectionIndex == 1)
 		{
 			menuStateIndex = 1;
+			if (aiSetting == 0)
+			{
+				aiSetting = 1;
+				slog("ai on");
+			}
+			else
+			{
+				aiSetting = 0;
+				slog("ai off");
+			}
 		}
 		if (selectionIndex == 0)
 		{

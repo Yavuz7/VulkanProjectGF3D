@@ -361,3 +361,14 @@ void destroyCard(void *Cardp)
 	
 	return;
 }
+
+int getNumberOfCardsOnField()
+{
+	return gfc_list_get_count(fieldList);
+}
+
+void *getCardOnField(int index)
+{
+	void *p = gfc_list_get_nth(fieldList, index);
+	return p;
+}

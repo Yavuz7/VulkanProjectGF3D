@@ -149,6 +149,8 @@ char *getImageFromData(int player, int index);
 */
 char *getNameFromData(int player, int index);
 
+int getNumberOfCardsOnField();
 
+void *getCardOnField(int index);
 
 #endif

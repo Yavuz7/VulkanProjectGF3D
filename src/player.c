@@ -23,6 +23,7 @@ Vector3D player1position, player2position;
 Vector3D player1rotation, player2rotation;
 Uint8 px1, py1, px2, py2;
 Sound *move, *select;
+int aiOn;
 
 Uint32 timeEnd;
 const int cameraDelay = 240;
@@ -79,10 +80,12 @@ void setPlayers()
 	{
 		slog("sound not loaded TwT");
 	}
-	/*loadMainMenuUI();
+
+	aiOn = 0;
+	loadMainMenuUI();
 	openMenu(4);	
 	startMenu = 4;
-	*/
+	
 	return;
 }
 
@@ -107,9 +110,14 @@ void changeTurn()
 		generateResource(activeP);
 		activeP = 2;
 		resetMovement();
+		if (aiOn == 1)
+		{
+			aiAction();
+		}
 		return;
 
 	}
+
 	if (activeP == 2) // Change to Player 1 Turn
 	{
 		px2 = px;
@@ -124,8 +132,10 @@ void changeTurn()
 		generateResource(activeP);
 		activeP = 1;
 		resetMovement();
+
 		return;
 	}
+
 }
 
 void player_think(Entity *self)
@@ -153,6 +163,7 @@ void player_think(Entity *self)
 			startMenu = 0;
 			timeEnd = SDL_GetTicks() + 250;
 			slog("menu is done!");
+			aiOn = getAiSetting();
 			return;
 		}
 		if (check == 2)
@@ -630,6 +641,140 @@ void movementHelperFight(Card *cardPointer)
 	
 }
 
+void aiAction()
+{
+	int rando;
+	int rando2;
+	// Srand modified from : https://stackoverflow.com/a/9459063
+	for (int p = 0; p < 3; p++)
+	{
+		srand((unsigned int)SDL_GetTicks());
+
+
+		rando = rand() % 2;
+		slog("Rand 1: %i", rando);
+
+
+		if (rando == 1)
+		{
+			Card * c;
+			for (int i = 0; i < getNumberOfCardsOnField(); i++)
+			{
+				c = getCardPointer(getCardOnField(i));
+				if (c->_cardOwner == 2 && c->_cardType != leader)
+				{
+					if (py > 0)
+					{
+						if (checkTileOccupation(c->cardXpos, c->cardYpos - 1) == 0)
+						{
+							cardMove(c->cardXpos, c->cardYpos - 1, c);
+						}
+						else
+						{
+							aiCombat(c, c->cardXpos, c->cardYpos - 1);
+						}
+					}
+					if (px > 0 && px < 6)
+					{
+						if (px < 3)
+						{
+							if (checkTileOccupation(c->cardXpos + 1, c->cardYpos) == 0)
+							{
+								cardMove(c->cardXpos + 1, c->cardYpos, c);
+							}
+							else
+							{
+								aiCombat(c, c->cardXpos+1, c->cardYpos);
+							}
+						}
+						if (px > 3)
+						{
+							if (checkTileOccupation(c->cardXpos-1, c->cardYpos) == 0)
+							{
+								cardMove(c->cardXpos - 1, c->cardYpos, c);
+							}
+							else
+							{
+								aiCombat(c, c->cardXpos -1, c->cardYpos);
+							}
+						}
+						if (px == 3)
+						{
+							if (checkTileOccupation(c->cardXpos, c->cardYpos - 1) == 0)
+							{
+								cardMove(c->cardXpos, c->cardYpos - 1, c);
+							}
+							else
+							{
+								aiCombat(c, c->cardXpos, c->cardYpos - 1);
+							}
+						}
+						
+					}
+				}
+				rando = 0;
+			}
+		}
+		if (rando == 0)
+		{
+			int rx, ry;
+			ry = rand() % 7;
+			rx = rand() % 7;
+			if (ry < 3)
+			{
+				ry += 3;
+			}
+			if (checkTileOccupation(rx, ry) == 0)
+			{
+				playCard(rx, ry, p, 2);
+			}
+		}
+	}
+	changeTurn();
+}
+
+void aiCombat(Card* c, int x, int y)
+{
+	defender = getCardPointer(getTileOccupation(x, y));
+	if (defender->_cardOwner == c->_cardOwner)
+	{
+		slog("no friendly fire");
+		resetMovement();
+		return;
+	}
+	setCardFight(c, activeP);
+	int result = cardFight(c, defender);
+	if (result == 0)
+	{
+		destroyCard(defender->listReference);
+		removeTileOccupation(x, y);
+		cardMove(x, y, c);
+		resetMovement();
+		timeEnd = SDL_GetTicks();
+
+		return;
+	}
+	if (result == 1)
+	{
+		destroyCard(c->listReference);
+		removeTileOccupation(c->cardXpos, c->cardYpos);
+		resetMovement();
+		timeEnd = SDL_GetTicks();
+
+		return;
+	}
+	if (result == 2)
+	{
+		cardMove(c->cardXpos, c->cardYpos, c);
+		resetMovement();
+		timeEnd = SDL_GetTicks();
+
+		return;
+	}
+	cardMove(x, y, c);
+	resetMovement();
+	return;
+}
 
 void resetMovement()
 {

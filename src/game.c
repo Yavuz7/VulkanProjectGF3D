@@ -75,8 +75,9 @@ int main(int argc,char *argv[])
 
     slog("gf3d main loop begin");
 	setPlayers();
-	
 
+		//aiAction();
+	
     while(!done)
     {
         SDL_PumpEvents();   // update SDL's internal event structures
